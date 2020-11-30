@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
+use App\Models\Video;
 
 class VideoTest extends TestCase
 {
@@ -17,8 +18,9 @@ class VideoTest extends TestCase
 
     public function test_user_can_browse_videos()
     {
+        $video = Video::factory()->create();
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response->assertSee($video->title);
     }
 }
