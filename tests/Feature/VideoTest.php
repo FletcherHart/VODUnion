@@ -23,4 +23,11 @@ class VideoTest extends TestCase
 
         $response->assertSee($video->title);
     }
+
+    public function test_user_can_view_single_video() {
+        $video = Video::factory()->create();
+        $response = $this->get('/' . $video->id);
+
+        $response->assertSee($video->title);
+    }
 }
