@@ -10,8 +10,8 @@
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <div v-for="video in $page.data" :key="video.id">
-                        <h2>{{video.title}}</h2>
-                        <p>{{video.description}}</p>
+                        <inertia-link :href="video.id">{{video.title}}</inertia-link>
+                        <hr>
                     </div>
                 </div>
             </div>
