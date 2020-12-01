@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use App\Models\Comment;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 
@@ -44,12 +45,16 @@ class VideoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Video  $video
+     * @param  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Video $video)
+    public function show($id)
     {
-        return $video;
+        $data = Video::where('id', $id)->get();
+        $comments = Comment::where('video_id', $id)
+            ->join('users', "comments.user_id", "users.id")
+        ->get(['comments.text', 'comments.created_at as date', 'users.name']);
+        return Inertia::render('Video', ['data'=> $data, 'comments'=>$comments]);
     }
 
     /**
