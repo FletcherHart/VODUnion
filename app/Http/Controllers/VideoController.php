@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 
 class VideoController extends Controller
@@ -14,9 +15,9 @@ class VideoController extends Controller
      */
     public function index()
     {
-        $videos = Video::latest()->get();
+        $data = Video::latest()->get();
 
-        return view('welcome', compact('videos'));
+        return Inertia::render('Dashboard', ['data'=> $data]);
     }
 
     /**
@@ -48,7 +49,7 @@ class VideoController extends Controller
      */
     public function show(Video $video)
     {
-        //
+        return $video;
     }
 
     /**
