@@ -3,31 +3,24 @@
         <div class="py-12">
             <h2>{{data.title}}</h2>
             <p>{{data.description}}</p>
-            <p>{{data.views}}</p>
+            <p>Views: {{data.views}}</p>
         </div>
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <div v-for="comment in $page.comments" :key="comment.id">
-                        <a :href="'user/' + comment.user_id">{{comment.name}}</a>
-                        <p>Date Posted {{comment.date}}</p>
-                        <p>{{comment.text}}</p>
-                        <hr>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
+        <comment-layout></comment-layout>
     </header-layout>
 </template>
 
 <script>
     import HeaderLayout from '@/Layouts/HeaderLayout'
+    import CommentLayout from '@/Layouts/CommentLayout'
     export default {
         components: {
             HeaderLayout,
+            CommentLayout
         },
         props: {
-            data: Object
+            data: Object,
+            comments: Array
         }
     }
 </script>
