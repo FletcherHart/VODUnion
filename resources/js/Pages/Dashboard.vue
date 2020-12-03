@@ -5,11 +5,10 @@
                 Dashboard
             </h2>
         </template>
-
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <div v-for="video in $page.data" :key="video.id">
+                    <div v-for="video in data" :key="video.id">
                         <inertia-link :href="'video/'+video.id">{{video.title}}</inertia-link>
                         <hr>
                     </div>
@@ -25,5 +24,8 @@
         components: {
             HeaderLayout
         },
+        props: {
+            data: Array
+        }
     }
 </script>
