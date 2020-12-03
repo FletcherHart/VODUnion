@@ -16,7 +16,7 @@ use App\Http\Controllers\VideoController;
 
 Route::get('/', [VideoController::class, 'index']);
 
-Route::get('/{id}', [VideoController::class, 'show']);
+Route::get('/video/{id}', [VideoController::class, 'show']);
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia\Inertia::render('Dashboard');
