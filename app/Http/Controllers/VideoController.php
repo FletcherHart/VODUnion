@@ -53,7 +53,7 @@ class VideoController extends Controller
         $data = Video::where('id', $id)->get();
         $comments = Comment::where('video_id', $id)
             ->join('users', "comments.user_id", "users.id")
-        ->get(['comments.text', 'comments.created_at as date', 'users.name']);
+        ->get(['comments.text', 'comments.created_at as date', 'users.name', 'users.id as user_id']);
         return Inertia::render('Video', ['data'=> $data, 'comments'=>$comments]);
     }
 

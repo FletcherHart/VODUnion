@@ -16,7 +16,7 @@
                     </div>
                     <hr>
                     <div v-for="comment in $page.comments" :key="comment.id">
-                        <p>{{comment.name}}</p>
+                        <a :href="'user/' + comment.user_id">{{comment.name}}</a>
                         <p>Date Posted {{comment.date}}</p>
                         <p>{{comment.text}}</p>
                         <hr>
