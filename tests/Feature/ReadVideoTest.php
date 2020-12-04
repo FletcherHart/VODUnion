@@ -32,7 +32,9 @@ class ReadVideoTest extends TestCase
     }
 
     public function test_user_can_view_single_video() {
-        $response = $this->get('/' . $this->video->id);
+        $response = $this->get('video/' . $this->video->id);
+
+        dump($this->video->id);
 
         $response->assertSee($this->video->title);
     }
@@ -40,7 +42,7 @@ class ReadVideoTest extends TestCase
     public function test_user_can_read_replies_associated_with_video() {
         $comment = Comment::factory()->create(["video_id" => $this->video->id]);
         
-        $response = $this->get('/' . $this->video->id);
+        $response = $this->get('video/' . $this->video->id);
 
         $response->assertSee($comment->text);
     }
