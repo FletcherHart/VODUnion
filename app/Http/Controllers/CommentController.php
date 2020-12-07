@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Video;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Illuminate\Routing\Redirector;
 
 class CommentController extends Controller
 {
+
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -33,9 +41,14 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Video $video)
     {
-        //
+        $video->addComment([
+            'text' => request('text'),
+            'user_id' => auth()->id()
+        ]);
+
+        return redirect()->route('video', ['id' => $video->id]);
     }
 
     /**

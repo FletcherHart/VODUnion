@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +17,10 @@ use App\Http\Controllers\VideoController;
 
 Route::get('/', [VideoController::class, 'index']);
 
-Route::get('/video/{id}', [VideoController::class, 'show']);
+Route::get('/video/{id}', [VideoController::class, 'show'])
+    ->name('video');
+
+Route::post('/video/{video}/comment', [CommentController::class, 'store']);
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia\Inertia::render('Dashboard');
