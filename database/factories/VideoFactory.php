@@ -22,8 +22,13 @@ class VideoFactory extends Factory
      */
     public function definition()
     {
+        $user = User::join('user_roles', 'users.id', 'user_roles.user_id')
+            ->where('user_roles.role_id', '>=', 2)
+            ->inRandomOrder()
+            ->first('id')
+            ->toArray();
         return [
-            'user_id' => User::factory(),
+            'user_id' => $user['id'],
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
             'views' => $this->faker->randomNumber,
