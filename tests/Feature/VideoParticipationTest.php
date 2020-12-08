@@ -13,6 +13,11 @@ class VideoParticipationTest extends TestCase
 {
     use DatabaseMigrations;
 
+    public function setUp():void {
+        parent::setUp();
+        $this->seed();
+    }
+
     public function test_unauthenticated_users_can_not_make_comment_on_video() {
         $response = $this->postJson('/video/1/comment', []);
         $response->assertStatus(401);

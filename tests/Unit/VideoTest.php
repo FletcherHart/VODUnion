@@ -14,6 +14,7 @@ class VideoTest extends TestCase
 
     public function setUp():void {
         parent::setUp();
+        $this->seed();
         $this->video = Video::factory()->create();
     }
 

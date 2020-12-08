@@ -28,13 +28,4 @@ class DatabaseSeeder extends Seeder
         
         
     }
-
-    private function seedRoles($users) {
-        DB::table('user_roles')->insert(
-            [
-                'user_id' => \App\Models\User::select('id')->orderByRaw("RAND()")->first()->id,
-                'role_id' => \App\Models\Role::select('id')->orderByRaw("RAND()")->first()->id,
-            ]
-        );
-    }
 }

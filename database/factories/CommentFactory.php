@@ -23,8 +23,8 @@ class CommentFactory extends Factory
      */
     public function definition()
     {
-        $user = User::orderByRaw('RAND()')->first();
-        $video = Video::orderByRaw('RAND()')->first();
+        $user = User::inRandomOrder()->first();
+        $video = Video::inRandomOrder()->first();
         return [
             'user_id' => $user->id,
             'video_id' => $video->id,
