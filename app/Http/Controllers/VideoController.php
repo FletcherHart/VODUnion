@@ -6,6 +6,8 @@ use App\Models\Video;
 use App\Models\Comment;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class VideoController extends Controller
 {
@@ -39,7 +41,12 @@ class VideoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(Auth::user()->role->id >= 2) {
+            $path = $request->file('video')->store('videos');
+            return $path;
+        } else {
+            return false;
+        }
     }
 
     /**

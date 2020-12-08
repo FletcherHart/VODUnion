@@ -20,7 +20,10 @@ Route::get('/', [VideoController::class, 'index']);
 Route::get('/video/{id}', [VideoController::class, 'show'])
     ->name('video');
 
-Route::post('/video/{video}/comment', [CommentController::class, 'store']);
+Route::post('/video/{video}/comment', [CommentController::class, 'store'])
+    ->middleware('auth');
+
+Route::post('/upload', [VideoController::class, 'store']);
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia\Inertia::render('Dashboard');

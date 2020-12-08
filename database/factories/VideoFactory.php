@@ -22,8 +22,7 @@ class VideoFactory extends Factory
      */
     public function definition()
     {
-        $user = User::join('user_roles', 'users.id', 'user_roles.user_id')
-            ->where('user_roles.role_id', '>=', 2)
+        $user = User::where('role_id', '>=', 2)
             ->inRandomOrder()
             ->first('id')
             ->toArray();
