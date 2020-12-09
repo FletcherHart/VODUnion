@@ -48,9 +48,19 @@ class VideoController extends Controller
     public function store(Request $request)
     {
         if (! Gate::allows('store-video', Auth::user())) {
-                abort(403);
+            abort(403);
         } else {
             $path = $request->file('video')->store('videos');
+
+            $video = new Video;
+            $video->title = $request->title;
+            $video->description = $request->description;
+            //$video->listed = $request->listed;
+            $video->user_id = Auth::user()->id;
+            $video->storedAt = $path;
+
+            $video->save();
+
             return $path;
         }
     }

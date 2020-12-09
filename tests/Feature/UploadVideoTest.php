@@ -43,6 +43,24 @@ class UploadVideoTest extends TestCase
         Storage::assertExists("videos/" . $file->hashName());
     }
 
+    public function test_successful_upload_adds_video_data_to_database() {
+        $this->be($user = User::factory(['role_id'=>2])->create());
+        $file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
+        $video = ['video' => $file, 
+        'title' => $this->faker->sentence,
+        'description' => $this->faker->paragraph,
+        'listed' => true];
+        $response = $this->post('/upload', $video);
+
+        dump($response);
+
+        $this->assertDatabaseHas('videos', [
+            'title' => $video['title'],
+            'description' => $video['description'],
+            'user_id' => $user->id
+        ]);
+    }
+
     public function test_authenticated_user_with_viewer_role_can_not_upload_video()
     {
         Storage::fake('videos');
