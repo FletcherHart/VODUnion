@@ -21,10 +21,10 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->text('profile_photo_path')->nullable();
-            $table->foreignId('role_id');
+            $table->foreignId('role_id')->default(1);
             $table->timestamps();
 
-            $table->foreign('role_id')->references('id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('role_id')->references('id')->on('roles');//->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
