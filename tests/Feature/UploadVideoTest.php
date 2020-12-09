@@ -15,7 +15,7 @@ use Tests\TestCase;
 
 class UploadVideoTest extends TestCase
 {
-    use DatabaseMigrations;
+    use DatabaseMigrations, WithFaker;
 
     public function setUp():void {
         parent::setUp();
@@ -34,7 +34,11 @@ class UploadVideoTest extends TestCase
         Storage::fake('videos');
         $this->be($user = User::factory(['role_id'=>2])->create());
         $file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
-        $response = $this->post('/upload', ['video' => $file]);
+        $response = $this->post('/upload', 
+        ['video' => $file, 
+        'title' => $this->faker->sentence,
+        'description' => $this->faker->paragraph,
+        'listed', true]);
 
         Storage::assertExists("videos/" . $file->hashName());
     }
@@ -43,8 +47,8 @@ class UploadVideoTest extends TestCase
     {
         Storage::fake('videos');
         $this->be($user = User::factory(['role_id'=>1])->create());
-        $file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
-        $response = $this->post('/upload', ['video' => $file]);
+        //$file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
+        $response = $this->post('/upload', ['video' => '']);
 
         $response->assertStatus(403);
     }
