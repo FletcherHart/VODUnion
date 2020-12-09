@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Redirect;
 
 class VideoController extends Controller
 {
+
+    public function __contstruct() {
+        $this->middleware('auth')->except(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -33,7 +38,7 @@ class VideoController extends Controller
     public function create()
     {
         if(Auth::user()->role->id == 1) {
-            return Inertia::render('Upgrade');
+            return Redirect::route('upgrade');
         } else {
             return Inertia::render('Upload');
         }
@@ -50,6 +55,10 @@ class VideoController extends Controller
         if (! Gate::allows('store-video', Auth::user())) {
             abort(403);
         } else {
+            if($this->totalStorageUsed() > 20000000)
+            {
+                return response()->json(['error' => 'Error: Max storage space occupied. No videos can be uploaded at this time.']);
+            }
             $path = $request->file('video')->store('videos');
 
             $video = new Video;
@@ -115,5 +124,9 @@ class VideoController extends Controller
     public function destroy(Video $video)
     {
         //
+    }
+
+    public function totalStorageUsed() {
+        return Video::all()->sum('sizeKB');
     }
 }

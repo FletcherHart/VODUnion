@@ -33,7 +33,7 @@ class VideoFactory extends Factory
             'views' => $this->faker->randomNumber,
             'storedAt' => 'river.mp4',
             'listed' => true,
-            'sizeKB' => $this->faker->numberBetween(10, 10000000)
+            'sizeKB' => $this->faker->numberBetween(10, 100000)
         ];
     }
 }

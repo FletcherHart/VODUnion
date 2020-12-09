@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\CommentController;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +28,11 @@ Route::post('/upload', [VideoController::class, 'store'])
     ->middleware('auth');
 
 Route::get('/upload', [VideoController::class, 'create'])
-    ->name('upload')
-    ->middleware('auth');
+    ->name('upload')->middleware('auth');
 
-Route::get('/upgrade', [UserController::class, 'upgrade'])
-    ->middleware('auth');
+Route::get('/upgrade', function() {
+    return Inertia::render('Upgrade');
+})->middleware('auth');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia\Inertia::render('Dashboard');
