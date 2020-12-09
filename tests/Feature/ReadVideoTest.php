@@ -34,8 +34,6 @@ class ReadVideoTest extends TestCase
     public function test_user_can_view_single_video() {
         $response = $this->get('video/' . $this->video->id);
 
-        dump($this->video->id);
-
         $response->assertSee($this->video->title);
     }
 
