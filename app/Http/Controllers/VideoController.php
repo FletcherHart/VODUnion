@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Redirect;
 
 class VideoController extends Controller
 {
@@ -31,7 +32,11 @@ class VideoController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Upload');
+        if(Auth::user()->role->id == 1) {
+            return Inertia::render('Upgrade');
+        } else {
+            return Inertia::render('Upload');
+        }
     }
 
     /**
@@ -43,7 +48,7 @@ class VideoController extends Controller
     public function store(Request $request)
     {
         if (! Gate::allows('store-video', Auth::user())) {
-            abort(403);
+                abort(403);
         } else {
             $path = $request->file('video')->store('videos');
             return $path;

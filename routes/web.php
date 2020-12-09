@@ -27,6 +27,10 @@ Route::post('/upload', [VideoController::class, 'store'])
     ->middleware('auth');
 
 Route::get('/upload', [VideoController::class, 'create'])
+    ->name('upload')
+    ->middleware('auth');
+
+Route::get('/upgrade', [UserController::class, 'upgrade'])
     ->middleware('auth');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {

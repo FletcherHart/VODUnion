@@ -52,4 +52,12 @@ class UploadVideoTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    public function test_authenticated_user_with_viewer_role_sees_upgrade_page_when_accessing_upload_page()
+    {
+        $this->be($user = User::factory(['role_id'=>1])->create());
+        $response = $this->get('/upload');
+
+        $response->assertSee('Upgrade');
+    }
 }

@@ -1,7 +1,7 @@
 <template>
     <header-layout>
         <div class="py-12">
-            Upload
+            Upgrade
         </div>
     </header-layout>
 </template>
