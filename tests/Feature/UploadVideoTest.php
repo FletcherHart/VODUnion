@@ -52,12 +52,11 @@ class UploadVideoTest extends TestCase
         'listed' => true];
         $response = $this->post('/upload', $video);
 
-        dump($response);
-
         $this->assertDatabaseHas('videos', [
             'title' => $video['title'],
             'description' => $video['description'],
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'sizeKB' => $file->getSize()
         ]);
     }
 

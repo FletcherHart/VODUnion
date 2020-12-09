@@ -58,6 +58,7 @@ class VideoController extends Controller
             //$video->listed = $request->listed;
             $video->user_id = Auth::user()->id;
             $video->storedAt = $path;
+            $video->sizeKB = $request->file('video')->getSize();
 
             $video->save();
 
