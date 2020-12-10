@@ -60,7 +60,7 @@ class UploadVideoTest extends TestCase
         ]);
     }
 
-    public function test_fail_upload_if_more_than_20GB_already_stored() {
+    public function test_deny_upload_if_more_than_20GB_already_stored() {
 
         Video::factory(['sizeKB' => 20000000])->create();
 
@@ -68,6 +68,18 @@ class UploadVideoTest extends TestCase
         $response = $this->post('/upload', []);
 
         $response->assertJsonPath('error', 'Error: Max storage space occupied. No videos can be uploaded at this time.');
+    }
+
+    public function test_deny_upload_if_video_greater_than_2gb_in_size() {
+        $this->be($user = User::factory(['role_id'=>2])->create());
+        $file = UploadedFile::fake()->create('vid.mp4', 2000001, 'video/mp4');
+        $video = ['video' => $file, 
+        'title' => $this->faker->sentence,
+        'description' => $this->faker->paragraph,
+        'listed' => true];
+        $response = $this->post('/upload', $video);
+
+        $response->assertJsonPath('error', 'Error: Uploaded video exceeds 2GB limit.');
     }
 
     public function test_authenticated_user_with_viewer_role_can_not_upload_video()

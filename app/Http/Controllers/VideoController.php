@@ -59,6 +59,9 @@ class VideoController extends Controller
             {
                 return response()->json(['error' => 'Error: Max storage space occupied. No videos can be uploaded at this time.']);
             }
+            if($request->file('video')->getSize() > 2000000) {
+                return response()->json(['error' => 'Error: Uploaded video exceeds 2GB limit.']);
+            }
             $path = $request->file('video')->store('videos');
 
             $video = new Video;
