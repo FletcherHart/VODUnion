@@ -43,12 +43,12 @@ class UploadVideoTest extends TestCase
         $this->be($user = User::factory(['role_id'=>1])->create());
         $response = $this->get('/upload');
 
-        $response->assertSee('Upgrade');
+        $response->assertRedirect('upgrade');
     }
 
-    public function test_deny_upload_if_more_than_20GB_already_stored() {
+    public function test_deny_upload_if_more_than_20gb_already_stored() {
 
-        Video::factory(['sizeKB' => 20000000])->create();
+        Video::factory(['sizeKB' => 20000000001])->create();
 
         $this->be($user = User::factory(['role_id'=>2])->create());
         $response = $this->post('/upload', []);
@@ -58,7 +58,7 @@ class UploadVideoTest extends TestCase
 
     public function test_deny_upload_if_video_greater_than_2gb_in_size() {
         $this->be($user = User::factory(['role_id'=>2])->create());
-        $file = UploadedFile::fake()->create('vid.mp4', 2000001, 'video/mp4');
+        $file = UploadedFile::fake()->create('vid.mp4', 2000000001, 'video/mp4');
         $video = ['video' => $file, 
         'title' => $this->faker->sentence,
         'description' => $this->faker->paragraph,
@@ -66,6 +66,18 @@ class UploadVideoTest extends TestCase
         $response = $this->post('/upload', $video);
 
         $response->assertJsonPath('error', 'Error: Uploaded video exceeds 2GB limit.');
+    }
+
+    public function test_deny_if_file_is_not_of_type_video() {
+        $this->be($user = User::factory(['role_id'=>2])->create());
+        $file = UploadedFile::fake()->create('vid.jpg', 20, 'image/jpeg');
+        $video = ['video' => $file, 
+        'title' => $this->faker->sentence,
+        'description' => $this->faker->paragraph,
+        'listed' => true];
+        $response = $this->post('/upload', $video);
+
+        $response->assertJsonPath('error', 'Error: Uploaded file is not an mp4 video file.');
     }
 
     public function test_authenticated_user_with_uploader_role_can_upload_video()
