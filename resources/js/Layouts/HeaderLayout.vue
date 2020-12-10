@@ -1,10 +1,16 @@
 <template>
   <main>
-    <header>
-        <inertia-link href="/">Home</inertia-link>
-        <inertia-link v-if="!$page.auth.user.loggedIn" href="/login">Login</inertia-link>
+    <header class="flex justify-between pl-5 pr-5 pt-5 bg-gray-700">
+        <jet-responsive-nav-link href="/">Home</jet-responsive-nav-link>
+        <form class="inline">
+          <input type="text" name="search">
+        </form>
+        <div v-if="!$page.auth.user.loggedIn" class="flex">
+          <jet-responsive-nav-link  href="/login">Login</jet-responsive-nav-link>
+          <jet-responsive-nav-link href="/register">Register</jet-responsive-nav-link>
+        </div>
         <form v-else @submit.prevent="logout">
-            <jet-responsive-nav-link as="button">
+            <jet-responsive-nav-link class="object-top" as="button">
                 Logout
             </jet-responsive-nav-link>
         </form>
