@@ -29,6 +29,23 @@ class UploadVideoTest extends TestCase
         $response->assertStatus(302);
     }
 
+    public function test_authenticated_user_with_viewer_role_can_not_upload_video()
+    {
+        Storage::fake('videos');
+        $this->be($user = User::factory(['role_id'=>1])->create());
+        $response = $this->post('/upload', ['video' => '']);
+
+        $response->assertStatus(403);
+    }
+
+    public function test_authenticated_user_with_viewer_role_sees_upgrade_page_when_accessing_upload_page()
+    {
+        $this->be($user = User::factory(['role_id'=>1])->create());
+        $response = $this->get('/upload');
+
+        $response->assertSee('Upgrade');
+    }
+
     public function test_authenticated_user_with_uploader_role_can_upload_video()
     {
         Storage::fake('videos');
@@ -80,22 +97,5 @@ class UploadVideoTest extends TestCase
         $response = $this->post('/upload', $video);
 
         $response->assertJsonPath('error', 'Error: Uploaded video exceeds 2GB limit.');
-    }
-
-    public function test_authenticated_user_with_viewer_role_can_not_upload_video()
-    {
-        Storage::fake('videos');
-        $this->be($user = User::factory(['role_id'=>1])->create());
-        $response = $this->post('/upload', ['video' => '']);
-
-        $response->assertStatus(403);
-    }
-
-    public function test_authenticated_user_with_viewer_role_sees_upgrade_page_when_accessing_upload_page()
-    {
-        $this->be($user = User::factory(['role_id'=>1])->create());
-        $response = $this->get('/upload');
-
-        $response->assertSee('Upgrade');
     }
 }
