@@ -46,6 +46,28 @@ class UploadVideoTest extends TestCase
         $response->assertSee('Upgrade');
     }
 
+    public function test_deny_upload_if_more_than_20GB_already_stored() {
+
+        Video::factory(['sizeKB' => 20000000])->create();
+
+        $this->be($user = User::factory(['role_id'=>2])->create());
+        $response = $this->post('/upload', []);
+
+        $response->assertJsonPath('error', 'Error: Max storage space occupied. No videos can be uploaded at this time.');
+    }
+
+    public function test_deny_upload_if_video_greater_than_2gb_in_size() {
+        $this->be($user = User::factory(['role_id'=>2])->create());
+        $file = UploadedFile::fake()->create('vid.mp4', 2000001, 'video/mp4');
+        $video = ['video' => $file, 
+        'title' => $this->faker->sentence,
+        'description' => $this->faker->paragraph,
+        'listed' => true];
+        $response = $this->post('/upload', $video);
+
+        $response->assertJsonPath('error', 'Error: Uploaded video exceeds 2GB limit.');
+    }
+
     public function test_authenticated_user_with_uploader_role_can_upload_video()
     {
         Storage::fake('videos');
@@ -75,27 +97,5 @@ class UploadVideoTest extends TestCase
             'user_id' => $user->id,
             'sizeKB' => $file->getSize()
         ]);
-    }
-
-    public function test_deny_upload_if_more_than_20GB_already_stored() {
-
-        Video::factory(['sizeKB' => 20000000])->create();
-
-        $this->be($user = User::factory(['role_id'=>2])->create());
-        $response = $this->post('/upload', []);
-
-        $response->assertJsonPath('error', 'Error: Max storage space occupied. No videos can be uploaded at this time.');
-    }
-
-    public function test_deny_upload_if_video_greater_than_2gb_in_size() {
-        $this->be($user = User::factory(['role_id'=>2])->create());
-        $file = UploadedFile::fake()->create('vid.mp4', 2000001, 'video/mp4');
-        $video = ['video' => $file, 
-        'title' => $this->faker->sentence,
-        'description' => $this->faker->paragraph,
-        'listed' => true];
-        $response = $this->post('/upload', $video);
-
-        $response->assertJsonPath('error', 'Error: Uploaded video exceeds 2GB limit.');
     }
 }
