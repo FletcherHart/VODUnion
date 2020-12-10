@@ -32,8 +32,8 @@ Route::get('/upload', [VideoController::class, 'create'])
 
 Route::get('/upgrade', function() {
     return Inertia::render('Upgrade');
-})->middleware('auth');
+})->middleware('auth')->name('upgrade');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia\Inertia::render('Dashboard');
+    return Inertia::render('Dashboard');
 })->name('dashboard');
