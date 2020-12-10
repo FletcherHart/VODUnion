@@ -55,11 +55,11 @@ class VideoController extends Controller
         if (! Gate::allows('store-video', Auth::user())) {
             abort(403);
         } else {
-            if($this->totalStorageUsed() > 20000000)
+            if($this->totalStorageUsed() > 2000000000)
             {
                 return response()->json(['error' => 'Error: Max storage space occupied. No videos can be uploaded at this time.']);
             }
-            if($request->file('video')->getSize() > 2000000) {
+            if($request->file('video')->getSize() > 200000000) {
                 return response()->json(['error' => 'Error: Uploaded video exceeds 2GB limit.']);
             }
             $path = $request->file('video')->store('videos');
