@@ -1,22 +1,21 @@
 <template>
-  <main>
+  <main class="h-full"> 
     <header class="flex justify-between pl-5 pr-5 pt-5 bg-gray-700">
         <jet-responsive-nav-link href="/">Home</jet-responsive-nav-link>
+        <button @click="nav">
+          Nav
+        </button>
         <form class="inline">
           <input type="text" name="search">
         </form>
-        <div v-if="!$page.auth.user.loggedIn" class="flex">
-          <jet-responsive-nav-link  href="/login">Login</jet-responsive-nav-link>
-          <jet-responsive-nav-link href="/register">Register</jet-responsive-nav-link>
-        </div>
-        <form v-else @submit.prevent="logout">
-            <jet-responsive-nav-link class="object-top" as="button">
-                Logout
-            </jet-responsive-nav-link>
-        </form>
     </header>
-    <article>
-      <slot />
+    <article class="grid grid-cols-6 h-full">
+      <div v-bind:class="{ hidden: isActive }">
+        <sidebar/>
+      </div>
+      <div v-bind:class="{ 'col-span-6': isWide, 'col-span-5': !isWide }">
+        <slot />
+      </div>
     </article>
   </main>
 </template>
@@ -24,10 +23,19 @@
 <script>
     import JetNavLink from '@/Jetstream/NavLink'
     import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink'
+    import Sidebar from '@/Layouts/Sidebar'
+import Button from '../Jetstream/Button.vue'
   export default {
     components: {
         JetNavLink,
         JetResponsiveNavLink,
+        Sidebar
+    },
+    data() {
+      return{
+        isActive: false,
+        isWide: false
+      }
     },
     methods: {
         logout() {
@@ -39,6 +47,10 @@
             axios.post(route('login').url()).then(response => {
                 window.location = '/login';
             })
+        },
+        nav() {
+          this.isActive = !this.isActive;
+          this.isWide = !this.isWide;
         }
     }
   }
