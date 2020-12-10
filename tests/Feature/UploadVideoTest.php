@@ -15,7 +15,7 @@ use Tests\TestCase;
 
 class UploadVideoTest extends TestCase
 {
-    use DatabaseMigrations, WithFaker;
+    use RefreshDatabase, DatabaseMigrations, WithFaker;
 
     public function setUp():void {
         parent::setUp();
@@ -51,9 +51,14 @@ class UploadVideoTest extends TestCase
         Video::factory(['sizeKB' => 20000000001])->create();
 
         $this->be($user = User::factory(['role_id'=>2])->create());
-        $response = $this->post('/upload', []);
+        $file = UploadedFile::fake()->create('vid.mp4', 20, 'video/mp4');
+        $video = ['video' => $file, 
+        'title' => $this->faker->sentence,
+        'description' => $this->faker->paragraph,
+        'listed' => true];
+        $response = $this->post('/upload', $video);
 
-        $response->assertJsonPath('error', 'Error: Max storage space occupied. No videos can be uploaded at this time.');
+        $response->assertSessionHasErrors(['storage']);
     }
 
     public function test_deny_upload_if_video_greater_than_2gb_in_size() {
@@ -65,7 +70,7 @@ class UploadVideoTest extends TestCase
         'listed' => true];
         $response = $this->post('/upload', $video);
 
-        $response->assertJsonPath('error', 'Error: Uploaded video exceeds 2GB limit.');
+        $response->assertSessionHasErrors(['video']);
     }
 
     public function test_deny_if_file_is_not_of_type_video() {
@@ -77,7 +82,7 @@ class UploadVideoTest extends TestCase
         'listed' => true];
         $response = $this->post('/upload', $video);
 
-        $response->assertJsonPath('error', 'Error: Uploaded file is not an mp4 video file.');
+        $response->assertSessionHasErrors(['video']);
     }
 
     public function test_authenticated_user_with_uploader_role_can_upload_video()
@@ -85,11 +90,10 @@ class UploadVideoTest extends TestCase
         Storage::fake('videos');
         $this->be($user = User::factory(['role_id'=>2])->create());
         $file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
-        $response = $this->post('/upload', 
-        ['video' => $file, 
-        'title' => $this->faker->sentence,
+        $response = $this->post('/upload', ['video' => $file, 
+        'title' => 'title',//$this->faker->sentence,
         'description' => $this->faker->paragraph,
-        'listed', true]);
+        'listed' => true]);
 
         Storage::assertExists("videos/" . $file->hashName());
     }

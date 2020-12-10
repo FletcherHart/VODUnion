@@ -55,15 +55,17 @@ class VideoController extends Controller
         if (! Gate::allows('store-video', Auth::user())) {
             abort(403);
         } else {
+            $validator = $request->validate([
+                'title' => 'required|max:255',
+                'description' => 'required|max:10000',
+                'video' => 'required|max:200000000|mimetypes:video/mp4',
+                'listed' => 'required'
+            ]);
             if($this->totalStorageUsed() > 20000000000)
             {
-                return response()->json(['error' => 'Error: Max storage space occupied. No videos can be uploaded at this time.']);
-            }
-            if($request->file('video')->getMimeType() != 'video/mp4') {
-                return response()->json(['error' => 'Error: Uploaded file is not an mp4 video file.']);
-            }
-            if($request->file('video')->getSize() > 200000000) {
-                return response()->json(['error' => 'Error: Uploaded video exceeds 2GB limit.']);
+                return Redirect::route('upload')
+                    ->withErrors(['storage' => 'Error: Max storage space occupied. No videos can be uploaded at this time.'])
+                    ->withInput();
             }
             $path = $request->file('video')->store('videos');
 
