@@ -1,15 +1,32 @@
 <template>
-    <main class="pl-5 pr-5 pt-5 bg-gray-400 h-screen">
-        <jet-responsive-nav-link href="/">Home</jet-responsive-nav-link>
+    <main class="pt-5 bg-gray-400 h-screen fixed top-0 lg:w-52 md:w-40 sm:w-24">
+        <jet-responsive-nav-link class="w-full" href="/">
+            <div class="grid grid-cols-3 flex items-center">
+                <img class="icon inline grid-span-1" src="/open-iconic/svg/home.svg" alt="home icon">
+                <p>Home</p>
+            </div>
+        </jet-responsive-nav-link>
         <div v-if="!$page.auth.user.loggedIn">
-          <jet-responsive-nav-link  href="/login">Login</jet-responsive-nav-link>
-          <jet-responsive-nav-link href="/register">Register</jet-responsive-nav-link>
+          <jet-responsive-nav-link  href="/login">
+            <div class="grid grid-cols-3 flex items-center">
+                <img class="icon inline grid-span-1" src="/open-iconic/svg/account-login.svg" alt="login icon">
+                <p>Login</p>
+            </div>
+          </jet-responsive-nav-link>
+          <jet-responsive-nav-link href="/register">
+            <div class="grid grid-cols-3 flex items-center">
+                <img class="icon inline grid-span-1" src="/open-iconic/svg/clipboard.svg" alt="register icon">
+                <p>Register</p>
+            </div>
+          </jet-responsive-nav-link>
         </div>
-        <form v-else @submit.prevent="logout">
-            <jet-responsive-nav-link class="object-top" as="button">
-                Logout
-            </jet-responsive-nav-link>
-        </form>
+        <div v-else>
+            <form @submit.prevent="logout">
+                <jet-responsive-nav-link class="object-top" as="button">
+                    Logout
+                </jet-responsive-nav-link>
+            </form>
+        </div>
     </main>
 </template>
 

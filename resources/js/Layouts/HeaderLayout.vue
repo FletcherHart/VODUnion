@@ -1,6 +1,6 @@
 <template>
   <main class="h-full"> 
-    <header class="flex justify-between pl-5 pr-5 pt-5 bg-gray-700">
+    <header class="flex justify-between pl-5 pr-5 pt-5 bg-gray-700 fixed w-full h-16">
         <jet-responsive-nav-link href="/">Home</jet-responsive-nav-link>
         <button @click="nav">
           Nav
@@ -9,11 +9,14 @@
           <input type="text" name="search">
         </form>
     </header>
-    <article class="grid grid-cols-6 h-full">
-      <div v-bind:class="{ hidden: isActive }">
+    <article class="h-full">
+      <div v-bind:class="{ hidden: isActive}">
         <sidebar/>
       </div>
-      <div v-bind:class="{ 'col-span-6': isWide, 'col-span-5': !isWide }">
+      <div v-bind:class="{ 
+        'w-full': isWide, 
+        'lg:ml-52 md:ml-40 sm:ml-24': !isWide 
+      }">
         <slot />
       </div>
     </article>
