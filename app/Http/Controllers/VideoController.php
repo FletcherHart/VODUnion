@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use App\Models\Comment;
+//use App\Jobs\ProcessVideo;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -67,17 +68,25 @@ class VideoController extends Controller
                     ->withErrors(['storage' => 'Error: Max storage space occupied. No videos can be uploaded at this time.'])
                     ->withInput();
             }
-            $path = $request->file('video')->store('videos');
+            $path = $request->file('video')->store('public/videos');
+
+            if($path === false) {
+                return Redirect::route('upload')
+                    ->withErrors(['storage' => 'Error: Video could not be stored. Please try again later.'])
+                    ->withInput();
+            }
 
             $video = new Video;
             $video->title = $request->title;
             $video->description = $request->description;
             //$video->listed = $request->listed;
             $video->user_id = Auth::user()->id;
-            $video->storedAt = $path;
+            $video->storedAt = $request->file('video')->hashName();
             $video->sizeKB = $request->file('video')->getSize();
 
             $video->save();
+
+            //ProcessVideo::dispatch($video);
 
             return $path;
         }
@@ -93,7 +102,7 @@ class VideoController extends Controller
     {
         $data = Video::where('videos.id', $id)
             ->join('users', "videos.user_id", "users.id")
-            ->first(['videos.title', 'videos.id', 'videos.description', 'videos.views', 'users.name as uploader']);
+            ->first(['videos.title', 'videos.id', 'videos.description', 'videos.views', 'videos.storedAt', 'videos.created_at', 'users.name as uploader']);
         $comments = Comment::where('video_id', $id)
             ->join('users', "comments.user_id", "users.id")
             ->get(['comments.text', 'comments.created_at as date', 'users.name', 'users.id as user_id']);
