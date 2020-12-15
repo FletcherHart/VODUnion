@@ -1,19 +1,28 @@
 <template>
   <main class="h-full"> 
-    <header class="flex justify-between pl-5 pr-5 pt-5 bg-gray-700 fixed w-full h-16">
-        <jet-responsive-nav-link href="/">Home</jet-responsive-nav-link>
-        <button @click="nav">
-          Nav
-        </button>
-        <form class="inline">
-          <input type="text" name="search">
+    <header class="grid lg:grid-cols-8 md:grid-cols-6 grid-cols-2 lg:gap-4 bg-gray-700 fixed top-0 w-full h-16">
+        <div class="flex flex-row items-center justify-center">
+          <button @click="nav">
+            <img class="icon" src="/open-iconic/svg/menu.svg">
+          </button>
+          <jet-responsive-nav-link href="/">Home</jet-responsive-nav-link>
+        </div>
+        
+        <form class="sm:visible invisible 
+        flex items-center justify-center 
+        lg:col-span-2 md:col-span-2 sm:col-span-1 lg:col-start-7 md:col-start-5">
+          <input class="w-4/5 h-6" type="text" name="search">
+          <button class="icon-button h-6 w-8 flex items-center justify-center bg-gray-600">
+            <img class="icon" src="/open-iconic/svg/magnifying-glass.svg">
+          </button>
         </form>
+
     </header>
-    <article class="h-full">
+    <article class="h-full mt-16 pt-4">
       <div v-bind:class="{ hidden: isActive}">
         <sidebar/>
       </div>
-      <div v-bind:class="{ 
+      <div class="h-full" v-bind:class="{ 
         'w-full': isWide, 
         'lg:ml-52 md:ml-40 sm:ml-24': !isWide 
       }">
@@ -27,7 +36,6 @@
     import JetNavLink from '@/Jetstream/NavLink'
     import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink'
     import Sidebar from '@/Layouts/Sidebar'
-import Button from '../Jetstream/Button.vue'
   export default {
     components: {
         JetNavLink,

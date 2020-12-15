@@ -1,6 +1,7 @@
 <template>
     <header-layout>
         <div class="py-12">
+            <video :src="'../storage/stream/' + data.storedAt" controls> </video>
             <h2>{{data.title}}</h2>
             <p>{{data.description}}</p>
             <p>Views: {{data.views}}</p>

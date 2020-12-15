@@ -1,5 +1,5 @@
 <template>
-    <main class="pt-5 bg-gray-400 h-screen fixed top-0 lg:w-52 md:w-40 sm:w-24">
+    <main class="pt-5 bg-gray-400 h-screen fixed top-16 lg:w-52 md:w-40 sm:w-24">
         <jet-responsive-nav-link class="w-full" href="/">
             <div class="grid grid-cols-3 flex items-center">
                 <img class="icon inline grid-span-1" src="/open-iconic/svg/home.svg" alt="home icon">

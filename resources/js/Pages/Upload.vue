@@ -1,7 +1,7 @@
 <template>
     <header-layout>
         <div class="py-12">
-            <div class="flex justify-center">
+            <div class="flex justify-center mt-16">
                 <h2 class="m-auto font-bold">Upload</h2>
             </div>
             <div class="flex justify-center">
