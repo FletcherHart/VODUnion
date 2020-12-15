@@ -43,5 +43,10 @@ class ProcessVideo implements ShouldQueue
         ' -progress C:\xampp\htdocs\VODeo\storage\app\public\progress.txt';
 
         pclose(popen("start /B ". $cmd, "r")); 
+
+        $cmd = 'ffmpeg -i C:\xampp\htdocs\VODeo\storage\app\public\videos/'
+        . $this->video->storedAt . ' -vf scale=300:169 -r 1/1 C:\xampp\htdocs\VODeo\storage\app\public\thumbnails/'.$this->video->storedAt.'.jpeg';
+
+        pclose(popen("start /B ". $cmd, "r"));
     }
 }

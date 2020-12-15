@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use App\Models\Comment;
-//use App\Jobs\ProcessVideo;
+use App\Jobs\ProcessVideo;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -86,7 +86,7 @@ class VideoController extends Controller
 
             $video->save();
 
-            //ProcessVideo::dispatch($video);
+            ProcessVideo::dispatch($video);
 
             return $path;
         }
