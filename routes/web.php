@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\CommentController;
 use Inertia\Inertia;
+use App\Models\Video;
+use Iman\Streamer\VideoStreamer;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,3 +39,10 @@ Route::get('/upgrade', function() {
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
+
+Route::get('/stream/{id}', function($id) {
+    $video = Video::where('videos.id', $id)->first('storedAt');
+    $path = public_path('/storage/stream/'.$video['storedAt']);
+    
+    VideoStreamer::streamFile($path);
+});
