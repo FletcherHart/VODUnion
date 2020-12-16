@@ -18,7 +18,7 @@
         </form>
 
     </header>
-    <article class="h-full mt-16 pt-4">
+    <article class="h-full pt-20">
       <div v-bind:class="{ hidden: isActive}">
         <sidebar/>
       </div>

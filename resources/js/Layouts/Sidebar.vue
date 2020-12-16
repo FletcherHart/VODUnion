@@ -23,9 +23,20 @@
         <div v-else>
             <form @submit.prevent="logout">
                 <jet-responsive-nav-link class="object-top" as="button">
-                    Logout
+                    <div class="grid grid-cols-3 flex items-center">
+                        <img class="icon inline grid-span-1" src="/open-iconic/svg/account-logout.svg" alt="logout icon">
+                        <p>Logout</p>
+                    </div>
                 </jet-responsive-nav-link>
             </form>
+            <hr>
+            <jet-responsive-nav-link href="/upload">
+                <div class="grid grid-cols-3 flex items-center">
+                    <img class="icon inline grid-span-1" src="/open-iconic/svg/data-transfer-upload.svg" alt="upload icon">
+                    <p>Upload</p>
+                </div>
+            </jet-responsive-nav-link>    
+            
         </div>
     </main>
 </template>
