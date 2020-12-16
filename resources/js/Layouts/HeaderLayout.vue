@@ -19,12 +19,12 @@
 
     </header>
     <article class="h-full pt-20">
-      <div v-bind:class="{ hidden: isActive}">
+      <div v-bind:class="{ hidden: isHidden}">
         <sidebar/>
       </div>
       <div class="h-full" v-bind:class="{ 
-        'w-full': isWide, 
-        'lg:ml-52 md:ml-40 sm:ml-24': !isWide 
+        'w-full': isHidden, 
+        'lg:ml-52 md:ml-40 sm:ml-24': !isHidden
       }">
         <slot />
       </div>
@@ -44,8 +44,7 @@
     },
     data() {
       return{
-        isActive: false,
-        isWide: false
+        isHidden: false
       }
     },
     methods: {
@@ -60,8 +59,7 @@
             })
         },
         nav() {
-          this.isActive = !this.isActive;
-          this.isWide = !this.isWide;
+          this.isHidden = !this.isHidden;
         }
     }
   }
