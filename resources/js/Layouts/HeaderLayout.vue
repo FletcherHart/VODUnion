@@ -22,7 +22,7 @@
       <div v-bind:class="{ hidden: isHidden}">
         <sidebar/>
       </div>
-      <div class="h-full" v-bind:class="{ 
+      <div class="h-auto" v-bind:class="{ 
         'w-full': isHidden, 
         'lg:ml-52 md:ml-40 sm:ml-24': !isHidden
       }">
