@@ -36,9 +36,8 @@ Route::get('/upgrade', function() {
     return Inertia::render('Upgrade');
 })->middleware('auth')->name('upgrade');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+// Route::middleware(['auth:sanctum', 'verified'])->get('/', [VideoController::class, 'index'])
+//     ->name('dashboard');
 
 Route::get('/stream/{id}', function($id) {
     $video = Video::where('videos.id', $id)->first('storedAt');

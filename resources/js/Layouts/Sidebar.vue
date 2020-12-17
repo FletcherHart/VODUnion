@@ -7,18 +7,18 @@
             </div>
         </jet-responsive-nav-link>
         <div v-if="!$page.auth.user.loggedIn">
-          <jet-responsive-nav-link  href="/login">
+          <responsive-nav-link  :href="route('login')" @submit.prevent="login">
             <div class="grid grid-cols-3 flex items-center">
                 <img class="icon inline grid-span-1" src="/open-iconic/svg/account-login.svg" alt="login icon">
                 <p>Login</p>
             </div>
-          </jet-responsive-nav-link>
-          <jet-responsive-nav-link href="/register">
+          </responsive-nav-link>
+          <responsive-nav-link href="/register">
             <div class="grid grid-cols-3 flex items-center">
                 <img class="icon inline grid-span-1" src="/open-iconic/svg/clipboard.svg" alt="register icon">
                 <p>Register</p>
             </div>
-          </jet-responsive-nav-link>
+          </responsive-nav-link>
         </div>
         <div v-else>
             <form @submit.prevent="logout">
@@ -44,20 +44,19 @@
 <script>
     import JetNavLink from '@/Jetstream/NavLink'
     import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink'
+    import ResponsiveNavLink from '@/Jetstream/NormalResponsiveNavLink'
+
   export default {
     components: {
         JetNavLink,
         JetResponsiveNavLink,
+        ResponsiveNavLink
     },
     methods: {
+       
         logout() {
             axios.post(route('logout').url()).then(response => {
                 window.location = '/';
-            })
-        },
-        login() {
-            axios.post(route('login').url()).then(response => {
-                window.location = '/login';
             })
         }
     }
