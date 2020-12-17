@@ -19,12 +19,12 @@
 
     </header>
     <article class="h-full pt-20">
-      <div v-bind:class="{ hidden: isHidden}">
+      <div v-bind:class="{ hidden: this.$store.state.isHidden}">
         <sidebar/>
       </div>
       <div class="h-auto" v-bind:class="{ 
-        'w-full': isHidden, 
-        'lg:ml-52 md:ml-40 sm:ml-24': !isHidden
+        'w-full': this.$store.state.isHidden, 
+        'lg:ml-52 md:ml-40 sm:ml-24': !this.$store.state.isHidden
       }">
         <slot />
       </div>
@@ -60,7 +60,11 @@
         },
         nav() {
           this.isHidden = !this.isHidden;
+          this.$store.commit('flip');
         }
+    },
+    beforeMount() {
+      this.$store.commit('setNotHidden');
     }
   }
 </script>

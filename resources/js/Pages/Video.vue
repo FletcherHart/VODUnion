@@ -1,8 +1,10 @@
 <template>
     <header-layout>
         <div class="h-auto -mt-4">
-            <div class="bg-black w-full flex items-center justify-center h-5/6">
-                <video class="h-full w-full" :src="'/stream/' + data.id" controls> </video>
+            <div class="h-screen">
+                <div class="bg-black w-full flex items-center justify-center h-5/6">
+                    <video class="h-full" :src="'/stream/' + data.id" controls> </video>
+                </div>
             </div>
             <div class="mt-3 flex justify-center">
                 <div class="w-11/12">
@@ -44,6 +46,9 @@
             toggleDesc() {
                 this.hideDescription = !this.hideDescription
             }
+        },
+        mounted() {
+            this.$store.commit('setHidden');
         }
     }
 </script>
