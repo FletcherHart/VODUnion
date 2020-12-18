@@ -61,25 +61,48 @@ class VideoController extends Controller
                     ->withErrors(['storage' => 'Error: You have reached the maximum allotment of video uploads.'])
                     ->withInput();
             }
+            if(Video::where('user_id', Auth::user()->id)->sum('sizeKB') >= 2000000000) {
+                return Redirect::route('upload')
+                    ->withErrors(['storage' => 'Error: You have reached the maximum 2GB of storage per user.'])
+                    ->withInput();
+            }
 
             $validator = $request->validate([
                 'title' => 'required|max:80',
                 'description' => 'required|max:2500',
                 'video' => 'required|max:200000000|mimetypes:video/mp4',
-                'listed' => 'required'
+                'listed' => 'required',
+                'thumbnail' => 'max:2000000|mimetypes:image/jpeg,image/png'
             ]);
+
             if($this->totalStorageUsed() >= 20000000000)
             {
                 return Redirect::route('upload')
                     ->withErrors(['storage' => 'Error: Max storage space occupied. No videos can be uploaded at this time.'])
                     ->withInput();
             }
-            $path = $request->file('video')->store('public/videos');
+            if($request->has('raw')) {
+                $path = $request->file('video')->store('public/stream');
+            } else {
+                $path = $request->file('video')->store('public/videos');
+            }
 
             if($path === false) {
                 return Redirect::route('upload')
                     ->withErrors(['storage' => 'Error: Video could not be stored. Please try again later.'])
                     ->withInput();
+            }
+
+            $hasThumb = false;
+            if($request->has('thumbnail')) {
+                $path = $request->file('thumbnail')->storeAs('public/thumbnails', $request->file('video')->hashName() . '.jpeg');
+
+                if($path === false) {
+                    return Redirect::route('upload')
+                        ->withErrors(['storage' => 'Error: Thumbnail could not be stored. Please try again later.'])
+                        ->withInput();
+                }
+                $hasThumb = true;
             }
 
             $video = new Video;
@@ -92,7 +115,14 @@ class VideoController extends Controller
 
             $video->save();
 
-            //ProcessVideo::dispatch($video);
+            $raw = false;
+
+            if($request->has('raw')) {
+                $raw = true;
+                dump('Raw video uploaded');
+            }
+
+            ProcessVideo::dispatch($video, $hasThumb, $raw);
 
             return $path;
         }

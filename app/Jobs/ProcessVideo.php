@@ -16,16 +16,18 @@ class ProcessVideo implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $video;
+    protected $video, $hasThumb, $raw;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Video $video)
+    public function __construct(Video $video, bool $hasThumb = false, bool $raw = false)
     {
         $this->video = $video;
+        $this->hasThumb = $hasThumb;
+        $this->raw = $raw;
     }
 
     /**
@@ -35,18 +37,22 @@ class ProcessVideo implements ShouldQueue
      */
     public function handle()
     {
+        if(!$this->raw)
+        {
+            $cmd = 'C:\ffmpeg\bin\ffmpeg.exe -i C:\xampp\htdocs\VODeo\storage\app\public\videos/'
+            . $this->video->storedAt . 
+            ' -crf 29 -r 60 C:\xampp\htdocs\VODeo\storage\app\public\stream/' 
+            . $this->video->storedAt .
+            ' -progress C:\xampp\htdocs\VODeo\storage\app\public\progress.txt';
 
-        $cmd = 'C:\ffmpeg\bin\ffmpeg.exe -i C:\xampp\htdocs\VODeo\storage\app\public\videos/'
-        . $this->video->storedAt . 
-        ' -crf 29 -r 60 C:\xampp\htdocs\VODeo\storage\app\public\stream/' 
-        . $this->video->storedAt .
-        ' -progress C:\xampp\htdocs\VODeo\storage\app\public\progress.txt';
+            pclose(popen("start /B ". $cmd, "r")); 
+        }
+        
+        if(!$this->hasThumb) {
+            $cmd = 'ffmpeg -i C:\xampp\htdocs\VODeo\storage\app\public\videos/'
+            . $this->video->storedAt . ' -vf scale=300:169 -r 1/1 C:\xampp\htdocs\VODeo\storage\app\public\thumbnails/'.$this->video->storedAt.'.jpeg';
 
-        pclose(popen("start /B ". $cmd, "r")); 
-
-        $cmd = 'ffmpeg -i C:\xampp\htdocs\VODeo\storage\app\public\videos/'
-        . $this->video->storedAt . ' -vf scale=300:169 -r 1/1 C:\xampp\htdocs\VODeo\storage\app\public\thumbnails/'.$this->video->storedAt.'.jpeg';
-
-        pclose(popen("start /B ". $cmd, "r"));
+            pclose(popen("start /B ". $cmd, "r"));
+        }
     }
 }

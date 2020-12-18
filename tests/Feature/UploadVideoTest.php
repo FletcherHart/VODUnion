@@ -131,4 +131,44 @@ class UploadVideoTest extends TestCase
 
         $response->assertSessionHasErrors(['storage']);
     }
+
+    public function test_user_cannot_upload_more_than_2_gigabytes() {
+        $this->be($user = User::factory(['role_id'=>2])->create());
+
+        Video::factory(['user_id' => $user->id, 'sizeKB' => 2000000000])->create();
+
+        $file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
+
+        $video = ['video' => $file, 
+        'title' => $this->faker->sentence,
+        'description' => $this->faker->paragraph,
+        'listed' => true];
+
+        $response = $this->post('/upload', $video);
+
+        $response->assertSessionHasErrors(['storage']);
+    }
+
+    public function test_user_can_upload_thumbnail_with_video() {
+        //also doubles as manual raw video test
+        Storage::fake('public/thumbnails');
+
+        $this->be($user = User::factory(['role_id'=>2])->create());
+
+        $file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
+
+        $image = UploadedFile::fake()->create('cat.jpg', 50, 'image/jpeg');
+
+        $video = ['video' => $file, 
+        'title' => $this->faker->sentence,
+        'description' => $this->faker->paragraph,
+        'listed' => true,
+        'thumbnail' => $image,
+        'raw' => true ];
+
+        $response = $this->post('/upload', $video);
+
+        Storage::assertExists("public/thumbnails/" . $file->hashName() . '.jpeg');
+    }
+
 }
