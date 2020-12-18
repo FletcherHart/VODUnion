@@ -58,13 +58,13 @@ class VideoController extends Controller
         } else {
             if(Video::where('user_id', Auth::user()->id)->count() >= 3) {
                 return Redirect::route('upload')
-                    ->withErrors(['userVideos' => 'Error: You have reached the maximum allotment of video uploads.'])
+                    ->withErrors(['storage' => 'Error: You have reached the maximum allotment of video uploads.'])
                     ->withInput();
             }
 
             $validator = $request->validate([
-                'title' => 'required|max:255',
-                'description' => 'required|max:10000',
+                'title' => 'required|max:80',
+                'description' => 'required|max:2500',
                 'video' => 'required|max:200000000|mimetypes:video/mp4',
                 'listed' => 'required'
             ]);
