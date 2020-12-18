@@ -129,6 +129,6 @@ class UploadVideoTest extends TestCase
 
         $response = $this->post('/upload', $video);
 
-        $response->assertSessionHasErrors(['userVideos']);
+        $response->assertSessionHasErrors(['storage']);
     }
 }
