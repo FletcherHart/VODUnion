@@ -12,3 +12,11 @@ html, body {
     width: 16px;
     height: 16px;
   }
+
+.thumb {
+    height: 169px;
+}
+
+.thumb-container {
+    max-width: 300px;
+}

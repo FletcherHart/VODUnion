@@ -44,7 +44,7 @@
     },
     data() {
       return{
-        isHidden: false
+        windowWidth: window.innerWidth
       }
     },
     methods: {
@@ -59,12 +59,33 @@
             })
         },
         nav() {
-          this.isHidden = !this.isHidden;
           this.$store.commit('flip');
+        },
+        onResize() {
+          this.windowWidth = window.innerWidth
         }
     },
     beforeMount() {
-      this.$store.commit('setNotHidden');
-    }
+      if(this.windowWidth < 640) {
+        this.$store.commit('setHidden');
+      } else {
+        this.$store.commit('setNotHidden');
+      }
+    },
+    mounted() {
+      this.$nextTick(() => {
+        window.addEventListener('resize', this.onResize);
+      })
+    },
+    beforeDestroy() { 
+      window.removeEventListener('resize', this.onResize); 
+    },
+    watch: {
+      windowWidth(newWidth, oldWidth) {
+        if(newWidth < 640) {
+          this.$store.commit('setHidden');
+        }
+      }
+    },
   }
 </script>
