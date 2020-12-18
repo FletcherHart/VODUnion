@@ -56,13 +56,19 @@ class VideoController extends Controller
         if (! Gate::allows('store-video', Auth::user())) {
             abort(403);
         } else {
+            if(Video::where('user_id', Auth::user()->id)->count() >= 3) {
+                return Redirect::route('upload')
+                    ->withErrors(['userVideos' => 'Error: You have reached the maximum allotment of video uploads.'])
+                    ->withInput();
+            }
+
             $validator = $request->validate([
                 'title' => 'required|max:255',
                 'description' => 'required|max:10000',
                 'video' => 'required|max:200000000|mimetypes:video/mp4',
                 'listed' => 'required'
             ]);
-            if($this->totalStorageUsed() > 20000000000)
+            if($this->totalStorageUsed() >= 20000000000)
             {
                 return Redirect::route('upload')
                     ->withErrors(['storage' => 'Error: Max storage space occupied. No videos can be uploaded at this time.'])
@@ -86,7 +92,7 @@ class VideoController extends Controller
 
             $video->save();
 
-            ProcessVideo::dispatch($video);
+            //ProcessVideo::dispatch($video);
 
             return $path;
         }

@@ -87,15 +87,15 @@ class UploadVideoTest extends TestCase
 
     public function test_authenticated_user_with_uploader_role_can_upload_video()
     {
-        Storage::fake('videos');
+        $path = Storage::fake('public/videos');
         $this->be($user = User::factory(['role_id'=>2])->create());
         $file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
         $response = $this->post('/upload', ['video' => $file, 
-        'title' => 'title',//$this->faker->sentence,
+        'title' => $this->faker->sentence,
         'description' => $this->faker->paragraph,
         'listed' => true]);
 
-        Storage::assertExists("videos/" . $file->hashName());
+        Storage::assertExists("public/videos/" . $file->hashName());
     }
 
     public function test_successful_upload_adds_video_data_to_database() {
@@ -113,5 +113,22 @@ class UploadVideoTest extends TestCase
             'user_id' => $user->id,
             'sizeKB' => $file->getSize()
         ]);
+    }
+
+    public function test_user_cannot_upload_more_than_3_videos() {
+        $this->be($user = User::factory(['role_id'=>2])->create());
+
+        Video::factory(['user_id' => $user->id])->count(3)->create();
+
+        $file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
+
+        $video = ['video' => $file, 
+        'title' => $this->faker->sentence,
+        'description' => $this->faker->paragraph,
+        'listed' => true];
+
+        $response = $this->post('/upload', $video);
+
+        $response->assertSessionHasErrors(['userVideos']);
     }
 }
