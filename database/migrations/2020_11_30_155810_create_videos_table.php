@@ -16,12 +16,13 @@ class CreateVideosTable extends Migration
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->string('title');
-            $table->string('description', 10000);
-            $table->string('storedAt');
+            $table->string('title')->nullable();
+            $table->string('description', 10000)->nullable();
+            $table->string('videoID');
+            $table->string('uploadUrl');
             $table->unsignedBigInteger('views')->default(0);
             $table->boolean('listed')->default(0);
-            $table->unsignedBigInteger('sizeKB');
+            $table->unsignedBigInteger('sizeKB')->default(0);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
