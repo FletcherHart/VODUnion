@@ -29,15 +29,6 @@ class UploadVideoTest extends TestCase
         $response->assertStatus(302);
     }
 
-    public function test_authenticated_user_with_viewer_role_can_not_upload_video()
-    {
-        Storage::fake('videos');
-        $this->be($user = User::factory(['role_id'=>1])->create());
-        $response = $this->post('/upload', ['video' => '']);
-
-        $response->assertStatus(403);
-    }
-
     public function test_authenticated_user_with_viewer_role_sees_upgrade_page_when_accessing_upload_page()
     {
         $this->be($user = User::factory(['role_id'=>1])->create());
@@ -46,90 +37,72 @@ class UploadVideoTest extends TestCase
         $response->assertRedirect('upgrade');
     }
 
-    public function test_deny_upload_if_more_than_20gb_already_stored() {
+    public function test_if_more_than_20gb_already_stored_user_is_redirected_from_upload_page_to_error_page() {
 
         Video::factory(['sizeKB' => 20000000001])->create();
 
         $this->be($user = User::factory(['role_id'=>2])->create());
-        $file = UploadedFile::fake()->create('vid.mp4', 20, 'video/mp4');
-        $video = ['video' => $file, 
-        'title' => $this->faker->sentence,
-        'description' => $this->faker->paragraph,
-        'listed' => true];
-        $response = $this->post('/upload', $video);
+        $response = $this->get('/upload');
 
-        $response->assertSessionHasErrors(['storage']);
+        $response->assertSessionHasErrors(['deny']);
     }
 
-    public function test_deny_upload_if_video_greater_than_2gb_in_size() {
-        $this->be($user = User::factory(['role_id'=>2])->create());
-        $file = UploadedFile::fake()->create('vid.mp4', 2000000001, 'video/mp4');
-        $video = ['video' => $file, 
-        'title' => $this->faker->sentence,
-        'description' => $this->faker->paragraph,
-        'listed' => true];
-        $response = $this->post('/upload', $video);
+    // public function test_deny_upload_if_video_greater_than_2gb_in_size() {
+    //     $this->be($user = User::factory(['role_id'=>2])->create());
+    //     $file = UploadedFile::fake()->create('vid.mp4', 2000000001, 'video/mp4');
+    //     $video = ['video' => $file, 
+    //     'title' => $this->faker->sentence,
+    //     'description' => $this->faker->paragraph,
+    //     'listed' => true];
+    //     $response = $this->post('/upload', $video);
 
-        $response->assertSessionHasErrors(['video']);
-    }
+    //     $response->assertSessionHasErrors(['video']);
+    // }
 
-    public function test_deny_if_file_is_not_of_type_video() {
-        $this->be($user = User::factory(['role_id'=>2])->create());
-        $file = UploadedFile::fake()->create('vid.jpg', 20, 'image/jpeg');
-        $video = ['video' => $file, 
-        'title' => $this->faker->sentence,
-        'description' => $this->faker->paragraph,
-        'listed' => true];
-        $response = $this->post('/upload', $video);
+    // public function test_deny_if_file_is_not_of_type_video() {
+    //     $this->be($user = User::factory(['role_id'=>2])->create());
+    //     $file = UploadedFile::fake()->create('vid.jpg', 20, 'image/jpeg');
+    //     $video = ['video' => $file, 
+    //     'title' => $this->faker->sentence,
+    //     'description' => $this->faker->paragraph,
+    //     'listed' => true];
+    //     $response = $this->post('/upload', $video);
 
-        $response->assertSessionHasErrors(['video']);
-    }
+    //     $response->assertSessionHasErrors(['video']);
+    // }
 
-    public function test_authenticated_user_with_uploader_role_can_upload_video()
+    public function test_authenticated_user_with_uploader_role_can_view_upload_page()
     {
-        $path = Storage::fake('public/videos');
         $this->be($user = User::factory(['role_id'=>2])->create());
-        $file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
-        $response = $this->post('/upload', ['video' => $file, 
-        'title' => $this->faker->sentence,
-        'description' => $this->faker->paragraph,
-        'listed' => true]);
+        $response = $this->get('/upload');
 
-        Storage::assertExists("public/videos/" . $file->hashName());
+        $response->assertStatus(200);
     }
 
-    public function test_successful_upload_adds_video_data_to_database() {
-        $this->be($user = User::factory(['role_id'=>2])->create());
-        $file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
-        $video = ['video' => $file, 
-        'title' => $this->faker->sentence,
-        'description' => $this->faker->paragraph,
-        'listed' => true];
-        $response = $this->post('/upload', $video);
+    // public function test_successful_upload_adds_video_data_to_database() {
+    //     $this->be($user = User::factory(['role_id'=>2])->create());
+    //     //$file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
+    //     $video = ['title' => $this->faker->sentence,
+    //     'description' => $this->faker->paragraph,
+    //     'listed' => true];
+    //     $response = $this->post('/upload', $video);
 
-        $this->assertDatabaseHas('videos', [
-            'title' => $video['title'],
-            'description' => $video['description'],
-            'user_id' => $user->id,
-            'sizeKB' => $file->getSize()
-        ]);
-    }
+    //     $this->assertDatabaseHas('videos', [
+    //         'title' => $video['title'],
+    //         'description' => $video['description'],
+    //         'user_id' => $user->id,
+    //         'sizeKB' => $file->getSize()
+    //     ]);
+    // }
 
-    public function test_user_cannot_upload_more_than_3_videos() {
+    public function test_user_with_3_uploaded_videos_cannot_view_upload_page() {
         $this->be($user = User::factory(['role_id'=>2])->create());
 
         Video::factory(['user_id' => $user->id])->count(3)->create();
 
-        $file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
+        $response = $this->get('/upload');
 
-        $video = ['video' => $file, 
-        'title' => $this->faker->sentence,
-        'description' => $this->faker->paragraph,
-        'listed' => true];
-
-        $response = $this->post('/upload', $video);
-
-        $response->assertSessionHasErrors(['storage']);
+        $response->assertSessionHasErrors(['deny']);
     }
 
     public function test_user_cannot_upload_more_than_2_gigabytes() {
@@ -137,38 +110,31 @@ class UploadVideoTest extends TestCase
 
         Video::factory(['user_id' => $user->id, 'sizeKB' => 2000000000])->create();
 
-        $file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
+        $response = $this->get('/upload');
 
-        $video = ['video' => $file, 
-        'title' => $this->faker->sentence,
-        'description' => $this->faker->paragraph,
-        'listed' => true];
-
-        $response = $this->post('/upload', $video);
-
-        $response->assertSessionHasErrors(['storage']);
+        $response->assertSessionHasErrors(['deny']);
     }
 
-    public function test_user_can_upload_thumbnail_with_video() {
-        //also doubles as manual raw video test
-        Storage::fake('public/thumbnails');
+    // public function test_user_can_upload_thumbnail_with_video() {
+    //     //also doubles as manual raw video test
+    //     Storage::fake('public/thumbnails');
 
-        $this->be($user = User::factory(['role_id'=>2])->create());
+    //     $this->be($user = User::factory(['role_id'=>2])->create());
 
-        $file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
+    //     $file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
 
-        $image = UploadedFile::fake()->create('cat.jpg', 50, 'image/jpeg');
+    //     $image = UploadedFile::fake()->create('cat.jpg', 50, 'image/jpeg');
 
-        $video = ['video' => $file, 
-        'title' => $this->faker->sentence,
-        'description' => $this->faker->paragraph,
-        'listed' => true,
-        'thumbnail' => $image,
-        'raw' => true ];
+    //     $video = ['video' => $file, 
+    //     'title' => $this->faker->sentence,
+    //     'description' => $this->faker->paragraph,
+    //     'listed' => true,
+    //     'thumbnail' => $image,
+    //     'raw' => true ];
 
-        $response = $this->post('/upload', $video);
+    //     $response = $this->post('/upload', $video);
 
-        Storage::assertExists("public/thumbnails/" . $file->hashName() . '.jpeg');
-    }
+    //     Storage::assertExists("public/thumbnails/" . $file->hashName() . '.jpeg');
+    // }
 
 }
