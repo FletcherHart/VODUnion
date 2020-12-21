@@ -32,6 +32,8 @@ Route::post('/upload', [VideoController::class, 'store'])
 Route::get('/upload', [VideoController::class, 'create'])
     ->name('upload')->middleware('auth');
 
+Route::get('/key', [VideoController::class, 'store']);
+
 Route::get('/upgrade', function() {
     return Inertia::render('Upgrade');
 })->middleware('auth')->name('upgrade');
@@ -45,3 +47,9 @@ Route::get('/stream/{id}', function($id) {
     
     VideoStreamer::streamFile($path);
 });
+
+Route::get('error', function() {
+    Inertia::render('Error');
+})->name('error');
+
+

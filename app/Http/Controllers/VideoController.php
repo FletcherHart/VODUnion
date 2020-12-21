@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
 
 class VideoController extends Controller
 {
@@ -40,9 +42,25 @@ class VideoController extends Controller
     {
         if(Auth::user()->role->id == 1) {
             return Redirect::route('upgrade');
-        } else {
-            return Inertia::render('Upload');
         }
+
+        if(Video::where('user_id', Auth::user()->id)->count() >= 30) {
+            return Redirect::route('error')
+                ->withErrors(['deny' => 
+                'Error: You have reached the maximum allotment of video uploads, and cannot upload more at this time.'
+            ]);
+        }
+        if($this->totalStorageUsed() >= 20000000000)
+        {
+            return Redirect::route('error')
+                ->withErrors(['deny' => 'Error: Max storage space occupied. No videos can be uploaded at this time.']);
+        }
+        if(Video::where('user_id', Auth::user()->id)->sum('sizeKB') >= 2000000000) {
+            return Redirect::route('error')
+                ->withErrors(['deny' => 'Error: You have reached the maximum 2GB of storage per user.']);
+        }
+
+        return Inertia::render('Upload');
     }
 
     /**
@@ -56,75 +74,81 @@ class VideoController extends Controller
         if (! Gate::allows('store-video', Auth::user())) {
             abort(403);
         } else {
-            if(Video::where('user_id', Auth::user()->id)->count() >= 3) {
-                return Redirect::route('upload')
-                    ->withErrors(['storage' => 'Error: You have reached the maximum allotment of video uploads.'])
-                    ->withInput();
-            }
-            if(Video::where('user_id', Auth::user()->id)->sum('sizeKB') >= 2000000000) {
-                return Redirect::route('upload')
-                    ->withErrors(['storage' => 'Error: You have reached the maximum 2GB of storage per user.'])
-                    ->withInput();
-            }
 
-            $validator = $request->validate([
-                'title' => 'required|max:80',
-                'description' => 'required|max:2500',
-                'video' => 'required|max:200000000|mimetypes:video/mp4',
-                'listed' => 'required',
-                'thumbnail' => 'max:2000000|mimetypes:image/jpeg,image/png'
-            ]);
+            $token = 'pJpbyJ0lY6PFeDncvjTP1IZyj3onQd3tBcRCxwta';
 
-            if($this->totalStorageUsed() >= 20000000000)
-            {
+            $account = '6443cfbddcb48088578fb01d9fbb7aac';
+
+            $response = Http::withToken($token)
+                ->withHeaders([
+                    'Access-Control-Allow-Origin' => '*',
+                    'Access-Control-Allow-Methods' => 'POST',
+                    'Access-Control-Allow-Headers' => '*'
+                ])
+                ->post('https://api.cloudflare.com/client/v4/accounts/'.$account.'/stream/direct_upload', [
+                    "maxDurationSeconds" => 120,
+                    "expiry" => Carbon::now()->add(5, 'minutes')->toRfc3339String(),
+
+                ]);
+
+            $uploadURL = "";
+            $uid = "";
+
+            if($response['success']) {
+
+                $video = new Video;
+                $video->user_id = Auth::user()->id;
+                $video->videoID = $response['result']['uid'];
+                $video->uploadUrl = $response['result']['uploadURL'];
+
+                $video->save();
+
+                return [$response['result']['uid'], $response['result']['uploadURL']];
+
                 return Redirect::route('upload')
-                    ->withErrors(['storage' => 'Error: Max storage space occupied. No videos can be uploaded at this time.'])
-                    ->withInput();
-            }
-            if($request->has('raw')) {
-                $path = $request->file('video')->store('public/stream');
+                    ->withInput()
+                    ->with('stuff', 'Hello');
+
+                return Redirect::route('upload')
+                    ->withInput()
+                    ->with('data', ['uid' => $response['result']['uid'], 'url' => $response['result']['uploadURL']]);
             } else {
-                $path = $request->file('video')->store('public/videos');
-            }
-
-            if($path === false) {
                 return Redirect::route('upload')
-                    ->withErrors(['storage' => 'Error: Video could not be stored. Please try again later.'])
-                    ->withInput();
+                    ->withInput()
+                    ->withErrors(['key' => 'Error: Cannot retrieve key.']);
             }
+            
 
-            $hasThumb = false;
-            if($request->has('thumbnail')) {
-                $path = $request->file('thumbnail')->storeAs('public/thumbnails', $request->file('video')->hashName() . '.jpeg');
+            // $validator = $request->validate([
+            //     'title' => 'required|max:80',
+            //     'description' => 'required|max:2500',
+            //     'video' => 'required|max:200000000|mimetypes:video/mp4',
+            //     'listed' => 'required',
+            //     'thumbnail' => 'max:2000000|mimetypes:image/jpeg,image/png'
+            // ]);
+            
+            // $hasThumb = false;
+            // if($request->has('thumbnail')) {
+            //     $path = $request->file('thumbnail')->storeAs('public/thumbnails', $request->file('video')->hashName() . '.jpeg');
 
-                if($path === false) {
-                    return Redirect::route('upload')
-                        ->withErrors(['storage' => 'Error: Thumbnail could not be stored. Please try again later.'])
-                        ->withInput();
-                }
-                $hasThumb = true;
-            }
+            //     if($path === false) {
+            //         return Redirect::route('upload')
+            //             ->withErrors(['storage' => 'Error: Thumbnail could not be stored. Please try again later.'])
+            //             ->withInput();
+            //     }
+            //     $hasThumb = true;
+            // }
 
-            $video = new Video;
-            $video->title = $request->title;
-            $video->description = $request->description;
-            //$video->listed = $request->listed;
-            $video->user_id = Auth::user()->id;
-            $video->storedAt = $request->file('video')->hashName();
-            $video->sizeKB = $request->file('video')->getSize();
+            // $video = new Video;
+            // $video->title = $request->title;
+            // $video->description = $request->description;
+            // //$video->listed = $request->listed;
+            // $video->user_id = Auth::user()->id;
+            // //$video->storedAt = $request->file('video')->hashName();
+            // $video->sizeKB = $request->file('video')->getSize();
 
-            $video->save();
+            // $video->save();
 
-            $raw = false;
-
-            if($request->has('raw')) {
-                $raw = true;
-                dump('Raw video uploaded');
-            }
-
-            ProcessVideo::dispatch($video, $hasThumb, $raw);
-
-            return $path;
         }
     }
 
@@ -181,5 +205,40 @@ class VideoController extends Controller
 
     public function totalStorageUsed() {
         return Video::all()->sum('sizeKB');
+    }
+
+    public function getKey() {
+        $token = 'pJpbyJ0lY6PFeDncvjTP1IZyj3onQd3tBcRCxwta';
+
+        $account = '6443cfbddcb48088578fb01d9fbb7aac';
+
+        $response = Http::withToken($token)
+            ->withHeaders([
+                'Access-Control-Allow-Origin' => '*',
+                'Access-Control-Allow-Methods' => 'POST',
+                'Access-Control-Allow-Headers' => '*'
+            ])
+            ->post('https://api.cloudflare.com/client/v4/accounts/'.$account.'/stream/direct_upload', [
+                "maxDurationSeconds" => 120,
+                "expiry" => Carbon::now()->add(5, 'minutes')->toRfc3339String(),
+
+            ]);
+
+        $uploadURL = "";
+        $uid = "";
+
+        if($response['success']) {
+
+            $video = new Video;
+            //$video->user_id = Auth::user()->id;
+            // $video->uid = $response['result']['uid'];
+            // $video->uploadUrl = $response['result']['uploadURL'];
+
+            //$video->store();
+
+            return $response['result'];
+        } else {
+            return $response['errors'];
+        }
     }
 }

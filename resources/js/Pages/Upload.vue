@@ -55,19 +55,46 @@
             HeaderLayout
         },
         props: {
-            errors: Object
+            errors: Object,
+        },
+        data() {
+            return {
+                uid: String,
+                urlId: String,
+            }
         },
         methods: {
             submit() {
-                var data = new FormData()
-                data.append('title', title.value || '')
-                data.append('description', description.value || '')
-                data.append('video', video.files[0] || '')
-                data.append('thumbnail', thumb.files[0] || '')
-                data.append('listed', listed.value || '')
-                data.append('raw', raw.value || '')
 
-                this.$inertia.post('/upload', data)
+                // var data = new FormData()
+                // data.append('title', title.value || '')
+                // data.append('description', description.value || '')
+                // data.append('link', video.files[0] || '')
+                // data.append('thumbnail', thumb.files[0] || '')
+                // data.append('listed', listed.value || '')
+                // data.append('raw', raw.value || '')
+                // this.$inertia.post('/upload', data)
+
+                var vid = new FormData()
+                vid.append('file', video.files[0] || '')
+
+                fetch('key')
+                .then(response => {
+                    response.json().then(function(result) {
+                        fetch(result[1], {
+                            method: "POST",
+                            body: vid,
+                        })
+                        .then(response => console.log('success'))
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                    })
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+
             }
         },
     }
