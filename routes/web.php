@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\UserController;
 use Inertia\Inertia;
 use App\Models\Video;
 use Iman\Streamer\VideoStreamer;
@@ -18,7 +19,8 @@ use Iman\Streamer\VideoStreamer;
 |
 */
 
-Route::get('/', [VideoController::class, 'index']);
+Route::get('/', [VideoController::class, 'index'])
+    ->name('home');
 
 Route::get('/video/{id}', [VideoController::class, 'show'])
     ->name('video');
@@ -52,4 +54,14 @@ Route::get('error', function() {
     Inertia::render('Error');
 })->name('error');
 
+//Channel page routes
+// Route::get('/channel', [UserController::class, "index"])
+//     ->middleware('auth');
+Route::get('/channel', [VideoController::class, "userVideos"])
+     ->middleware('auth')->name('channel');
 
+// Route::get('/channel/{id}', [UserController::class, "show"])
+//     ->middleware('auth');
+
+Route::post('/channel/{video}', [VideoController::class, "update"])
+    ->middleware('auth');

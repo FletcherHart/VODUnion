@@ -31,8 +31,9 @@ class VideoFactory extends Factory
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
             'views' => $this->faker->randomNumber,
-            'storedAt' => 'river.mp4',
-            'listed' => true,
+            'uploadUrl' => 'river.mp4',
+            'videoID' => $this->faker->numberBetween(0,100000),
+            'listed' => false,
             'sizeKB' => $this->faker->numberBetween(10, 100000)
         ];
     }

@@ -162,7 +162,7 @@ class VideoController extends Controller
     {
         $data = Video::where('videos.id', $id)
             ->join('users', "videos.user_id", "users.id")
-            ->first(['videos.title', 'videos.id', 'videos.description', 'videos.views', 'videos.storedAt', 'videos.created_at', 'users.name as uploader']);
+            ->first(['videos.title', 'videos.id', 'videos.description', 'videos.views', 'videos.created_at', 'users.name as uploader']);
         $comments = Comment::where('video_id', $id)
             ->join('users', "comments.user_id", "users.id")
             ->get(['comments.text', 'comments.created_at as date', 'users.name', 'users.id as user_id']);
@@ -189,7 +189,44 @@ class VideoController extends Controller
      */
     public function update(Request $request, Video $video)
     {
-        //
+        $user = Auth::user();
+
+        if($video->user_id != $user->id) {
+            return Redirect::route('home');
+        }
+
+        if($request->has('list')) {
+            if($video->title === null)
+                $request->validate(['title' => 'required|max:80']);
+            if($video->description === null)
+                $request->validate(['description' => 'required|max:2500']);
+        } else {
+            $request->validate([
+                'title' => 'max:80',
+                'description' => 'max:2500',
+            ]);
+        }
+
+        $request->validate([
+            'thumbnail' => 'max:2000000|mimetypes:image/jpeg,image/png'
+        ]);
+        
+        
+        if($request->has('title'))
+            $video->title = $request['title'];
+        if($request->has('description'))
+            $video->description =  $request['description'];
+        if($request->has('thumbnail')) { 
+            $path = $request->file('thumbnail')->store('public/thumbnails');
+            $video->thumbnail = $path;
+        }
+        if($request->has('list'))
+            $video->listed = true;
+
+        $video->save();
+
+        return Redirect::route('channel')
+            ->withInput();
     }
 
     /**
@@ -207,38 +244,16 @@ class VideoController extends Controller
         return Video::all()->sum('sizeKB');
     }
 
-    public function getKey() {
-        $token = 'pJpbyJ0lY6PFeDncvjTP1IZyj3onQd3tBcRCxwta';
+    public function userVideos() {
+        $user = Auth::user();
 
-        $account = '6443cfbddcb48088578fb01d9fbb7aac';
-
-        $response = Http::withToken($token)
-            ->withHeaders([
-                'Access-Control-Allow-Origin' => '*',
-                'Access-Control-Allow-Methods' => 'POST',
-                'Access-Control-Allow-Headers' => '*'
-            ])
-            ->post('https://api.cloudflare.com/client/v4/accounts/'.$account.'/stream/direct_upload', [
-                "maxDurationSeconds" => 120,
-                "expiry" => Carbon::now()->add(5, 'minutes')->toRfc3339String(),
-
-            ]);
-
-        $uploadURL = "";
-        $uid = "";
-
-        if($response['success']) {
-
-            $video = new Video;
-            //$video->user_id = Auth::user()->id;
-            // $video->uid = $response['result']['uid'];
-            // $video->uploadUrl = $response['result']['uploadURL'];
-
-            //$video->store();
-
-            return $response['result'];
-        } else {
-            return $response['errors'];
+        if (! Gate::allows('store-video', $user)) {
+            return Redirect::route('upgrade');
         }
+        
+        $videos = Video::where('user_id', Auth::user()->id)
+            ->get();
+        
+        return Inertia::render('Channel', ['data' => $videos]);
     }
 }
