@@ -4,6 +4,9 @@
             <div class="flex justify-center mt-16">
                 <h2 class="m-auto font-bold">Upload</h2>
             </div>
+            <div v-if="progress > 0" class="w-full flex justify-center">
+                Progress: {{progress.toFixed(1)}}%
+            </div>
             <div class="flex flex-col">
                 <div v-if="errors.storage" class="h-full w-full flex justify-center">
                     <mark>{{errors.storage}}</mark>
@@ -61,6 +64,8 @@
             return {
                 uid: String,
                 urlId: String,
+                progress: Number,
+                uploadError: String
             }
         },
         methods: {
@@ -78,24 +83,39 @@
                 var vid = new FormData()
                 vid.append('file', video.files[0] || '')
 
-                fetch('key')
-                .then(response => {
-                    response.json().then(function(result) {
-                        fetch(result[1], {
-                            method: "POST",
-                            body: vid,
-                        })
-                        .then(response => console.log('success'))
-                        .catch((error) => {
-                            console.error('Error:', error);
+                this.fetchKey().then( data => {
+                    const config = {
+                        onUploadProgress: progressEvent => this.displayProgress(progressEvent.loaded/progressEvent.total)
+                    }
+                    axios.post(data[1], vid, config)
+                        .catch(function(error) {
+                            if(error.response) {
+                                console.log(error.response.data);
+                                console.log(error.response.status);
+                                console.log(error.response.headers);
+                            } else if (error.request) {
+                                console.log(error.request);
+                            } else {
+                                console.log('Error', error.message);
+                            }
                         });
-                    })
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
 
+                })
+
+            },
+            fetchKey() {
+                return fetch('key')
+                    .then(response =>  response.json())
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            },
+
+            displayProgress(percent) {
+                console.log(percent*100);
+                this.progress = percent*100;
             }
+
         },
     }
 </script>
