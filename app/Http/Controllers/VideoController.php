@@ -44,7 +44,7 @@ class VideoController extends Controller
             return Redirect::route('upgrade');
         }
 
-        if(Video::where('user_id', Auth::user()->id)->count() >= 30) {
+        if(Video::where('user_id', Auth::user()->id)->count() >= 3) {
             return Redirect::route('error')
                 ->withErrors(['deny' => 
                 'Error: You have reached the maximum allotment of video uploads, and cannot upload more at this time.'
@@ -162,7 +162,7 @@ class VideoController extends Controller
     {
         $data = Video::where('videos.id', $id)
             ->join('users', "videos.user_id", "users.id")
-            ->first(['videos.title', 'videos.id', 'videos.description', 'videos.views', 'videos.created_at', 'users.name as uploader']);
+            ->first(['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.views', 'videos.created_at', 'users.name as uploader']);
         $comments = Comment::where('video_id', $id)
             ->join('users', "comments.user_id", "users.id")
             ->get(['comments.text', 'comments.created_at as date', 'users.name', 'users.id as user_id']);
