@@ -13,40 +13,15 @@
                 </div>
                 <div class="h-full w-full flex justify-center">
                     <form @submit.prevent="submit" class="grid grid-cols-1 xl:w-1/3">
-                        <input class="border-solid border-2 border-black-600" id="title" name="title" placeholder="Video Title" >
-                        <div v-if="errors.title"><mark>{{ errors.title }}</mark></div>
-
-                        <input class="border-solid border-2 border-black-600" id="description" name="description" rows=5 placeholder="Description">
-                        <div v-if="errors.description"><mark>{{ errors.description }}</mark></div>
-
                         <span>
                             <label for="video">Video: </label>
                             <input type="file" id="video" name="video" ref="video" accept=".mp4">
                         </span>
                         <div v-if="errors.video"><mark>{{ errors.video }}</mark></div>
-
-                        <span>
-                            <label for="thumb">Thumbnail: </label>
-                            <input type="file" id="thumb" name="thumb" ref="thumb" accept=".jpeg, .jpg, .png">
-                        </span>
-                        <div v-if="errors.thumb"><mark>{{ errors.thumb }}</mark></div>
-
-                        <span>
-                            <label for="listed">List video immediatly upon upload?</label>
-                            <input type="checkbox" name="listed" id="listed">
-                        </span>
-                        <div v-if="errors.listed"><mark>{{ errors.listed }}</mark></div>
-
-                        <span>
-                            <label for="raw">Maintain raw video quality?</label>
-                            <input type="checkbox" name="raw" id="raw">
-                        </span>
-
                         <button type="submit" class="bg-blue-600">Submit</button>
                     </form>
                 </div>
             </div>
-            
         </div>
     </header-layout>
 </template>
@@ -87,19 +62,19 @@
                     const config = {
                         onUploadProgress: progressEvent => this.displayProgress(progressEvent.loaded/progressEvent.total)
                     }
-                    axios.post(data[1], vid, config)
-                        .catch(function(error) {
-                            if(error.response) {
-                                console.log(error.response.data);
-                                console.log(error.response.status);
-                                console.log(error.response.headers);
-                            } else if (error.request) {
-                                console.log(error.request);
-                            } else {
-                                console.log('Error', error.message);
-                            }
-                        });
 
+                    uploadVideo(data[1], vid. config).catch(function(error) {
+                        if(error.response) {
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers);
+                        } else if (error.request) {
+                            console.log(error.request);
+                        } else {
+                            console.log('Error', error.message);
+                        }
+                    });
+                    
                 })
 
             },
@@ -110,7 +85,9 @@
                         console.error('Error:', error);
                     });
             },
-
+            uploadVideo(url, video, config) {
+                axios.post(data[1], vid, config);
+            },
             displayProgress(percent) {
                 console.log(percent*100);
                 this.progress = percent*100;
