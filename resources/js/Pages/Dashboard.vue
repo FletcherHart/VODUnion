@@ -5,7 +5,7 @@
                 <div class="thumb-container" v-for="video in data" :key="video.id">
                     <inertia-link class="flex flex-col" :href="'video/'+video.id">
                         <div class="w-full bg-black flex justify-center ">
-                            <img class="thumb" :src="'../storage/thumbnails/'+ video.storedAt + '.jpeg'">
+                            <img :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=270'">
                         </div>
                         {{video.title}}
                     </inertia-link>
