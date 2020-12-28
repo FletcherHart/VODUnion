@@ -51,7 +51,7 @@ Route::get('/stream/{id}', function($id) {
 });
 
 Route::get('error', function() {
-    Inertia::render('Error');
+    return Inertia::render('Error');
 })->name('error');
 
 //Channel page routes
