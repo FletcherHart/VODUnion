@@ -231,4 +231,7 @@ return [
 
     ],
 
+    'cloud_account' => env('CLOUD_ACCOUNT'),
+    'cloud_token' => env('CLOUD_TOKEN'),
+
 ];
