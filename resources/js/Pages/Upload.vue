@@ -8,16 +8,13 @@
                 Progress: {{progress.toFixed(1)}}%
             </div>
             <div class="flex flex-col">
-                <div v-if="errors.storage" class="h-full w-full flex justify-center">
-                    <mark>{{errors.storage}}</mark>
-                </div>
                 <div class="h-full w-full flex justify-center">
                     <form @submit.prevent="submit" class="grid grid-cols-1 xl:w-1/3">
                         <span>
                             <label for="video">Video: </label>
                             <input type="file" id="video" name="video" ref="video" accept=".mp4">
                         </span>
-                        <div v-if="errors.video"><mark>{{ errors.video }}</mark></div>
+                        <div v-if="errors.length > 0"><mark>{{ errors }}</mark></div>
                         <button type="submit" class="bg-blue-600">Submit</button>
                     </form>
                 </div>
@@ -33,19 +30,17 @@
             HeaderLayout
         },
         props: {
-            errors: Object,
         },
         data() {
             return {
-                uid: String,
-                urlId: String,
+                url: "",
                 progress: Number,
-                uploadError: String
+                errors: "",
             }
         },
         methods: {
             submit() {
-
+                this.errors = "";
                 // var data = new FormData()
                 // data.append('title', title.value || '')
                 // data.append('description', description.value || '')
@@ -57,42 +52,62 @@
 
                 var vid = new FormData()
                 vid.append('file', video.files[0] || '')
+                const config = {
+                    onUploadProgress: progressEvent => this.displayProgress(progressEvent.loaded/progressEvent.total)
+                }
 
-                this.fetchKey().then( data => {
-                    const config = {
-                        onUploadProgress: progressEvent => this.displayProgress(progressEvent.loaded/progressEvent.total)
-                    }
-
-                    uploadVideo(data[1], vid. config).catch(function(error) {
-                        if(error.response) {
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            console.log(error.response.headers);
-                        } else if (error.request) {
-                            console.log(error.request);
+                if(this.url.length == 0) {
+                    this.fetchKey().then( data => {
+                        console.log(data[1]);
+                        if(data == null) {
+                            this.errors = "There was an error processing your request. Please try again later.";
                         } else {
-                            console.log('Error', error.message);
+                            this.url = data[1];
+
+                            axios.post(this.url, vid, config).catch(error => {
+                                if(error.response) {
+                                    this.progress = 0;
+                                    console.log(error.response.data);
+                                    console.log(error.response.status);
+                                    if(error.response.status == 400) {
+                                        this.errors = "Error: The chosen file is not supported. Please use an mp4 file."
+                                    }
+                                }
+                            });
+
                         }
-                    });
-                    
-                })
+                        
+                        // .then( data => {
+                        //     this.displayError(data);
+                        //     console.log(this.errors.video);
+                        // });
+                        
+                    })
+                } else {
+                    axios.post(this.url, vid, config).catch(error => {
+                            if(error.response) {
+                                this.errors = error.message;
+                            }
+                        });
+                }
+                
 
             },
             fetchKey() {
                 return fetch('key')
-                    .then(response =>  response.json())
+                    .then(response =>  {
+                        if(response.status == 200)  {
+                            return response.json();
+                        }
+                    })
                     .catch((error) => {
                         console.error('Error:', error);
                     });
             },
-            uploadVideo(url, video, config) {
-                axios.post(data[1], vid, config);
-            },
             displayProgress(percent) {
-                console.log(percent*100);
+                //console.log(percent*100);
                 this.progress = percent*100;
-            }
-
+            },
         },
     }
 </script>
