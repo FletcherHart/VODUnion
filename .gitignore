@@ -16,3 +16,4 @@ public/css/app.css
 node_modules/*
 phpunit.xml
 public/open-iconic/*
+.env.testing
