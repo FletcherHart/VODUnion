@@ -10,7 +10,7 @@ use App\Models\User;
 
 class CommentTest extends TestCase
 {
-    use DatabaseMigrations;
+    use DatabaseMigrations, RefreshDatabase;
 
     public function setUp():void {
         parent::setUp();
