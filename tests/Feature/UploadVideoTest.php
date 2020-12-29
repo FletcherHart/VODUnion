@@ -47,30 +47,6 @@ class UploadVideoTest extends TestCase
         $response->assertSessionHasErrors(['deny']);
     }
 
-    // public function test_deny_upload_if_video_greater_than_2gb_in_size() {
-    //     $this->be($user = User::factory(['role_id'=>2])->create());
-    //     $file = UploadedFile::fake()->create('vid.mp4', 2000000001, 'video/mp4');
-    //     $video = ['video' => $file, 
-    //     'title' => $this->faker->sentence,
-    //     'description' => $this->faker->paragraph,
-    //     'listed' => true];
-    //     $response = $this->post('/upload', $video);
-
-    //     $response->assertSessionHasErrors(['video']);
-    // }
-
-    // public function test_deny_if_file_is_not_of_type_video() {
-    //     $this->be($user = User::factory(['role_id'=>2])->create());
-    //     $file = UploadedFile::fake()->create('vid.jpg', 20, 'image/jpeg');
-    //     $video = ['video' => $file, 
-    //     'title' => $this->faker->sentence,
-    //     'description' => $this->faker->paragraph,
-    //     'listed' => true];
-    //     $response = $this->post('/upload', $video);
-
-    //     $response->assertSessionHasErrors(['video']);
-    // }
-
     public function test_authenticated_user_with_uploader_role_can_view_upload_page()
     {
         $this->be($user = User::factory(['role_id'=>2])->create());
@@ -78,22 +54,6 @@ class UploadVideoTest extends TestCase
 
         $response->assertStatus(200);
     }
-
-    // public function test_successful_upload_adds_video_data_to_database() {
-    //     $this->be($user = User::factory(['role_id'=>2])->create());
-    //     //$file = UploadedFile::fake()->create('vid.mp4', 50, 'video/mp4');
-    //     $video = ['title' => $this->faker->sentence,
-    //     'description' => $this->faker->paragraph,
-    //     'listed' => true];
-    //     $response = $this->post('/upload', $video);
-
-    //     $this->assertDatabaseHas('videos', [
-    //         'title' => $video['title'],
-    //         'description' => $video['description'],
-    //         'user_id' => $user->id,
-    //         'sizeKB' => $file->getSize()
-    //     ]);
-    // }
 
     public function test_user_with_3_uploaded_videos_cannot_view_upload_page() {
         $this->be($user = User::factory(['role_id'=>2])->create());
