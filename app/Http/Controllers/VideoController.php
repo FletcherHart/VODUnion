@@ -28,7 +28,7 @@ class VideoController extends Controller
      */
     public function index()
     {
-        $data = Video::latest()->get();
+        $data = Video::latest()->where('listed', 1)->get();
 
         return Inertia::render('Dashboard', ['data'=> $data]);
     }
@@ -76,7 +76,7 @@ class VideoController extends Controller
         } else {
 
             $token = config('app.cloud_token');
-            
+
             $account = config('app.cloud_account');
 
             $response = Http::withToken($token)
@@ -162,7 +162,20 @@ class VideoController extends Controller
     {
         $data = Video::where('videos.id', $id)
             ->join('users', "videos.user_id", "users.id")
-            ->first(['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.views', 'videos.created_at', 'users.name as uploader']);
+            ->first(['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.created_at', 'users.name as uploader']);
+        
+        $response = Http::withToken(config('app.cloud_token'))
+            ->withHeaders([
+                'Access-Control-Allow-Origin' => '*',
+                'Access-Control-Allow-Methods' => 'POST',
+                'Access-Control-Allow-Headers' => '*'
+            ])
+            ->get('https://api.cloudflare.com/client/v4/accounts/'
+            . config('app.cloud_account') .
+            '/stream/analytics/views?metrics=totalImpressions&filters=videoId==' . $data['videoID']);
+
+        $data['views'] = $response['result']['totals']['totalImpressions'];
+
         $comments = Comment::where('video_id', $id)
             ->join('users', "comments.user_id", "users.id")
             ->get(['comments.text', 'comments.created_at as date', 'users.name', 'users.id as user_id']);
