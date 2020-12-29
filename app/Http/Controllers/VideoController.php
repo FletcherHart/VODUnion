@@ -44,7 +44,7 @@ class VideoController extends Controller
             return Redirect::route('upgrade');
         }
 
-        if(Video::where('user_id', Auth::user()->id)->count() >= 3) {
+        if(Video::where('user_id', Auth::user()->id)->count() >= 3 && Auth::user()->role->id < 4) {
             return Redirect::route('error')
                 ->withErrors(['deny' => 
                 'Error: You have reached the maximum allotment of video uploads, and cannot upload more at this time.'
@@ -75,9 +75,9 @@ class VideoController extends Controller
             abort(403);
         } else {
 
-            $token = 'pJpbyJ0lY6PFeDncvjTP1IZyj3onQd3tBcRCxwta';
-
-            $account = '6443cfbddcb48088578fb01d9fbb7aac';
+            $token = config('app.cloud_token');
+            
+            $account = config('app.cloud_account');
 
             $response = Http::withToken($token)
                 ->withHeaders([
