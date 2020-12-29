@@ -20,7 +20,7 @@ class ReadVideoTest extends TestCase
     public function setUp(): void {
         parent::setUp();
         $this->seed();
-        $this->video = Video::factory()->create();
+        $this->video = Video::factory(['listed'=>true])->create();
     }
 
     public function test_user_can_browse_videos()
