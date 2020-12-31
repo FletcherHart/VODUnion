@@ -209,10 +209,8 @@ class VideoController extends Controller
         }
 
         if($request->has('list')) {
-            if($video->title === null)
-                $request->validate(['title' => 'required|max:80']);
-            if($video->description === null)
-                $request->validate(['description' => 'required|max:2500']);
+            $request->validate(['title' => 'required|max:80']);
+            $request->validate(['description' => 'required|max:2500']);
         } else {
             $request->validate([
                 'title' => 'max:80',
@@ -231,15 +229,17 @@ class VideoController extends Controller
             $video->description =  $request['description'];
         if($request->has('thumbnail')) { 
             $path = $request->file('thumbnail')->store('public/thumbnails');
-            $video->thumbnail = $path;
+            $video->thumbnail = $request->file('thumbnail')->hashname();
         }
         if($request->has('list'))
             $video->listed = true;
+        else 
+            $video->listed = false;
 
         $video->save();
 
-        return Redirect::route('channel')
-            ->withInput();
+        return Redirect::back()
+            ->with('updateStatus','Operation Completed');
     }
 
     /**

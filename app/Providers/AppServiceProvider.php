@@ -30,5 +30,11 @@ class AppServiceProvider extends ServiceProvider
                 'loggedIn' => Auth::check(),
             ];
         });
+
+        Inertia::share('flash', function () {
+            return [
+                'updateStatus' => session('updateStatus'),
+            ];
+        });
     }
 }

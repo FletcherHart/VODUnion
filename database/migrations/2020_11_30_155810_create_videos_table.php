@@ -20,6 +20,7 @@ class CreateVideosTable extends Migration
             $table->string('description', 10000)->nullable();
             $table->string('videoID');
             $table->string('uploadUrl');
+            $table->string('thumbnail')->nullable();
             $table->unsignedBigInteger('views')->default(0);
             $table->boolean('listed')->default(0);
             $table->unsignedBigInteger('sizeKB')->default(0);

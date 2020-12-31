@@ -1,6 +1,6 @@
 <template>
   <main class="h-full"> 
-    <header class="grid lg:grid-cols-8 md:grid-cols-6 grid-cols-2 lg:gap-4 bg-gray-700 fixed top-0 w-full h-16 z-50">
+    <header class="grid lg:grid-cols-8 md:grid-cols-6 grid-cols-2 lg:gap-4 bg-gray-700 fixed top-0 w-full h-16 z-30">
         <div class="flex flex-row items-center justify-center">
           <button @click="nav">
             <img class="icon" src="/open-iconic/svg/menu.svg">
