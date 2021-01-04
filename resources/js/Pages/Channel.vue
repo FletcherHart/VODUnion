@@ -40,7 +40,7 @@
                             <label for="title">Title: </label>
                             <input class="border-solid border-2 border-black-600" id="title" name="title" placeholder="Video Title" :value="video.title">
                         </span>
-                        <!-- <div v-if="errors.title"><mark>{{ errors.title }}</mark></div> -->
+                        <div v-if="errors.title && formID === video.id"><mark>{{ errors.title }}</mark></div>
 
                         <span class="w-full">
                             <label for="description">Description:</label>
@@ -65,13 +65,6 @@
                     </form>
                 </div>
             </div>
-        </div>
-        <div v-on:click="clearErrors" v-if="Object.keys(this.errors).length > 0" class="fixed top-0 left-0 flex items-center justify-center w-full h-full cursor-pointer">
-            <div v-bind:class="{'lg:ml-52 md:ml-40 sm:ml-24': !this.$store.state.isHidden}"
-            class="lg:mb-52 md:mb-40 sm:mb-24 bg-white opacity-100 w-1/3 h-1/3 z-50">
-                <mark>{{Object.values(errors)[0]}}</mark>
-            </div>
-            <div class="bg-black opacity-75 w-full h-full absolute top-0 left-0"></div>
         </div>
         <div v-on:click="clearStatus" v-if="$page.flash.updateStatus" class="fixed top-0 left-0 flex items-center justify-center w-full h-full cursor-pointer">
             <div v-bind:class="{'lg:ml-52 md:ml-40 sm:ml-24': !this.$store.state.isHidden}"
@@ -102,12 +95,14 @@
                 progress: 0,
                 uploadErrors: "",
                 videoList: 0,
+                formID: 0,
             }
         },
         methods: {
             submit(id) {
-                var data = new FormData(document.getElementById(id))
-                this.$inertia.post('/channel/'+id, data)
+                this.formID = id;
+                var data = new FormData(document.getElementById(id));
+                this.$inertia.post('/channel/'+id, data);
             },
             clearErrors() {
                 this.errors = new Object;
@@ -119,7 +114,7 @@
                 this.$inertia.delete('/channel/'+id);
             },
             uploadModalDisplay() {
-                this.uploadModal = !this.uploadModal
+                this.uploadModal = !this.uploadModal;
             },
             upload() {
                 this.uploadErrors = "";
