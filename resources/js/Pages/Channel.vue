@@ -66,12 +66,12 @@
                 </div>
             </div>
         </div>
-        <div v-on:click="clearStatus" v-if="$page.flash.updateStatus" class="fixed top-0 left-0 flex items-center justify-center w-full h-full cursor-pointer">
-            <div v-bind:class="{'lg:ml-52 md:ml-40 sm:ml-24': !this.$store.state.isHidden}"
-            class="lg:mb-52 md:mb-40 sm:mb-24 bg-white opacity-100 w-1/3 h-1/3 z-50">
+        <div v-on:click="clearStatus" v-if="$page.flash.updateStatus" 
+        class="fixed bottom-24 left-1/2 bg-gray-900 h-16 w-48 flex items-center justify-center cursor-pointer"
+        v-bind:class="{'-ml-24': this.$store.state.isHidden}">
+            <div class="text-center text-white">
                 {{$page.flash.updateStatus}}
             </div>
-            <div class="bg-black opacity-75 w-full h-full absolute top-0 left-0"></div>
         </div>
 
     </header-layout>
