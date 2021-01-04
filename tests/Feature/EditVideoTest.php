@@ -170,4 +170,28 @@ class EditVideoTest extends TestCase
         $this->assertDatabaseHas('videos', ['id' => $video->id, 'description' => $video->description, 'listed' => 1]);
     }
 
+    public function test_owner_can_delete_video() {
+        //NOTE: does not test that video is deleted from Cloudflare, only from database.
+        $this->be($user = User::factory(['role_id'=>2])->create());
+
+        $video = Video::factory(['user_id' => $user->id])->create();
+
+        $response = $this->delete('/channel/'. $video->id);
+
+        $this->assertDatabaseMissing('videos', ['id' => $video->id]);
+    }
+
+    public function test_user_other_than_owner_cannot_delete_video() {
+        //NOTE: does not test that video is deleted from Cloudflare, only from database.
+        $owner = User::factory(['role_id'=>2])->create();
+
+        $video = Video::factory(['user_id' => $owner->id])->create();
+
+        $this->be($user = User::factory(['role_id'=>2])->create());
+
+        $response = $this->delete('/channel/'. $video->id);
+
+        $this->assertDatabaseHas('videos', ['id' => $video->id]);
+    }
+
 }

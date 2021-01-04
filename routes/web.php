@@ -65,3 +65,6 @@ Route::get('/channel', [VideoController::class, "userVideos"])
 
 Route::post('/channel/{video}', [VideoController::class, "update"])
     ->middleware('auth');
+
+Route::delete('/channel/{video}', [VideoController::class, "destroy"])
+    ->middleware('auth');

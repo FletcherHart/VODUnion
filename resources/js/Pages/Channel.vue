@@ -9,6 +9,9 @@
                             <img v-else :src="'/storage/thumbnails/' + video.thumbnail">
                         </div>
                     </div>
+                    <div>
+                        <button v-on:click="deleteVideo(video.id)">Delete</button>
+                    </div>
                     <form @submit.prevent="submit(video.id)" class="grid grid-cols-1 col-span-2" :id="video.id">
                         <span>
                             <label for="title">Title: </label>
@@ -77,6 +80,9 @@
             },
             clearStatus() {
                 this.$page.flash.updateStatus = null;
+            },
+            deleteVideo(id) {
+                this.$inertia.delete('/channel/'+id);
             }
         },
     }
