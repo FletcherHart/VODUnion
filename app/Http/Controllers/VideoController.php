@@ -209,8 +209,10 @@ class VideoController extends Controller
         }
 
         if($request->has('list')) {
-            $request->validate(['title' => 'required|max:80']);
-            $request->validate(['description' => 'required|max:2500']);
+            if($video->title == null)
+                $request->validate(['title' => 'required|max:80']);
+            if($video->description == null)
+                $request->validate(['description' => 'required|max:2500']);
         } else {
             $request->validate([
                 'title' => 'max:80',
@@ -250,7 +252,18 @@ class VideoController extends Controller
      */
     public function destroy(Video $video)
     {
-        //
+        if($video->user_id != Auth::user()->id) {
+            return Redirect::route('home');
+        }
+
+        $response = Http::withToken(config('app.cloud_token'))
+            ->delete('https://api.cloudflare.com/client/v4/accounts/'
+            . config('app.cloud_account') .
+            '/stream/' . $video->videoID);
+
+        $video->delete();
+
+        return Redirect::back();
     }
 
     public function totalStorageUsed() {
