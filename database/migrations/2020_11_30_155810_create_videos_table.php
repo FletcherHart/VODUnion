@@ -25,6 +25,7 @@ class CreateVideosTable extends Migration
             $table->boolean('listed')->default(0);
             $table->unsignedBigInteger('sizeKB')->default(0);
             $table->timestamps();
+            $table->string('status')->default('uploading');
 
             $table->foreign('user_id')->references('id')->on('users');
         });

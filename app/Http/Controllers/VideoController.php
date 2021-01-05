@@ -279,7 +279,36 @@ class VideoController extends Controller
         
         $videos = Video::where('user_id', Auth::user()->id)
             ->get();
+
+        $videos->each(function($item, $key) {
+           $item = $this->status($item);
+        });
         
         return Inertia::render('Channel', ['data' => $videos]);
+    }
+
+    public function status(Video $video) {
+
+        //$video = Video::where('videoID', $request['uid'])->first();
+        if($video->status != 'done') {
+            $response = Http::withToken(config('app.cloud_token'))
+            ->get('https://api.cloudflare.com/client/v4/accounts/'
+            . config('app.cloud_account') .
+            '/stream/'. $video['videoID']);
+            
+            $status = $response['result']['status']['state'];
+
+            if($status == 'ready') {
+                $video->status = "done";
+                $video->save();
+                return $video;
+            } else if ($status = 'inProgress') {
+                $video->status = "pending";
+                $video->save();
+                return $video;
+            }
+        }
+
+        return $video;
     }
 }

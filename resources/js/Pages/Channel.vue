@@ -34,6 +34,7 @@
                     </div>
                     <div>
                         <button v-on:click="deleteVideo(video.id)">Delete</button>
+                        <div class="bg-gray-400">Status: {{video.status}}</div>
                     </div>
                     <form @submit.prevent="submit(video.id)" class="grid grid-cols-1 col-span-2" :id="video.id">
                         <span>
