@@ -209,6 +209,10 @@ class VideoController extends Controller
         }
 
         if($request->has('list')) {
+            if($video->status != 'done') {
+                return Redirect::back()
+                    ->withErrors(['status' => 'Video must finish processing before it can be listed']);
+            }
             if($video->title == null)
                 $request->validate(['title' => 'required|max:80']);
             if($video->description == null)

@@ -194,4 +194,16 @@ class EditVideoTest extends TestCase
         $this->assertDatabaseHas('videos', ['id' => $video->id]);
     }
 
+    public function test_owner_can_not_list_video_if_not_done_processing() {
+        $owner = User::factory(['role_id'=>2])->create();
+
+        $this->be($owner);
+
+        $video = Video::factory(['user_id' => $owner->id, 'status' => 'uploading'])->create();
+
+        $response = $this->post('/channel/'. $video->id, ['list' => true]);
+
+        $response->assertSessionHasErrors();
+    }
+
 }

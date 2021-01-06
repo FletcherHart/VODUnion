@@ -34,7 +34,8 @@ class VideoFactory extends Factory
             'uploadUrl' => 'river.mp4',
             'videoID' => $this->faker->numberBetween(0,100000),
             'listed' => false,
-            'sizeKB' => $this->faker->numberBetween(10, 100000)
+            'sizeKB' => $this->faker->numberBetween(10, 100000),
+            'status' => 'done'
         ];
     }
 }
