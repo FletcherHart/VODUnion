@@ -28,11 +28,9 @@ Route::get('/video/{id}', [VideoController::class, 'show'])
 Route::post('/video/{video}/comment', [CommentController::class, 'store'])
     ->middleware('auth');
 
-Route::post('/upload', [VideoController::class, 'store'])
-    ->middleware('auth');
-
-Route::get('/upload', [VideoController::class, 'create'])
-    ->name('upload')->middleware('auth');
+Route::get('/upload', function() {
+    return Redirect::route('channel');
+});
 
 Route::get('/key', [VideoController::class, 'store']);
 

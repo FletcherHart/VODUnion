@@ -30,7 +30,7 @@
                 </jet-responsive-nav-link>
             </form>
             <hr>
-            <jet-responsive-nav-link href="/upload">
+            <jet-responsive-nav-link href="/channel">
                 <div class="grid grid-cols-3 flex items-center">
                     <img class="icon inline grid-span-1" src="/open-iconic/svg/data-transfer-upload.svg" alt="upload icon">
                     <p>Upload</p>
