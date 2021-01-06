@@ -70,13 +70,15 @@
                 </div>
             </div>
         </div>
-        <div v-on:click="clearStatus" v-if="$page.flash.updateStatus" 
-        class="fixed bottom-24 left-1/2 bg-gray-900 h-16 w-48 flex items-center justify-center cursor-pointer"
-        v-bind:class="{'-ml-24': this.$store.state.isHidden}">
-            <div class="text-center text-white">
-                {{$page.flash.updateStatus}}
+        <transition name="fade">
+            <div v-on:click="clearStatus" v-if="$page.flash.updateStatus" 
+            class="fixed bottom-24 left-1/2 bg-gray-900 h-16 w-48 flex items-center justify-center cursor-pointer"
+            v-bind:class="{'-ml-24': this.$store.state.isHidden}">
+                <div class="text-center text-white">
+                    {{$page.flash.updateStatus}}
+                </div>
             </div>
-        </div>
+        </transition>
 
     </header-layout>
 </template>
@@ -101,6 +103,13 @@
                 videoList: 0,
                 formID: 0,
             }
+        },
+        updated: function() {
+            this.$nextTick(function() {
+                if(this.$page.flash.updateStatus) {
+                    setTimeout(() => {  this.clearStatus(); }, 3000);
+                }
+            })
         },
         methods: {
             submit(id) {
