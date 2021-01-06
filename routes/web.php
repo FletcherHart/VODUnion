@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UpgradeCodeController;
 use Inertia\Inertia;
 use App\Models\Video;
 use Iman\Streamer\VideoStreamer;
@@ -34,10 +35,6 @@ Route::get('/upload', function() {
 
 Route::get('/key', [VideoController::class, 'store']);
 
-Route::get('/upgrade', function() {
-    return Inertia::render('Upgrade');
-})->middleware('auth')->name('upgrade');
-
 // Route::middleware(['auth:sanctum', 'verified'])->get('/', [VideoController::class, 'index'])
 //     ->name('dashboard');
 
@@ -65,4 +62,12 @@ Route::post('/channel/{video}', [VideoController::class, "update"])
     ->middleware('auth');
 
 Route::delete('/channel/{video}', [VideoController::class, "destroy"])
+    ->middleware('auth');
+
+//Upgrade routes
+Route::get('/upgrade', function() {
+    return Inertia::render('Upgrade');
+})->middleware('auth')->name('upgrade');
+
+Route::post('/upgrade', [UpgradeCodeController::class, 'store'])
     ->middleware('auth');
