@@ -32,38 +32,41 @@
                             <img v-else :src="'/storage/thumbnails/' + video.thumbnail">
                         </div>
                     </div>
-                    <div>
-                        <button v-on:click="deleteVideo(video.id)">Delete</button>
-                        <div class="bg-gray-400">Status: {{video.status}}</div>
+                    <div class="col-span-2">
+                        <div class="flex flex-row justify-between">
+                            <div v-if="video.status == 'done'" class="bg-green-400 rounded p-1 w-min">Ready</div>
+                            <div v-else-if="video.status == 'processing'" class="bg-gray-400 rounded p-1 w-min">Ready</div>
+                            <button v-on:click="deleteVideo(video.id)" class="bg-red-600 rounded p-1 text-white">Delete</button>
+                        </div>
+                        <form @submit.prevent="submit(video.id)" class="grid grid-cols-1" :id="video.id">
+                            <span>
+                                <label for="title">Title: </label>
+                                <input class="border-solid border-2 border-black-600" id="title" name="title" placeholder="Video Title" :value="video.title">
+                            </span>
+                            <div v-if="errors.title && formID === video.id"><mark>{{ errors.title }}</mark></div>
+
+                            <span class="w-full">
+                                <label for="description">Description:</label>
+                                <textarea class="border-solid border-2 border-black-600 resize-none" id="description" name="description" rows=5 placeholder="Description" :value="video.description"/>
+                            </span>
+                            <!-- <div v-if="errors.description"><mark>{{ errors.description }}</mark></div> -->
+
+                            <span>
+                                <label for="thumbnail">Thumbnail: </label>
+                                <input type="file" id="thumbnail" name="thumbnail" ref="thumbnail" accept=".jpeg, .jpg, .png">
+                            </span>
+                            <!-- <div v-if="errors.thumb"><mark>{{ errors.thumb }}</mark></div> -->
+
+                            <span v-if="video.status === 'done'">
+                                <label for="list">Visibile:</label>
+                                <input v-if="video.listed == 0" type="checkbox" name="list" id="list">
+                                <input v-else type="checkbox" name="list" id="list" checked>
+                            </span>
+                            <div v-if="errors.list"><mark>{{ errors.list }}</mark></div>
+
+                            <button type="submit" class="bg-blue-600">Submit</button>
+                        </form>
                     </div>
-                    <form @submit.prevent="submit(video.id)" class="grid grid-cols-1 col-span-2" :id="video.id">
-                        <span>
-                            <label for="title">Title: </label>
-                            <input class="border-solid border-2 border-black-600" id="title" name="title" placeholder="Video Title" :value="video.title">
-                        </span>
-                        <div v-if="errors.title && formID === video.id"><mark>{{ errors.title }}</mark></div>
-
-                        <span class="w-full">
-                            <label for="description">Description:</label>
-                            <textarea class="border-solid border-2 border-black-600 resize-none" id="description" name="description" rows=5 placeholder="Description" :value="video.description"/>
-                        </span>
-                        <!-- <div v-if="errors.description"><mark>{{ errors.description }}</mark></div> -->
-
-                        <span>
-                            <label for="thumbnail">Thumbnail: </label>
-                            <input type="file" id="thumbnail" name="thumbnail" ref="thumbnail" accept=".jpeg, .jpg, .png">
-                        </span>
-                        <!-- <div v-if="errors.thumb"><mark>{{ errors.thumb }}</mark></div> -->
-
-                        <span>
-                            <label for="list">Visibile:</label>
-                            <input v-if="video.listed == 0" type="checkbox" name="list" id="list">
-                            <input v-else type="checkbox" name="list" id="list" checked>
-                        </span>
-                        <div v-if="errors.list"><mark>{{ errors.list }}</mark></div>
-
-                        <button type="submit" class="bg-blue-600">Submit</button>
-                    </form>
                 </div>
             </div>
         </div>
