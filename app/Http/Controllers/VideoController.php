@@ -282,6 +282,7 @@ class VideoController extends Controller
         }
         
         $videos = Video::where('user_id', Auth::user()->id)
+            ->where('status', '!=', 'uploading')
             ->get();
 
         $videos->each(function($item, $key) {
