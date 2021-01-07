@@ -40,27 +40,19 @@ class VideoController extends Controller
      */
     public function create()
     {
-        if(Auth::user()->role->id == 1) {
+        if (! Gate::allows('store-video', Auth::user())) {
             return Redirect::route('upgrade');
         }
+        
+        $videos = Video::where('user_id', Auth::user()->id)
+            ->where('status', '!=', 'uploading')
+            ->get();
 
-        if(Video::where('user_id', Auth::user()->id)->count() >= 3 && Auth::user()->role->id < 4) {
-            return Redirect::route('error')
-                ->withErrors(['deny' => 
-                'Error: You have reached the maximum allotment of video uploads, and cannot upload more at this time.'
-            ]);
-        }
-        if($this->totalStorageUsed() >= 20000000000)
-        {
-            return Redirect::route('error')
-                ->withErrors(['deny' => 'Error: Max storage space occupied. No videos can be uploaded at this time.']);
-        }
-        if(Video::where('user_id', Auth::user()->id)->sum('sizeKB') >= 2000000000) {
-            return Redirect::route('error')
-                ->withErrors(['deny' => 'Error: You have reached the maximum 2GB of storage per user.']);
-        }
-
-        return Inertia::render('Upload');
+        $videos->each(function($item, $key) {
+           $item = $this->status($item);
+        });
+        
+        return Inertia::render('Channel', ['data' => $videos]);
     }
 
     /**
@@ -74,6 +66,23 @@ class VideoController extends Controller
         if (! Gate::allows('store-video', Auth::user())) {
             abort(403);
         } else {
+
+            if(Video::where('user_id', Auth::user()->id)->count() >= 3 && Auth::user()->role->id < 4) {
+                return Redirect::back()
+                    ->withErrors(['deny' => 
+                    'Error: You have reached the maximum allotment of video uploads, and cannot upload more at this time.'
+                ]);
+            }
+            if($this->totalStorageUsed() >= 20000000000)
+            {
+                return Redirect::back()
+                    ->withErrors(['deny' => 'Error: Max storage space occupied. No videos can be uploaded at this time.']);
+            }
+            if(Video::where('user_id', Auth::user()->id)->sum('sizeKB') >= 2000000000) {
+                return Redirect::back()
+                    ->withErrors(['deny' => 'Error: You have reached the maximum 2GB of storage per user.']);
+            }
+
 
             $token = config('app.cloud_token');
 
@@ -272,24 +281,6 @@ class VideoController extends Controller
 
     public function totalStorageUsed() {
         return Video::all()->sum('sizeKB');
-    }
-
-    public function userVideos() {
-        $user = Auth::user();
-
-        if (! Gate::allows('store-video', $user)) {
-            return Redirect::route('upgrade');
-        }
-        
-        $videos = Video::where('user_id', Auth::user()->id)
-            ->where('status', '!=', 'uploading')
-            ->get();
-
-        $videos->each(function($item, $key) {
-           $item = $this->status($item);
-        });
-        
-        return Inertia::render('Channel', ['data' => $videos]);
     }
 
     public function status(Video $video) {

@@ -52,7 +52,7 @@ Route::get('error', function() {
 //Channel page routes
 // Route::get('/channel', [UserController::class, "index"])
 //     ->middleware('auth');
-Route::get('/channel', [VideoController::class, "userVideos"])
+Route::get('/channel', [VideoController::class, "create"])
      ->middleware('auth')->name('channel');
 
 // Route::get('/channel/{id}', [UserController::class, "show"])

@@ -29,38 +29,30 @@ class UploadVideoTest extends TestCase
         $response->assertStatus(302);
     }
 
-    public function test_authenticated_user_with_viewer_role_sees_upgrade_page_when_accessing_upload_page()
+    public function test_authenticated_user_with_viewer_role_sees_upgrade_page_when_accessing_channel_page()
     {
         $this->be($user = User::factory(['role_id'=>1])->create());
-        $response = $this->get('/upload');
+        $response = $this->get('/channel');
 
         $response->assertRedirect('upgrade');
     }
 
-    public function test_if_more_than_20gb_already_stored_user_is_redirected_from_upload_page_to_error_page() {
+    public function test_prevent_upload_if_more_than_20gb_already_stored() {
 
         Video::factory(['sizeKB' => 20000000001])->create();
 
         $this->be($user = User::factory(['role_id'=>2])->create());
-        $response = $this->get('/upload');
+        $response = $this->get('/key');
 
         $response->assertSessionHasErrors(['deny']);
     }
 
-    public function test_authenticated_user_with_uploader_role_can_view_upload_page()
-    {
-        $this->be($user = User::factory(['role_id'=>2])->create());
-        $response = $this->get('/upload');
-
-        $response->assertStatus(200);
-    }
-
-    public function test_user_with_3_uploaded_videos_cannot_view_upload_page() {
+    public function test_user_with_3_uploaded_videos_cannot_upload_more_videos() {
         $this->be($user = User::factory(['role_id'=>2])->create());
 
         Video::factory(['user_id' => $user->id])->count(3)->create();
 
-        $response = $this->get('/upload');
+        $response = $this->get('/key');
 
         $response->assertSessionHasErrors(['deny']);
     }
@@ -70,7 +62,7 @@ class UploadVideoTest extends TestCase
 
         Video::factory(['user_id' => $user->id, 'sizeKB' => 2000000000])->create();
 
-        $response = $this->get('/upload');
+        $response = $this->get('/key');
 
         $response->assertSessionHasErrors(['deny']);
     }
