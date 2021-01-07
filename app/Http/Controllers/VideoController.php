@@ -45,12 +45,14 @@ class VideoController extends Controller
         }
         
         $videos = Video::where('user_id', Auth::user()->id)
-            ->where('status', '!=', 'uploading')
             ->get();
 
-        $videos->each(function($item, $key) {
+        foreach($videos as $key => $item) {
            $item = $this->status($item);
-        });
+           if($item->status == "uploading") {
+               $videos->forget($key);
+           }
+        };
         
         return Inertia::render('Channel', ['data' => $videos]);
     }
@@ -83,80 +85,50 @@ class VideoController extends Controller
                     ->withErrors(['deny' => 'Error: You have reached the maximum 2GB of storage per user.']);
             }
 
+            $video = Video::where('user_id', Auth::user()->id)
+                ->where('status', 'uploading')
+                ->first();
 
-            $token = config('app.cloud_token');
+            if($video == null){
+                $token = config('app.cloud_token');
 
-            $account = config('app.cloud_account');
+                $account = config('app.cloud_account');
 
-            $response = Http::withToken($token)
-                ->withHeaders([
-                    'Access-Control-Allow-Origin' => '*',
-                    'Access-Control-Allow-Methods' => 'POST',
-                    'Access-Control-Allow-Headers' => '*'
-                ])
-                ->post('https://api.cloudflare.com/client/v4/accounts/'.$account.'/stream/direct_upload', [
-                    "maxDurationSeconds" => 120,
-                    "expiry" => Carbon::now()->add(5, 'minutes')->toRfc3339String(),
+                $response = Http::withToken($token)
+                    ->withHeaders([
+                        'Access-Control-Allow-Origin' => '*',
+                        'Access-Control-Allow-Methods' => 'POST',
+                        'Access-Control-Allow-Headers' => '*'
+                    ])
+                    ->post('https://api.cloudflare.com/client/v4/accounts/'.$account.'/stream/direct_upload', [
+                        "maxDurationSeconds" => 120,
+                        "expiry" => Carbon::now()->add(5, 'minutes')->toRfc3339String(),
 
-                ]);
+                    ]);
 
-            $uploadURL = "";
-            $uid = "";
+                $uploadURL = "";
+                $uid = "";
 
-            if($response['success']) {
+                if($response['success']) {
 
-                $video = new Video;
-                $video->user_id = Auth::user()->id;
-                $video->videoID = $response['result']['uid'];
-                $video->uploadUrl = $response['result']['uploadURL'];
-
-                $video->save();
-
-                return [$response['result']['uid'], $response['result']['uploadURL']];
-
-                return Redirect::route('upload')
-                    ->withInput()
-                    ->with('stuff', 'Hello');
-
-                return Redirect::route('upload')
-                    ->withInput()
-                    ->with('data', ['uid' => $response['result']['uid'], 'url' => $response['result']['uploadURL']]);
-            } else {
-                return Redirect::route('upload')
-                    ->withInput()
-                    ->withErrors(['key' => 'Error: Cannot retrieve key.']);
+                    $video = new Video;
+                    $video->user_id = Auth::user()->id;
+                    $video->videoID = $response['result']['uid'];
+                    $video->uploadUrl = $response['result']['uploadURL'];
+    
+                    $video->save();    
+                    
+                } else {
+                    return Redirect::back()
+                        ->withInput()
+                        ->withErrors(['deny' => 'Error: Cannot retrieve key.']);
+                }
             }
+
+            return Redirect::back()
+                ->withInput()
+                ->with('url', $video->uploadUrl);
             
-
-            // $validator = $request->validate([
-            //     'title' => 'required|max:80',
-            //     'description' => 'required|max:2500',
-            //     'video' => 'required|max:200000000|mimetypes:video/mp4',
-            //     'listed' => 'required',
-            //     'thumbnail' => 'max:2000000|mimetypes:image/jpeg,image/png'
-            // ]);
-            
-            // $hasThumb = false;
-            // if($request->has('thumbnail')) {
-            //     $path = $request->file('thumbnail')->storeAs('public/thumbnails', $request->file('video')->hashName() . '.jpeg');
-
-            //     if($path === false) {
-            //         return Redirect::route('upload')
-            //             ->withErrors(['storage' => 'Error: Thumbnail could not be stored. Please try again later.'])
-            //             ->withInput();
-            //     }
-            //     $hasThumb = true;
-            // }
-
-            // $video = new Video;
-            // $video->title = $request->title;
-            // $video->description = $request->description;
-            // //$video->listed = $request->listed;
-            // $video->user_id = Auth::user()->id;
-            // //$video->storedAt = $request->file('video')->hashName();
-            // $video->sizeKB = $request->file('video')->getSize();
-
-            // $video->save();
 
         }
     }
@@ -298,7 +270,7 @@ class VideoController extends Controller
                 $video->status = "done";
                 $video->save();
                 return $video;
-            } else if ($status = 'inProgress') {
+            } else if ($status == 'inProgress') {
                 $video->status = "pending";
                 $video->save();
                 return $video;

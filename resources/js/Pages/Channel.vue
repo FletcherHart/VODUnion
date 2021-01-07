@@ -1,6 +1,9 @@
 <template>
     <header-layout>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 h-full">
+            <div v-if="errors.deny">
+                <mark>{{errors.deny}}</mark>
+            </div>
             <div class="overflow-hidden flex flex-col justify-center">
                 <div> 
                     <button v-on:click="uploadModalDisplay">Upload</button>
@@ -13,7 +16,7 @@
                         </div>
                         <div class="flex flex-col">
                             <div class="h-full w-full flex justify-center">
-                                <form @submit.prevent="upload" class="grid grid-cols-1 xl:w-1/3">
+                                <form @submit.prevent="fetchKey" class="grid grid-cols-1 xl:w-1/3">
                                     <span>
                                         <label for="video">Video: </label>
                                         <input type="file" id="video" name="video" ref="video" accept=".mp4">
@@ -97,7 +100,6 @@
         data() {
             return {
                 uploadModal: Boolean,
-                url: "",
                 progress: 0,
                 uploadErrors: "",
                 videoList: 0,
@@ -138,56 +140,29 @@
                     onUploadProgress: progressEvent => this.displayProgress(progressEvent.loaded/progressEvent.total)
                 }
 
-                if(this.url.length == 0) {
-                    this.fetchKey().then( data => {
-                        console.log(data[1]);
-                        if(data == null) {
-                            this.uploadErrors = "There was an error processing your request. Please try again later.";
-                        } else {
-                            this.url = data[1];
-
-                            axios.post(this.url, vid, config).then(response => {
-                               this.progress = 0;
-                               this.uploadModalDisplay();
-                               this.$refs.video.value = null;
-                               Inertia.reload();
-                            }).catch(error => {
-                                if(error.response) {
-                                    this.progress = 0;
-                                    console.log(error.response.data);
-                                    console.log(error.response.status);
-                                    if(error.response.status == 400) {
-                                        this.uploadErrors = "Error: The chosen file is not supported. Please use an mp4 file."
-                                    }
-                                }
-                            });
-
-                        }
-                        
-                    })
-                } else {
-                    axios.post(this.url, vid, config).then(x => {
+                if(this.$page.flash.url) {
+                    axios.post(this.$page.flash.url, vid, config).then(response => {
                         this.progress = 0;
                         this.uploadModalDisplay();
                         this.$refs.video.value = null;
                         Inertia.reload();
                     }).catch(error => {
-                            if(error.response) {
-                                this.uploadErrors = error.message;
+                        if(error.response) {
+                            this.progress = 0;
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            if(error.response.status == 400) {
+                                this.uploadErrors = "Error: The chosen file is not supported. Please use an mp4 file."
                             }
-                        });
+                        }
+                    });
                 }
             },
             fetchKey() {
-                return fetch('key')
-                    .then(response =>  {
-                        if(response.status == 200)  {
-                            return response.json();
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                    });
+                this.$inertia.post('key', { preserveState: true });
+                if(this.$page.flash.url) {
+                    this.upload();
+                }
             },
             displayProgress(percent) {
                 this.progress = percent*100;

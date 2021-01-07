@@ -35,6 +35,8 @@ Route::get('/upload', function() {
 
 Route::get('/key', [VideoController::class, 'store']);
 
+Route::post('/key', [VideoController::class, 'store']);
+
 // Route::middleware(['auth:sanctum', 'verified'])->get('/', [VideoController::class, 'index'])
 //     ->name('dashboard');
 
