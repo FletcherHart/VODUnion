@@ -6,7 +6,10 @@
             </div>
             <div class="overflow-hidden flex flex-col justify-center">
                 <div> 
-                    <button v-on:click="uploadModalDisplay">Upload</button>
+                    <span>
+                        <button v-on:click="uploadModalDisplay">Upload</button>
+                        <button v-on:click="reloadPage">Reload Videos</button>
+                    </span>
                     <div v-bind:class="{'hidden': uploadModal}">
                         <div class="flex justify-center">
                             <h2 class="m-auto font-bold">Upload</h2>
@@ -28,12 +31,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="w-full grid grid-cols-3 gap-4 border-2 border-black" v-for="video in data" :key="video.id">
+                <div class="w-full grid grid-cols-3 gap-4 border-2 border-black" v-for="video in videos" :key="video.id">
                     <div class="w-40 sm:w-auto">
                         <div class="w-full bg-black flex justify-center ">
                             <img v-if="!video.thumbnail" :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=270'">
                             <img v-else :src="'/storage/thumbnails/' + video.thumbnail">
                         </div>
+                        <div>Date Uploaded: {{setTime(video.created_at)}}</div>
                     </div>
                     <div class="col-span-2">
                         <div class="flex flex-row justify-between">
@@ -89,12 +93,13 @@
 <script>
     import HeaderLayout from '@/Layouts/HeaderLayout'
     import { Inertia } from '@inertiajs/inertia'
+    import moment from 'moment'
     export default {
         components: {
             HeaderLayout,
         },
         props: {
-            data: Array,
+            videos: Array,
             errors: Object
         },
         data() {
@@ -104,6 +109,7 @@
                 uploadErrors: "",
                 videoList: 0,
                 formID: 0,
+                url: "",
             }
         },
         updated: function() {
@@ -111,7 +117,12 @@
                 if(this.$page.flash.updateStatus) {
                     setTimeout(() => {  this.clearStatus(); }, 3000);
                 }
-            })
+            });
+            if(this.$page.flash.url) {
+                this.url = this.$page.flash.url;
+                this.$page.flash.url = null;
+                this.upload();
+            }
         },
         methods: {
             submit(id) {
@@ -140,32 +151,34 @@
                     onUploadProgress: progressEvent => this.displayProgress(progressEvent.loaded/progressEvent.total)
                 }
 
-                if(this.$page.flash.url) {
-                    axios.post(this.$page.flash.url, vid, config).then(response => {
+                axios.post(this.url, vid, config).then(response => {
+                    this.progress = 0;
+                    this.uploadModalDisplay();
+                    this.$refs.video.value = null;
+                    Inertia.reload();
+                }).catch(error => {
+                    if(error.response) {
                         this.progress = 0;
-                        this.uploadModalDisplay();
-                        this.$refs.video.value = null;
-                        Inertia.reload();
-                    }).catch(error => {
-                        if(error.response) {
-                            this.progress = 0;
-                            console.log(error.response.data);
-                            console.log(error.response.status);
-                            if(error.response.status == 400) {
-                                this.uploadErrors = "Error: The chosen file is not supported. Please use an mp4 file."
-                            }
+                        console.log(error.response.data);
+                        console.log(error.response.status);
+                        if(error.response.status == 400) {
+                            this.uploadErrors = "Error: The chosen file is not supported. Please use an mp4 file."
                         }
-                    });
-                }
+                    }
+                });
             },
             fetchKey() {
                 this.$inertia.post('key', { preserveState: true });
-                if(this.$page.flash.url) {
-                    this.upload();
-                }
             },
             displayProgress(percent) {
                 this.progress = percent*100;
+            },
+            reloadPage() {
+                Inertia.reload();
+            },
+            setTime(date) {
+                moment.locale();
+                return moment(date).format('MMMM Do YYYY, hh:mm a');
             }
         },
     }

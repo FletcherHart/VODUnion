@@ -44,17 +44,19 @@ class VideoController extends Controller
             return Redirect::route('upgrade');
         }
         
-        $videos = Video::where('user_id', Auth::user()->id)
+        $videos = Video::where([['user_id', Auth::user()->id],['status', '!=', 'done']])
+            ->orderByDesc('created_at')
             ->get();
 
         foreach($videos as $key => $item) {
            $item = $this->status($item);
-           if($item->status == "uploading") {
-               $videos->forget($key);
-           }
         };
+
+        $videos = Video::where([['user_id', Auth::user()->id],['status', '=', 'done']])
+            ->orderByDesc('created_at')
+            ->get();
         
-        return Inertia::render('Channel', ['data' => $videos]);
+        return Inertia::render('Channel', ['videos' => $videos]);
     }
 
     /**
@@ -89,25 +91,23 @@ class VideoController extends Controller
                 ->where('status', 'uploading')
                 ->first();
 
+            if($video != null) {
+                if (Carbon::now()->gt(Carbon::parse($video->created_at)->add(5, 'minutes'))) {
+                    $response = Http::withToken(config('app.cloud_token'))
+                        ->delete('https://api.cloudflare.com/client/v4/accounts/'
+                        . config('app.cloud_account') .
+                        '/stream/' . $video->videoID);
+                    $video->delete();
+                    //$response = $this.getUploadUrl();
+                }
+            }
+
             if($video == null){
-                $token = config('app.cloud_token');
-
-                $account = config('app.cloud_account');
-
-                $response = Http::withToken($token)
-                    ->withHeaders([
-                        'Access-Control-Allow-Origin' => '*',
-                        'Access-Control-Allow-Methods' => 'POST',
-                        'Access-Control-Allow-Headers' => '*'
-                    ])
-                    ->post('https://api.cloudflare.com/client/v4/accounts/'.$account.'/stream/direct_upload', [
-                        "maxDurationSeconds" => 120,
-                        "expiry" => Carbon::now()->add(5, 'minutes')->toRfc3339String(),
-
-                    ]);
 
                 $uploadURL = "";
                 $uid = "";
+
+                $response = $this->getUploadUrl();
 
                 if($response['success']) {
 
@@ -129,8 +129,27 @@ class VideoController extends Controller
                 ->withInput()
                 ->with('url', $video->uploadUrl);
             
-
         }
+    }
+
+    public function getUploadUrl() {
+        $token = config('app.cloud_token');
+
+        $account = config('app.cloud_account');
+
+        $response = Http::withToken($token)
+            ->withHeaders([
+                'Access-Control-Allow-Origin' => '*',
+                'Access-Control-Allow-Methods' => 'POST',
+                'Access-Control-Allow-Headers' => '*'
+            ])
+            ->post('https://api.cloudflare.com/client/v4/accounts/'.$account.'/stream/direct_upload', [
+                "maxDurationSeconds" => 120,
+                "expiry" => Carbon::now()->add(5, 'minutes')->toRfc3339String(),
+
+            ]);
+        
+        return $response;
     }
 
     /**
