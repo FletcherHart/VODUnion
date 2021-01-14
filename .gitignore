@@ -17,3 +17,4 @@ node_modules/*
 phpunit.xml
 public/open-iconic/*
 .env.testing
+mysql/*
