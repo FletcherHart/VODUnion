@@ -16,7 +16,7 @@ services:
       depends_on:
         - php
         - mysql
-        - vue
+        # - vue
       links:
         - php
       networks:
@@ -53,14 +53,14 @@ services:
       networks:
         - laravel
 
-    # vue:
-    #   build: 
-    #     context: .
-    #     dockerfile: Dockerfile2
-    #   ports: 
-    #     - 8080:8080
-    #   volumes:
-    #     - ./:/var/www/html
+    vue:
+      build: 
+        context: .
+        dockerfile: Dockerfile2
+      ports: 
+        - 8080:8080
+      volumes:
+        - ./:/var/www/html
     
     # mailhog:
     #       image: 'mailhog/mailhog:latest'
