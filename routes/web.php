@@ -73,3 +73,8 @@ Route::get('/upgrade', function() {
 
 Route::post('/upgrade', [UpgradeCodeController::class, 'store'])
     ->middleware('auth');
+
+Route::post('/admin/upgradeKeys', [UpgradeCodeController::class, 'generate']);
+
+Route::get('/admin/upgradeKeys', [UpgradeCodeController::class, 'index'])
+    ->middleware('auth')->name('upgradeKeys');

@@ -29,5 +29,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('store-video', function (User $user) {
             return $user->role->id >= 2;
         });
+
+        Gate::define('upgrade-key', function (User $user) {
+            return $user->role->id == 4;
+        });
     }
 }
