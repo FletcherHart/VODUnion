@@ -6,11 +6,13 @@
             </div>
             <div class="overflow-hidden flex flex-col justify-center">
                 <div> 
-                    <span>
-                        <button v-on:click="uploadModalDisplay">Upload</button>
+                    <span class="flex justify-between">
                         <button v-on:click="reloadPage">Reload Videos</button>
+                        <button v-on:click="uploadModalDisplay" class="bg-green-400 w-10 flex justify-center items-center rounded">
+                            <img class="icon" src="/open-iconic/svg/plus.svg" alt="add video icon">
+                        </button>
                     </span>
-                    <div v-bind:class="{'hidden': uploadModal}">
+                    <div class="m-10" v-bind:class="{'hidden': uploadModal}">
                         <div class="flex justify-center">
                             <h2 class="m-auto font-bold">Upload</h2>
                         </div>
