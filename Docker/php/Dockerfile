@@ -1,4 +1,4 @@
-FROM php:8-fpm
+FROM php:7.4-fpm
 
 COPY composer.lock composer.json /var/www/html/
 
@@ -18,8 +18,12 @@ COPY . /var/www/html
 # Copy existing application directory permissions
 COPY --chown=www:www . /var/www/html
 
+#RUN composer update
+
 # Change current user to www
 USER www
+
+RUN php artisan migrate --force
 
 EXPOSE 9000
 CMD ["php-fpm"]
