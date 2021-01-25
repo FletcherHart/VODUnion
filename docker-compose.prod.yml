@@ -40,12 +40,12 @@ services:
 
     php:
       build:
-        context: ./Docker
+        context: .
         dockerfile: ./php/Dockerfile
       container_name: app
       working_dir: /var/www/html
-      # volumes:
-      #   - ./:/var/www/html
+      volumes:
+        - ../../:/var/www/html
       ports:
         - "9000:9000"
       networks:
