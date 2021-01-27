@@ -10,8 +10,8 @@
         
         <form class="sm:visible invisible 
         flex items-center justify-center 
-        lg:col-span-2 md:col-span-2 sm:col-span-1 lg:col-start-7 md:col-start-5">
-          <input class="w-4/5 h-6" type="text" name="search">
+        lg:col-span-2 md:col-span-2 sm:col-span-1 lg:col-start-7 md:col-start-5" @submit.prevent="search">
+          <input class="w-4/5 h-6" type="text" id="search">
           <button class="icon-button h-6 w-8 flex items-center justify-center bg-gray-600">
             <img class="icon" src="/open-iconic/svg/magnifying-glass.svg">
           </button>
@@ -63,6 +63,12 @@
         },
         onResize() {
           this.windowWidth = window.innerWidth
+        },
+        search() {
+          var term = document.getElementById('search').value;
+          if(term != "") {
+            this.$inertia.get('/search/'+term);
+          }
         }
     },
     beforeMount() {

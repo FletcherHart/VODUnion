@@ -298,4 +298,11 @@ class VideoController extends Controller
 
         return $video;
     }
+
+    public function search($request) {
+        $videos = Video::where('title', $request)
+            ->orWhere('title', 'like', '%'.$request.'%')->get();
+
+        return Inertia::render('Dashboard.vue', ['data' => $videos, 'search' => $request]);
+    }
 }

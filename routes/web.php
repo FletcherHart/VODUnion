@@ -78,3 +78,8 @@ Route::post('/admin/upgradeKeys', [UpgradeCodeController::class, 'generate']);
 
 Route::get('/admin/upgradeKeys', [UpgradeCodeController::class, 'index'])
     ->middleware('auth')->name('upgradeKeys');
+
+Route::get('search/{term}', [VideoController::class, "search"]);
+Route::get('search', function() {
+    return redirect()->route('home');
+});
