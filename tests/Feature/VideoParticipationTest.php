@@ -23,15 +23,15 @@ class VideoParticipationTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function test_auth_user_can_make_comment_on_video() {
-        $this->be($user = User::factory()->create());
+    // public function test_auth_user_can_make_comment_on_video() {
+    //     $this->be($user = User::factory()->create());
 
-        $video = Video::factory()->create();
-        $comment = Comment::factory()->make();
-        $response = $this->postJson('/video/'.$video->id .'/comment', $comment->toArray());
+    //     $video = Video::factory()->create();
+    //     $comment = Comment::factory()->make();
+    //     $response = $this->postJson('/video/'.$video->id .'/comment', $comment->toArray());
 
-        $this->get("/video/".$video->id)
-            ->assertSee($comment->text);
-    }
+    //     $this->get("/video/".$video->id)
+    //         ->assertSee($comment->text);
+    // }
 
 }
