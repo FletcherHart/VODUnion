@@ -44,7 +44,7 @@ class AdminPanelTest extends TestCase
         $user = User::factory(['role_id'=>1])->create();
         $response = $this->post('/admin/ban/'.$user->id);
 
-        $this->assertDatabaseHas('banned_users', ['user_id'=> $user->id]);
+        $this->assertDatabaseHas('users', ['id'=> $user->id, 'banned'=>1]);
     }
 
     public function test_non_admin_cannot_ban_user()
@@ -53,13 +53,13 @@ class AdminPanelTest extends TestCase
         $user = User::factory(['role_id'=>1])->create();
         $response = $this->post('/admin/ban/'.$user->id);
 
-        $this->assertDatabaseMissing('banned_users', ['user_id'=> $user->id]);
+        $this->assertDatabaseMissing('users', ['id'=> $user->id, 'banned'=>1]);
     }
 
     public function test_admin_can_view_all_users() {
         $this->be($admin = User::factory(['role_id'=>4])->create());
         $users = User::factory(['role_id'=>2])->count(3)->create();
-        $response = $this->post('/admin/listUsers'.$user->id);
+        $response = $this->post('/admin/listUsers');
 
         $response->assertSee($users[0]->name);
         $response->assertSee($users[1]->name);

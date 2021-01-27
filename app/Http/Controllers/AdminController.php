@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -21,6 +22,16 @@ class AdminController extends Controller
         }
 
         return Inertia::render('AdminPanel');
+    }
+
+    public function listUsers() {
+        if (! Gate::allows('admin', Auth::user())) {
+            return Redirect::route('home');
+        }
+
+        $users = User::all();
+
+        return Inertia::render('AdminPanel', ['users' => $users]);
     }
 
     
@@ -57,9 +68,9 @@ class AdminController extends Controller
             return Redirect::route('home');
         }
 
-        DB::table('banned_users')->insertOrIgnore([
-            ['user_id' => $user->id]
-        ]);
+        $user->banned = 1;
+        $user->ban_date = Carbon::now();
+        $user->save();
     }
 
 }
