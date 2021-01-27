@@ -23,6 +23,9 @@ class CreateUsersTable extends Migration
             $table->text('profile_photo_path')->nullable();
             $table->foreignId('role_id')->default(1);
             $table->timestamps();
+            $table->boolean('banned')->default(0);
+            $table->date('ban_date')->nullable();
+            $table->string('ban_reason')->nullable();
 
             $table->foreign('role_id')->references('id')->on('roles');//->onUpdate('cascade')->onDelete('cascade');
         });
