@@ -30,7 +30,7 @@ class AuthServiceProvider extends ServiceProvider
             return $user->role->id >= 2;
         });
 
-        Gate::define('upgrade-key', function (User $user) {
+        Gate::define('admin', function (User $user) {
             return $user->role->id == 4;
         });
     }
