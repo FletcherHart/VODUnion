@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\UpgradeCode;
 use Database\Seeders\RolesSeeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class UpgradeAccountTest extends TestCase
 {
@@ -22,6 +23,12 @@ class UpgradeAccountTest extends TestCase
     public function setUp(): void {
         parent::setUp();
         $this->seed(RolesSeeder::class);
+
+        $this->code =  hash('md5', Str::random(10));
+
+        DB::table('upgrade_codes')->insertOrIgnore([
+            ['upgrade_code' =>  $this->code]
+        ]);
     }
 
     public function test_user_without_key_does_not_change_role()
@@ -42,18 +49,16 @@ class UpgradeAccountTest extends TestCase
 
     public function test_user_with_invalid_key_is_given_error()
     {
-        $code = UpgradeCode::factory()->create();
         $this->be($user = User::factory(['role_id'=>1])->create());
         $response = $this->post('/upgrade', ['code'=> 'fake code']);
-
+        
         $response->assertSessionHasErrors();
     }
 
     public function test_user_with_valid_key_has_role_upgraded()
     {
-        $code = UpgradeCode::factory()->create();
         $this->be($user = User::factory(['role_id'=>1])->create());
-        $response = $this->post('/upgrade', ['code'=> $code->upgrade_code]);
+        $response = $this->post('/upgrade', ['code'=> $this->code]);
 
         $this->assertDatabaseHas('users', ['id'=> $user->id, 'role_id'=>2]);
     }

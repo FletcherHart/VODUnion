@@ -4,10 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\UpgradeCodeController;
+use App\Http\Controllers\AdminController;
 use Inertia\Inertia;
 use App\Models\Video;
+use App\Models\UpgradeCode;
 use Iman\Streamer\VideoStreamer;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,20 +68,42 @@ Route::post('/channel/{video}', [VideoController::class, "update"])
 Route::delete('/channel/{video}', [VideoController::class, "destroy"])
     ->middleware('auth');
 
-//Upgrade routes
+//Upgrade route
 Route::get('/upgrade', function() {
     return Inertia::render('Upgrade');
 })->middleware('auth')->name('upgrade');
 
-Route::post('/upgrade', [UpgradeCodeController::class, 'store'])
-    ->middleware('auth');
+Route::post('/upgrade', function(Request $request) {
+    $request->validate(['code' => 'required|max:50']);
 
-Route::post('/admin/upgradeKeys', [UpgradeCodeController::class, 'generate']);
+    $code = UpgradeCode::where('upgrade_code', $request['code'])->first();
 
-Route::get('/admin/upgradeKeys', [UpgradeCodeController::class, 'index'])
-    ->middleware('auth')->name('upgradeKeys');
+    if($code != null) {
+        Auth::user()->role_id = 2;
+        Auth::user()->save();
+        $code->delete();
 
+        return redirect()->route('home');
+    } else {
+        return redirect()->back()->withErrors(['code' => 'Code is invalid. Please use a valid code.']);
+    }
+})->middleware('auth');
+
+//Search routes
 Route::get('search/{term}', [VideoController::class, "search"]);
 Route::get('search', function() {
     return redirect()->route('home');
 });
+
+//Admin routes
+Route::get('/admin/', [AdminController::class, 'index'])
+    ->middleware('auth')->name('adminPanel');
+
+Route::post('/admin/upgradeKeys', [AdminController::class, 'generateKeys']);
+
+Route::get('/admin/upgradeKeys', [AdminController::class, 'listKeys'])
+    ->middleware('auth')->name('upgradeKeys');
+
+Route::post('/admin/ban/{user}', [AdminController::class, 'banUser']);
+
+Route::post('/admin/listUsers', [AdminController::class, 'listUsers']);

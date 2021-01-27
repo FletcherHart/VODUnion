@@ -4,18 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\UpgradeCode;
+use App\Models\User;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
-class UpgradeCodeController extends Controller
+class AdminController extends Controller
 {
 
     public function index() {
+        if (! Gate::allows('admin', Auth::user())) {
+            return Redirect::route('home');
+        }
 
-        if (! Gate::allows('upgrade-key', Auth::user())) {
+        return Inertia::render('AdminPanel');
+    }
+
+    
+    public function listKeys() {
+
+        if (! Gate::allows('admin', Auth::user())) {
             return Redirect::route('home');
         }
 
@@ -24,9 +35,9 @@ class UpgradeCodeController extends Controller
         return Inertia::render('UpgradeKeys', ['upgradeKeys'=> $data]);
     }
 
-    public function generate() {
+    public function generateKeys() {
 
-        if (! Gate::allows('upgrade-key', Auth::user())) {
+        if (! Gate::allows('admin', Auth::user())) {
             return Redirect::route('home');
         }
 
@@ -40,23 +51,15 @@ class UpgradeCodeController extends Controller
         return redirect()->back();
     }
 
-    public function store(Request $request) {
-        $request->validate(['code' => 'required|max:50']);
+    public function banUser(User $user) {
 
-        $code = UpgradeCode::where('upgrade_code', $request['code'])->first();
-
-        if($code != null) {
-            Auth::user()->role_id = 2;
-            Auth::user()->save();
-            $code->delete();
-
-            return redirect()->route('home');
-        } else {
-            return redirect()->back()->withErrors(['code' => 'Code is invalid. Please use a valid code.']);
+        if (! Gate::allows('admin', Auth::user())) {
+            return Redirect::route('home');
         }
+
+        DB::table('banned_users')->insertOrIgnore([
+            ['user_id' => $user->id]
+        ]);
     }
 
-    public function destroy(UpgradeCode $code) {
-
-    }
 }
