@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Video;
 use App\Models\UpgradeCode;
 use Database\Seeders\RolesSeeder;
 use Illuminate\Support\Facades\DB;
@@ -66,4 +67,43 @@ class AdminPanelTest extends TestCase
         $response->assertSee($users[2]->name);
     }
 
+    public function test_admin_can_view_listed_and_unlisted_videos() {
+        $this->be($admin = User::factory(['role_id'=>4])->create());
+        $video1 = Video::factory(['listed'=>0])->create();
+        $video2 = Video::factory(['listed'=>1])->create();
+        $response = $this->post('/admin/listVideos');
+
+        $response->assertSee($video1->title);
+        $response->assertSee($video2->title);
+    }
+
+    public function test_admin_can_view_owners_of_listed_and_unlisted_videos() {
+        $this->be($admin = User::factory(['role_id'=>4])->create());
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+        $video1 = Video::factory(['user_id' => $user1->id, 'listed'=>0])->create();
+        $video2 = Video::factory(['user_id' => $user2->id, 'listed'=>0])->create();
+        $response = $this->post('/admin/listVideos');
+
+        $response->assertSee($user1->name);
+        $response->assertSee($user2->name);
+    }
+
+    public function test_non_admin_cannot_delete_any_users_video_with_admin_delete() {
+        $this->be($admin = User::factory(['role_id'=>2])->create());
+        $user = User::factory()->create();
+        $video = Video::factory(['user_id' => $user->id])->create();
+        $response = $this->post('/admin/deleteVideo/'.$video->id);
+
+        $response->assertRedirect('');
+    }
+
+    public function test_admin_can_delete_any_users_video() {
+        $this->be($admin = User::factory(['role_id'=>4])->create());
+        $user = User::factory()->create();
+        $video = Video::factory(['user_id' => $user->id])->create();
+        $response = $this->post('/admin/deleteVideo/'.$video->id);
+
+        $this->assertDatabaseMissing('videos', ['id'=> $video->id]);
+    }
 }
