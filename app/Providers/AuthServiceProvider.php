@@ -33,5 +33,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('admin', function (User $user) {
             return $user->role->id == 4;
         });
+
+        Gate::define('banned', function (User $user) {
+            return $user->banned == true;
+        });
     }
 }
