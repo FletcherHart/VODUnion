@@ -106,8 +106,8 @@ Route::get('/admin/upgradeKeys', [AdminController::class, 'listKeys'])
 
 Route::post('/admin/ban/{user}', [AdminController::class, 'banUser']);
 
-Route::post('/admin/listUsers', [AdminController::class, 'listUsers']);
+Route::get('/admin/listUsers', [AdminController::class, 'listUsers']);
 
-Route::post('/admin/listVideos', [AdminController::class, 'listVideos']);
+Route::get('/admin/listVideos', [AdminController::class, 'listVideos']);
 
 Route::post('/admin/deleteVideo/{video}', [AdminController::class, 'deleteVideo']);
