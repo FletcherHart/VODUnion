@@ -2,21 +2,21 @@
     <main class="pt-5 bg-gray-400 h-screen fixed top-16 lg:w-52 md:w-40 sm:w-24">
         <jet-responsive-nav-link class="w-full" :href="route('home')">
             <div class="grid grid-cols-3 flex items-center">
-                <img class="icon inline grid-span-1" src="/open-iconic/svg/home.svg" alt="home icon">
+                <img class="icon inline col-span-1" src="/open-iconic/svg/home.svg" alt="home icon">
                 <p>Home</p>
             </div>
         </jet-responsive-nav-link>
         <div v-if="!$page.auth.user.loggedIn">
           <responsive-nav-link  :href="route('login')" @submit.prevent="login">
             <div class="grid grid-cols-3 flex items-center">
-                <img class="icon inline grid-span-1" src="/open-iconic/svg/account-login.svg" alt="login icon">
+                <img class="icon inline col-span-1" src="/open-iconic/svg/account-login.svg" alt="login icon">
                 <p>Login</p>
             </div>
           </responsive-nav-link>
           <responsive-nav-link href="/register">
             <div class="grid grid-cols-3 flex items-center">
-                <img class="icon inline grid-span-1" src="/open-iconic/svg/clipboard.svg" alt="register icon">
-                <p>Register</p>
+                <img class="icon inline col-span-1" src="/open-iconic/svg/clipboard.svg" alt="register icon">
+                <p class="col-span-2">Register</p>
             </div>
           </responsive-nav-link>
         </div>
@@ -24,16 +24,16 @@
             <form @submit.prevent="logout">
                 <jet-responsive-nav-link class="object-top" as="button">
                     <div class="grid grid-cols-3 flex items-center">
-                        <img class="icon inline grid-span-1" src="/open-iconic/svg/account-logout.svg" alt="logout icon">
-                        <p>Logout</p>
+                        <img class="icon inline col-span-1" src="/open-iconic/svg/account-logout.svg" alt="logout icon">
+                        <p class="col-span-2">Logout</p>
                     </div>
                 </jet-responsive-nav-link>
             </form>
             <hr>
             <jet-responsive-nav-link href="/channel">
                 <div class="grid grid-cols-3 flex items-center">
-                    <img class="icon inline grid-span-1" src="/open-iconic/svg/data-transfer-upload.svg" alt="upload icon">
-                    <p>Upload</p>
+                    <img class="icon inline col-span-1" src="/open-iconic/svg/data-transfer-upload.svg" alt="upload icon">
+                    <p class="col-span-2">My Videos</p>
                 </div>
             </jet-responsive-nav-link>    
             

@@ -10,12 +10,18 @@
         
         <form class="sm:visible invisible 
         flex items-center justify-center 
-        lg:col-span-2 md:col-span-2 sm:col-span-1 lg:col-start-7 md:col-start-5" @submit.prevent="search">
+        lg:col-span-2 md:col-span-2 sm:col-span-1 lg:col-start-4 md:col-start-2" @submit.prevent="search">
           <input class="w-4/5 h-6" type="text" id="search">
           <button class="icon-button h-6 w-8 flex items-center justify-center bg-gray-600">
             <img class="icon" src="/open-iconic/svg/magnifying-glass.svg">
           </button>
         </form>
+
+        <div class="flex items-center text-white font-medium lg:col-start-7 md:col-start-5 col-span-2">
+            <div>Have questions? Email 
+              <a href="mailto:support@vodunion.com">support@vodunion.com</a>
+            </div>
+        </div>
 
     </header>
     <article class="h-full pt-20">

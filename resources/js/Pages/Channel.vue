@@ -60,10 +60,10 @@
                             </span>
                             <!-- <div v-if="errors.description"><mark>{{ errors.description }}</mark></div> -->
 
-                            <span>
+                            <!-- <span>
                                 <label for="thumbnail">Thumbnail: </label>
                                 <input type="file" id="thumbnail" name="thumbnail" ref="thumbnail" accept=".jpeg, .jpg, .png">
-                            </span>
+                            </span> -->
                             <!-- <div v-if="errors.thumb"><mark>{{ errors.thumb }}</mark></div> -->
 
                             <span v-if="video.status === 'done'">
