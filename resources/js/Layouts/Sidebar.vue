@@ -6,7 +6,7 @@
                 <p>Home</p>
             </div>
         </jet-responsive-nav-link>
-        <div v-if="!$page.auth.user.loggedIn">
+        <div v-if="!$page.props.auth.user.loggedIn">
           <responsive-nav-link  :href="route('login')" @submit.prevent="login">
             <div class="grid grid-cols-3 flex items-center">
                 <img class="icon inline col-span-1" src="/open-iconic/svg/account-login.svg" alt="login icon">

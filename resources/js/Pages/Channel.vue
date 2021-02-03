@@ -80,11 +80,11 @@
             </div>
         </div>
         <transition name="fade">
-            <div v-on:click="clearStatus" v-if="$page.flash.updateStatus" 
+            <div v-on:click="clearStatus" v-if="$page.props.flash.updateStatus" 
             class="fixed bottom-24 left-1/2 bg-gray-900 h-16 w-48 flex items-center justify-center cursor-pointer"
             v-bind:class="{'-ml-24': this.$store.state.isHidden}">
                 <div class="text-center text-white">
-                    {{$page.flash.updateStatus}}
+                    {{$page.props.flash.updateStatus}}
                 </div>
             </div>
         </transition>
@@ -116,13 +116,13 @@
         },
         updated: function() {
             this.$nextTick(function() {
-                if(this.$page.flash.updateStatus) {
+                if(this.$page.props.flash.updateStatus) {
                     setTimeout(() => {  this.clearStatus(); }, 3000);
                 }
             });
-            if(this.$page.flash.url) {
-                this.url = this.$page.flash.url;
-                this.$page.flash.url = null;
+            if(this.$page.props.flash.url) {
+                this.url = this.$page.props.flash.url;
+                this.$page.props.flash.url = null;
                 this.upload();
             }
         },
@@ -136,7 +136,7 @@
                 this.errors = new Object;
             },
             clearStatus() {
-                this.$page.flash.updateStatus = null;
+                this.$page.props.flash.updateStatus = null;
             },
             deleteVideo(id) {
                 this.$inertia.delete('/channel/'+id);
