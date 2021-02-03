@@ -111,3 +111,9 @@ Route::get('/admin/listUsers', [AdminController::class, 'listUsers']);
 Route::get('/admin/listVideos', [AdminController::class, 'listVideos']);
 
 Route::post('/admin/deleteVideo/{video}', [AdminController::class, 'deleteVideo']);
+
+
+//Info pages
+Route::get('/about', function() {
+    return Inertia::render('Info', ['status'=>'about']);
+})->name('about');

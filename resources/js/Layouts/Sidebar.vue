@@ -35,9 +35,16 @@
                     <img class="icon inline col-span-1" src="/open-iconic/svg/data-transfer-upload.svg" alt="upload icon">
                     <p class="col-span-2">My Videos</p>
                 </div>
-            </jet-responsive-nav-link>    
-            
+            </jet-responsive-nav-link>       
         </div>
+        <div class="h-full relative">
+            <jet-responsive-nav-link href="/about" class="absolute top-0 w-full">
+                <div class="grid grid-cols-3 flex items-center">
+                    <img class="icon inline col-span-1" src="/open-iconic/svg/question-mark.svg" alt="question mark icon">
+                    <p>About</p>
+                </div>
+            </jet-responsive-nav-link> 
+        </div>   
     </main>
 </template>
 
