@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Jetstream\Jetstream;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,14 @@ class AppServiceProvider extends ServiceProvider
             return[
                 'loggedIn' => Auth::check(),
             ];
+        });
+
+        Inertia::share('user', function (){
+            return Auth::user();
+        });
+
+        Inertia::share('jetstream', function() {
+            return Jetstream;
         });
 
         Inertia::share('flash', function () {

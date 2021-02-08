@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <header-layout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Profile
@@ -8,36 +8,36 @@
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <div v-if="$page.jetstream.canUpdateProfileInformation">
-                    <update-profile-information-form :user="$page.user" />
+                <div>
+                    <update-profile-information-form :user="$page.props.user" />
 
                     <jet-section-border />
                 </div>
 
-                <div v-if="$page.jetstream.canUpdatePassword">
+                <div>
                     <update-password-form class="mt-10 sm:mt-0" />
 
                     <jet-section-border />
                 </div>
 
-                <div v-if="$page.jetstream.canManageTwoFactorAuthentication">
+                <!-- <div v-if="$page.jetstream.canManageTwoFactorAuthentication">
                     <two-factor-authentication-form class="mt-10 sm:mt-0" />
 
                     <jet-section-border />
-                </div>
+                </div> -->
 
-                <logout-other-browser-sessions-form :sessions="sessions" class="mt-10 sm:mt-0" />
+                <!-- <logout-other-browser-sessions-form :sessions="sessions" class="mt-10 sm:mt-0" /> -->
 
                 <jet-section-border />
 
                 <delete-user-form class="mt-10 sm:mt-0" />
             </div>
         </div>
-    </app-layout>
+    </header-layout>
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout'
+    import HeaderLayout from '@/Layouts/HeaderLayout'
     import DeleteUserForm from './DeleteUserForm'
     import JetSectionBorder from '@/Jetstream/SectionBorder'
     import LogoutOtherBrowserSessionsForm from './LogoutOtherBrowserSessionsForm'
@@ -49,7 +49,7 @@
         props: ['sessions'],
 
         components: {
-            AppLayout,
+            HeaderLayout,
             DeleteUserForm,
             JetSectionBorder,
             LogoutOtherBrowserSessionsForm,

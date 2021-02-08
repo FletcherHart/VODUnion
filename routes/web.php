@@ -10,6 +10,7 @@ use App\Models\Video;
 use App\Models\UpgradeCode;
 use Iman\Streamer\VideoStreamer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,9 +39,6 @@ Route::get('/upload', function() {
 Route::get('/key', [VideoController::class, 'store']);
 
 Route::post('/key', [VideoController::class, 'store']);
-
-// Route::middleware(['auth:sanctum', 'verified'])->get('/', [VideoController::class, 'index'])
-//     ->name('dashboard');
 
 Route::get('/stream/{id}', function($id) {
     $video = Video::where('videos.id', $id)->first('storedAt');
@@ -117,3 +115,12 @@ Route::post('/admin/deleteVideo/{video}', [AdminController::class, 'deleteVideo'
 Route::get('/about', function() {
     return Inertia::render('Info', ['status'=>'about']);
 })->name('about');
+
+//Account
+Route::get('/account', function() {
+    return Inertia::render('Profile/Show', ['user'=> Auth::user()]);
+})->name('account');
+
+// Route::middleware(['auth:sanctum', 'verified'])->get('/', function() {
+//     return Inertia::render('Dashboard');
+// })->name('dashboard');

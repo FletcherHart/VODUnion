@@ -21,6 +21,12 @@
           </responsive-nav-link>
         </div>
         <div v-else>
+            <jet-responsive-nav-link :href="route('account')">
+                <div class="grid grid-cols-3 flex items-center">
+                    <img class="icon inline col-span-1" src="/open-iconic/svg/person.svg" alt="account icon">
+                    <p class="col-span-2">Account</p>
+                </div>
+          </jet-responsive-nav-link>
             <form @submit.prevent="logout">
                 <jet-responsive-nav-link class="object-top" as="button">
                     <div class="grid grid-cols-3 flex items-center">

@@ -27,14 +27,13 @@
 
                 <template #content>
                     Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.
-
                     <div class="mt-4">
                         <jet-input type="password" class="mt-1 block w-3/4" placeholder="Password"
                                     ref="password"
                                     v-model="form.password"
                                     @keyup.enter.native="deleteUser" />
 
-                        <jet-input-error :message="form.error('password')" class="mt-2" />
+                        <jet-input-error v-if="form.errors.deleteUser" :message="form.errors.deleteUser['password']" class="mt-2" />
                     </div>
                 </template>
 
