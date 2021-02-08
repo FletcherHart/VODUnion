@@ -30,7 +30,7 @@ class VideoController extends Controller
     {
         $data = Video::latest()->where('listed', 1)->get();
 
-        return Inertia::render('Dashboard', ['data'=> $data]);
+        return Inertia::render('Home', ['data'=> $data]);
     }
 
     /**
@@ -303,6 +303,6 @@ class VideoController extends Controller
         $videos = Video::where('title', $request)
             ->orWhere('title', 'like', '%'.$request.'%')->get();
 
-        return Inertia::render('Dashboard.vue', ['data' => $videos, 'search' => $request]);
+        return Inertia::render('Home.vue', ['data' => $videos, 'search' => $request]);
     }
 }
