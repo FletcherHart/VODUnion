@@ -19,7 +19,7 @@
             </div>
         </div>
         
-        <!-- <comment-layout></comment-layout> -->
+        <comment-layout></comment-layout>
     </header-layout>
 </template>
 

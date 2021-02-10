@@ -41,11 +41,14 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Video $video)
+    public function store(Video $video, Request $request)
     {
+        $request->validate(['text' => 'required|max:500']);
+
         $video->addComment([
-            'text' => request('text'),
-            'user_id' => auth()->id()
+            'text' => $request['text'],
+            'user_id' => auth()->id(),
+            'video_id' => $video->id
         ]);
 
         return redirect()->route('video', ['id' => $video->id]);
