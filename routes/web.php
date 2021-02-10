@@ -32,6 +32,9 @@ Route::get('/video/{id}', [VideoController::class, 'show'])
 Route::post('/video/{video}/comment', [CommentController::class, 'store'])
     ->middleware('auth');
 
+Route::delete('/video/{video}/comment/{comment}', [CommentController::class, 'destroy'])
+    ->middleware('auth');
+
 Route::get('/upload', function() {
     return Redirect::route('channel');
 });

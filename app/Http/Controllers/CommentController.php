@@ -7,6 +7,8 @@ use App\Models\Video;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class CommentController extends Controller
 {
@@ -20,9 +22,14 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($video_id, $page)
     {
-        //
+        $comments = Comment::where('video_id', $id)
+            ->join('users', "comments.user_id", "users.id")
+            ->get(['comments.text', 'comments.created_at as date', 'users.name', 'users.id as user_id'])
+            ->limit($page*10);
+
+        return $comments;
     }
 
     /**
@@ -94,8 +101,13 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment)
+    public function destroy(Video $video, Comment $comment)
     {
-        //
+        if(Auth::user()->id == $comment->user_id || Gate::allows('admin', Auth::user()) || Auth::user()->id == $video->user_id) {
+            $comment->delete();
+            return redirect()->back();
+        } else {
+            return redirect()->back();
+        }
     }
 }

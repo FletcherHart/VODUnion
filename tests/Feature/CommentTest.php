@@ -12,7 +12,7 @@ use App\Models\Comment;
 
 class CommentTest extends TestCase
 {
-    use DatabaseMigrations, WithFaker;
+    use DatabaseMigrations, WithFaker, RefreshDatabase;
 
     public function setUp():void {
         parent::setUp();
@@ -22,8 +22,8 @@ class CommentTest extends TestCase
     }
 
     public function test_unauthenticated_users_can_not_make_comment_on_video() {
-        $response = $this->postJson('/video/1/comment', ["text" => 'test text']);
-        $response->assertStatus(401);
+        $response = $this->post('/video/'.$this->video->id .'/comment', ["text" => 'test text']);
+        $response->assertStatus(302);
     }
 
     public function test_auth_user_can_make_comment_on_video() {
@@ -34,6 +34,54 @@ class CommentTest extends TestCase
 
         $this->get("/video/".$this->video->id)
             ->assertSee($comment);
+    }
+
+    public function test_unauthenticated_users_cannot_delete_comments() {
+        $comment = Comment::factory()->create();
+        $response = $this->delete('/video/'.$this->video->id .'/comment/'.$comment->id);
+
+        $response->assertStatus(302);
+    }
+
+    public function test_owner_can_delete_own_comment() {
+        $this->be($user = User::factory()->create());
+
+        $comment = Comment::factory(['user_id'=>$user->id])->create();
+        $response = $this->delete('/video/'.$comment->video_id .'/comment/'.$comment->id);
+
+        $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
+    }
+
+    public function test_auth_user_cannot_delete_unowned_comments() {
+        $user = User::factory(['id'=>50])->create();
+        $this->be(User::factory(['id'=>100])->create());
+
+        $comment = Comment::factory(['user_id'=>50])->create();
+        $response = $this->delete('/video/'.$comment->video_id .'/comment/'.$comment->id);
+
+        $this->assertDatabaseHas('comments', ['id' => $comment->id]);
+    }
+
+    public function test_admins_can_delete_any_comment() {
+        $user = User::factory(['id'=>50])->create();
+        $this->be(User::factory(['id'=>100, 'role_id'=>4])->create());
+
+        $comment = Comment::factory(['user_id'=>50])->create();
+        $response = $this->delete('/video/'.$comment->video_id .'/comment/'.$comment->id);
+
+        $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
+    }
+
+    public function test_owner_of_video_can_delete_any_comment_on_video() {
+        $user = User::factory(['id'=>50])->create();
+        $this->be($owner = User::factory(['id'=>100, 'role_id'=>2])->create());
+
+        $video = Video::factory(['user_id'=>$owner->id])->create();
+
+        $comment = Comment::factory(['user_id'=>50, 'video_id'=>$video->id])->create();
+        $response = $this->delete('/video/'.$comment->video_id .'/comment/'.$comment->id);
+
+        $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
     }
 
 }
