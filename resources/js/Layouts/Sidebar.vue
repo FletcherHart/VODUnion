@@ -7,18 +7,18 @@
             </div>
         </jet-responsive-nav-link>
         <div v-if="!$page.props.auth.user.loggedIn">
-          <responsive-nav-link  :href="route('login')" @submit.prevent="login">
+          <jet-responsive-nav-link  :href="route('login')">
             <div class="grid grid-cols-3 flex items-center">
                 <img class="icon inline col-span-1" src="/open-iconic/svg/account-login.svg" alt="login icon">
                 <p>Login</p>
             </div>
-          </responsive-nav-link>
-          <responsive-nav-link href="/register">
+          </jet-responsive-nav-link>
+          <jet-responsive-nav-link :href="route('register')">
             <div class="grid grid-cols-3 flex items-center">
                 <img class="icon inline col-span-1" src="/open-iconic/svg/clipboard.svg" alt="register icon">
                 <p class="col-span-2">Register</p>
             </div>
-          </responsive-nav-link>
+          </jet-responsive-nav-link>
         </div>
         <div v-else>
             <jet-responsive-nav-link :href="route('account')">
