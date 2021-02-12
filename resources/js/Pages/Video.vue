@@ -19,7 +19,7 @@
             </div>
         </div>
         
-        <comment-layout></comment-layout>
+        <comment-layout :id="data.id"></comment-layout>
     </header-layout>
 </template>
 
