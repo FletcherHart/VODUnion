@@ -38,7 +38,7 @@ class CommentTest extends TestCase
 
     public function test_unauthenticated_users_cannot_delete_comments() {
         $comment = Comment::factory()->create();
-        $response = $this->delete('/video/'.$this->video->id .'/comment/'.$comment->id);
+        $response = $this->delete('/comment/'.$comment->id);
 
         $response->assertStatus(302);
     }
@@ -47,7 +47,7 @@ class CommentTest extends TestCase
         $this->be($user = User::factory()->create());
 
         $comment = Comment::factory(['user_id'=>$user->id])->create();
-        $response = $this->delete('/video/'.$comment->video_id .'/comment/'.$comment->id);
+        $response = $this->delete('/comment/'.$comment->id);
 
         $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
     }
@@ -56,8 +56,12 @@ class CommentTest extends TestCase
         $user = User::factory(['id'=>50])->create();
         $this->be(User::factory(['id'=>100])->create());
 
+        $video = Video::factory(['user_id'=>1])->create();
+
+        $comment = Comment::factory(['user_id'=>50, 'video_id'=>$video->id])->create();
+
         $comment = Comment::factory(['user_id'=>50])->create();
-        $response = $this->delete('/video/'.$comment->video_id .'/comment/'.$comment->id);
+        $response = $this->delete('/comment/'.$comment->id);
 
         $this->assertDatabaseHas('comments', ['id' => $comment->id]);
     }
@@ -67,7 +71,7 @@ class CommentTest extends TestCase
         $this->be(User::factory(['id'=>100, 'role_id'=>4])->create());
 
         $comment = Comment::factory(['user_id'=>50])->create();
-        $response = $this->delete('/video/'.$comment->video_id .'/comment/'.$comment->id);
+        $response = $this->delete('/comment/'.$comment->id);
 
         $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
     }
@@ -79,7 +83,7 @@ class CommentTest extends TestCase
         $video = Video::factory(['user_id'=>$owner->id])->create();
 
         $comment = Comment::factory(['user_id'=>50, 'video_id'=>$video->id])->create();
-        $response = $this->delete('/video/'.$comment->video_id .'/comment/'.$comment->id);
+        $response = $this->delete('/comment/'.$comment->id);
 
         $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
     }

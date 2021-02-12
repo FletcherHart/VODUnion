@@ -101,8 +101,9 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Video $video, Comment $comment)
+    public function destroy(Comment $comment)
     {
+        $video = Video::where('id', $comment->video_id)->first();
         if(Auth::user()->id == $comment->user_id || Gate::allows('admin', Auth::user()) || Auth::user()->id == $video->user_id) {
             $comment->delete();
             return redirect()->back();
