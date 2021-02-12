@@ -18,8 +18,7 @@
             </div>
             </div>
         </div>
-        
-        <comment-layout :id="data.id" :ownerID="data.user_id"></comment-layout>
+        <comment-layout :id="data.id" :ownerID="data.user_id" :totalComments="totalComments"></comment-layout>
     </header-layout>
 </template>
 
@@ -33,7 +32,8 @@
         },
         props: {
             data: Object,
-            comments: Array
+            comments: Array,
+            totalComments: Number
         },
         data() {
             return{
