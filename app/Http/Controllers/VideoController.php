@@ -162,7 +162,7 @@ class VideoController extends Controller
     {
         $data = Video::where('videos.id', $id)
             ->join('users', "videos.user_id", "users.id")
-            ->first(['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.created_at', 'users.name as uploader']);
+            ->first(['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.created_at', 'users.name as uploader', 'videos.user_id']);
         
         $response = Http::withToken(config('app.cloud_token'))
             ->withHeaders([
@@ -178,7 +178,7 @@ class VideoController extends Controller
 
         $comments = Comment::where('video_id', $id)
             ->join('users', "comments.user_id", "users.id")
-            ->get(['comments.text', 'comments.created_at as date', 'users.name', 'users.id as user_id']);
+            ->get(['comments.id','comments.text', 'comments.created_at as date', 'users.name', 'users.id as user_id']);
         return Inertia::render('Video', ['data'=> $data, 'comments'=>$comments]);
     }
 
