@@ -1,4 +1,5 @@
 <template>
+    <header-layout>
     <jet-authentication-card>
         <template #logo>
             <jet-authentication-card-logo />
@@ -29,6 +30,7 @@
             </div>
         </form>
     </jet-authentication-card>
+    </header-layout>
 </template>
 
 <script>
@@ -38,6 +40,7 @@
     import JetInput from '@/Jetstream/Input'
     import JetLabel from '@/Jetstream/Label'
     import JetValidationErrors from '@/Jetstream/ValidationErrors'
+    import HeaderLayout from '../../Layouts/HeaderLayout.vue'
 
     export default {
         components: {
@@ -46,7 +49,8 @@
             JetButton,
             JetInput,
             JetLabel,
-            JetValidationErrors
+            JetValidationErrors,
+            HeaderLayout
         },
 
         props: {
