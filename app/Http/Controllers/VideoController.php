@@ -215,26 +215,29 @@ class VideoController extends Controller
                 return Redirect::back()
                     ->withErrors(['status' => 'Video must finish processing before it can be listed']);
             }
-            if($video->title == null)
+            if($video->title == null || $video->title != $request['title'])
                 $request->validate(['title' => 'required|max:80']);
-            if($video->description == null)
+                $video->title = $request['title'];
+                $video->save();
+            if($video->description == null || $video->description != $request['description'])
                 $request->validate(['description' => 'required|max:2500']);
+                $video->description = $request['description'];
+                $video->save();
         } else {
             $request->validate([
                 'title' => 'max:80',
                 'description' => 'max:2500',
             ]);
+
+            $video->title = $request['title'];
+            $video->description = $request['description'];
+            $video->save();
         }
 
         $request->validate([
             'thumbnail' => 'max:2000000|mimetypes:image/jpeg,image/png'
         ]);
         
-        
-        if($request->has('title'))
-            $video->title = $request['title'];
-        if($request->has('description'))
-            $video->description =  $request['description'];
         if($request->has('thumbnail')) { 
             $path = $request->file('thumbnail')->store('public/thumbnails');
             $video->thumbnail = $request->file('thumbnail')->hashname();

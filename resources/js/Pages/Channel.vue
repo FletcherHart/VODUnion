@@ -52,13 +52,13 @@
                                 <label for="title">Title: </label>
                                 <input class="border-solid border-2 border-black-600" id="title" name="title" placeholder="Video Title" :value="video.title">
                             </span>
-                            <div v-if="errors.title && formID === video.id"><mark>{{ errors.title }}</mark></div>
+                            <jet-input-error v-if="errors.title && formID === video.id" :message="errors.title"/>
 
                             <span class="w-full">
                                 <label for="description">Description:</label>
                                 <textarea class="border-solid border-2 border-black-600 resize-none" id="description" name="description" rows=5 placeholder="Description" :value="video.description"/>
                             </span>
-                            <!-- <div v-if="errors.description"><mark>{{ errors.description }}</mark></div> -->
+                            <jet-input-error v-if="errors.description && formID === video.id" :message="errors.description"/>
 
                             <!-- <span>
                                 <label for="thumbnail">Thumbnail: </label>
@@ -94,11 +94,13 @@
 
 <script>
     import HeaderLayout from '@/Layouts/HeaderLayout'
+    import JetInputError from '@/Jetstream/InputError'
     import { Inertia } from '@inertiajs/inertia'
     import moment from 'moment'
     export default {
         components: {
             HeaderLayout,
+            JetInputError
         },
         props: {
             videos: Array,
@@ -112,6 +114,14 @@
                 videoList: 0,
                 formID: 0,
                 url: "",
+                form: this.$inertia.form({
+                    '_method': 'POST',
+                    text:null
+                }, {
+                        bag: 'video',
+                        resetOnSuccess: false,
+                    }
+                ),
             }
         },
         updated: function() {
