@@ -3,8 +3,8 @@
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
               <div v-if="$page.props.auth.user.loggedIn">
               <form @submit.prevent="submit">
-                <input class="border-solid border-2 border-black-600" id="text" type="textarea" v-model="form.text" placeholder="Comment" />
-                <button type="submit">Submit</button>
+                <textarea class="border-solid border-2 border-black-600 w-full" id="text" rows="4" v-model="form.text" placeholder="Comment" />
+                <button type="submit" class="bg-blue-600 text-white rounded pl-4 pr-4">Submit</button>
                 <div>
                 <jet-input-error v-if="form.errors.text" :message="form.errors.text"/>
                 </div>
@@ -30,7 +30,7 @@
                       v-if="$page.props.user.id == comment.user_id || $page.props.user.role_id == 4 || $page.props.user.id == ownerID">Delete</button>
                      </div>
                   </div>
-                  <p class="break-words">{{comment.text}}</p>
+                  <p class="break-words whitespace-pre-line whitespace-pre-wrap">{{comment.text}}</p>
                 </div>
                 <hr>
               </div>
