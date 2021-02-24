@@ -209,20 +209,39 @@ class VideoController extends Controller
         if($video->user_id != $user->id) {
             return Redirect::route('home');
         }
-
         if($request->has('list')) {
             if($video->status != 'done') {
                 return Redirect::back()
                     ->withErrors(['status' => 'Video must finish processing before it can be listed']);
             }
-            if($video->title == null || $video->title != $request['title'])
-                $request->validate(['title' => 'required|max:80']);
-                $video->title = $request['title'];
-                $video->save();
-            if($video->description == null || $video->description != $request['description'])
-                $request->validate(['description' => 'required|max:2500']);
-                $video->description = $request['description'];
-                $video->save();
+
+            if($request->has('title') || $video->title == null) {
+                if($video->title == null || $video->title != $request['title'])
+                {
+                    $request->validate(['title' => 'required|max:80']);
+                    $video->title = $request['title'];
+                    $video->save();
+                }
+            }
+            if($request->has('description') || $video->description == null) {
+                if($video->description == null || $video->description != $request['description'])
+                {
+                    $request->validate(['description' => 'required|max:2500']);
+                    $video->description = $request['description'];
+                    $video->save();
+                }
+            }
+            
+            if($video->title != null && $video->description != null)
+            {
+                $video->listed = true;
+                dump($video->title . " " . $video->listed);
+            }
+            else {
+                $video->listed = false;
+            }
+
+            $video->save();
         } else {
             $request->validate([
                 'title' => 'max:80',
@@ -242,10 +261,6 @@ class VideoController extends Controller
             $path = $request->file('thumbnail')->store('public/thumbnails');
             $video->thumbnail = $request->file('thumbnail')->hashname();
         }
-        if($request->has('list'))
-            $video->listed = true;
-        else 
-            $video->listed = false;
 
         $video->save();
 
