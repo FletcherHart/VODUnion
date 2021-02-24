@@ -7,8 +7,8 @@
             <div class="overflow-hidden flex flex-col justify-center">
                 <div> 
                     <span class="flex justify-between">
-                        <button v-on:click="reloadPage">Reload Videos</button>
-                        <button v-on:click="uploadModalDisplay" class="bg-green-400 w-10 flex justify-center items-center rounded">
+                        <button v-on:click="reloadPage" class="bg-blue-400 w-10 h-10 flex justify-center items-center rounded"><img class="icon" src="/open-iconic/svg/loop-circular.svg" alt="refresh videos icon"></button>
+                        <button v-on:click="uploadModalDisplay" class="bg-green-400 w-10 h-10 flex justify-center items-center rounded">
                             <img class="icon" src="/open-iconic/svg/plus.svg" alt="add video icon">
                         </button>
                     </span>
