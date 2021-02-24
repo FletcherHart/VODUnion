@@ -33,48 +33,35 @@
                         </div>
                     </div>
                 </div>
-                <div class="w-full grid grid-cols-3 gap-4 border-2 border-black" v-for="video in videos" :key="video.id">
+                <div class="w-full grid grid-cols-6 gap-4 border-2 border-black">  
+                    <div class="col-start-2">
+                        Title
+                    </div>
+                    <div>
+                        Edit
+                    </div>
+                    <div>
+                        Visibility
+                    </div>
+                    <div>
+                        Date
+                    </div>
+                </div>
+                <div class="w-full grid grid-cols-6 gap-4 border-2 border-black" v-for="video in videos" :key="video.id">
                     <div class="w-40 sm:w-auto">
-                        <div class="w-full bg-black flex justify-center ">
-                            <img v-if="!video.thumbnail" :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=270'">
+                        <div class="w-full flex justify-center ">
+                            <img v-if="!video.thumbnail" :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=81'">
                             <img v-else :src="'/storage/thumbnails/' + video.thumbnail">
                         </div>
-                        <div>Date Uploaded: {{setTime(video.created_at)}}</div>
                     </div>
-                    <div class="col-span-2">
-                        <div class="flex flex-row justify-between">
-                            <div v-if="video.status == 'done'" class="bg-green-400 rounded p-1 w-min">Ready</div>
-                            <div v-else-if="video.status == 'processing'" class="bg-gray-400 rounded p-1 w-min">Ready</div>
-                            <button v-on:click="deleteVideo(video.id)" class="bg-red-600 rounded p-1 text-white">Delete</button>
-                        </div>
-                        <form @submit.prevent="submit(video.id)" class="grid grid-cols-1" :id="video.id">
-                            <span>
-                                <label for="title">Title: </label>
-                                <input class="border-solid border-2 border-black-600" id="title" name="title" placeholder="Video Title" :value="video.title">
-                            </span>
-                            <jet-input-error v-if="errors.title && formID === video.id" :message="errors.title"/>
-
-                            <span class="w-full">
-                                <label for="description">Description:</label>
-                                <textarea class="border-solid border-2 border-black-600 resize-none" id="description" name="description" rows=5 placeholder="Description" :value="video.description"/>
-                            </span>
-                            <jet-input-error v-if="errors.description && formID === video.id" :message="errors.description"/>
-
-                            <!-- <span>
-                                <label for="thumbnail">Thumbnail: </label>
-                                <input type="file" id="thumbnail" name="thumbnail" ref="thumbnail" accept=".jpeg, .jpg, .png">
-                            </span> -->
-                            <!-- <div v-if="errors.thumb"><mark>{{ errors.thumb }}</mark></div> -->
-
-                            <span v-if="video.status === 'done'">
-                                <label for="list">Visibile:</label>
-                                <input v-if="video.listed == 0" type="checkbox" name="list" id="list">
-                                <input v-else type="checkbox" name="list" id="list" checked>
-                            </span>
-                            <div v-if="errors.list"><mark>{{ errors.list }}</mark></div>
-
-                            <button type="submit" class="bg-blue-600">Submit</button>
-                        </form>
+                    <div>{{video.title}}</div>
+                    <button v-on:click="edit(video)" class="w-10 bg-gray-600">Edit Video</button>
+                    <div>Visibility</div>
+                    <div>Date Uploaded: {{setTime(video.created_at)}}</div>
+                    <div class="flex flex-row justify-between">
+                        <div v-if="video.status == 'done'" class="bg-green-400 rounded p-1 w-min">Ready</div>
+                        <div v-else-if="video.status == 'processing'" class="bg-gray-400 rounded p-1 w-min">Ready</div>
+                        <button v-on:click="deleteVideo(video.id)" class="bg-red-600 rounded p-1 text-white">Delete</button>
                     </div>
                 </div>
             </div>
@@ -88,6 +75,35 @@
                 </div>
             </div>
         </transition>
+        <div class="w-full h-full absolute top-0 z-50 lg:-ml-52 md:-ml-40 sm:-ml-24 flex justify-center bg-black bg-opacity-50" v-if="editVideo.id">
+            <div class="flex flex-col bg-white relative m-auto w-4/6 h-4/5">    
+                <div class="flex flex-row-reverse">
+                    <button v-on:click="unedit()"> <img class="icon" src="/open-iconic/svg/x.svg" alt="add video icon"></button>
+                </div>
+                <form @submit.prevent="submit(editVideo.id)" :id="editVideo.id" class="flex flex-col">
+                    <span>
+                        <label for="title">Title: </label>
+                        <input class="border-solid border-2 border-black-600 rounded" id="title" name="title" placeholder="Video Title" :value="editVideo.title">
+                    </span>
+                    <jet-input-error v-if="errors.title && formID === editVideo.id" :message="errors.title"/>
+
+                    <div class="w-full border-solid border-2 border-black-600">
+                        <label for="description" class="text-gray-400 block">Description</label>
+                        <textarea class="resize-none rounded w-5/6 outline-none" id="description" name="description" rows=5 :value="editVideo.description"/>
+                    </div>
+                    <jet-input-error v-if="errors.description && formID === editVideo.id" :message="errors.description"/>
+
+                    <span v-if="editVideo.status === 'done'">
+                        <label for="list">Visibile:</label>
+                        <input v-if="editVideo.listed == 0" type="checkbox" name="list" id="list">
+                        <input v-else type="checkbox" name="list" id="list" checked>
+                    </span>
+                    <div v-if="errors.list"><mark>{{ errors.list }}</mark></div>
+
+                    <button type="submit" class="bg-blue-600">Submit</button>
+                </form>
+            </div>
+        </div>
 
     </header-layout>
 </template>
@@ -97,6 +113,7 @@
     import JetInputError from '@/Jetstream/InputError'
     import { Inertia } from '@inertiajs/inertia'
     import moment from 'moment'
+
     export default {
         components: {
             HeaderLayout,
@@ -104,11 +121,12 @@
         },
         props: {
             videos: Array,
-            errors: Object
+            errors: Object,
         },
         data() {
             return {
                 uploadModal: Boolean,
+                editVideo: Object,
                 progress: 0,
                 uploadErrors: "",
                 videoList: 0,
@@ -137,6 +155,12 @@
             }
         },
         methods: {
+            edit(video) {
+                this.editVideo = video;
+            },
+            unedit() {
+                this.editVideo = {};
+            },
             submit(id) {
                 this.formID = id;
                 var data = new FormData(document.getElementById(id));
