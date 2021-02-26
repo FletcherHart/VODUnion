@@ -66,15 +66,6 @@
                 </div>
             </div>
         </div>
-        <transition name="fade">
-            <div v-on:click="clearStatus" v-if="$page.props.flash.updateStatus" 
-            class="fixed bottom-24 left-1/2 bg-gray-900 h-16 w-48 flex items-center justify-center cursor-pointer"
-            v-bind:class="{'-ml-24': this.$store.state.isHidden}">
-                <div class="text-center text-white">
-                    {{$page.props.flash.updateStatus}}
-                </div>
-            </div>
-        </transition>
         <div class="w-full h-full absolute top-0 z-50 flex justify-center bg-black bg-opacity-50"
         v-bind:class="{ 
             'w-full': this.$store.state.isHidden, 
@@ -107,6 +98,15 @@
 
                     <button type="submit" class="ml-5 bg-blue-600 w-1/6 rounded float-right">Submit</button>
                 </form>
+                <transition name="fade">
+                    <div v-on:click="clearStatus" v-if="$page.props.flash.updateStatus" class="w-full flex items-center justify-center">
+                        <div class="fixed bottom-24 bg-gray-900 h-16 w-48 flex items-center justify-center cursor-pointer">
+                            <div class="text-center text-white">
+                                {{$page.props.flash.updateStatus}}
+                            </div>
+                        </div>
+                    </div>
+                </transition>
             </div>
         </div>
 
@@ -140,12 +140,9 @@
                 form: this.$inertia.form({
                     '_method': 'POST',
                     title:null,
-                    description:null
-                }, {
-                        bag: 'video',
-                        resetOnSuccess: false,
-                    }
-                ),
+                    description:null,
+                    list:null
+                }),
             }
         },
         updated: function() {

@@ -235,7 +235,6 @@ class VideoController extends Controller
             if($video->title != null && $video->description != null)
             {
                 $video->listed = true;
-                dump($video->title . " " . $video->listed);
             }
             else {
                 $video->listed = false;
@@ -265,7 +264,8 @@ class VideoController extends Controller
         $video->save();
 
         return Redirect::back()
-            ->with('updateStatus','Operation Completed');
+            ->with('updateStatus','Operation Completed')
+            ->withInput();
     }
 
     /**
