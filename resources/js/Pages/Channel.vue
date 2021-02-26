@@ -46,6 +46,9 @@
                     <div>
                         Date
                     </div>
+                    <div>
+                        Status
+                    </div>
                 </div>
                 <div class="w-full grid grid-cols-6 gap-4 border-2 border-black" v-for="video in videos" :key="video.id">
                     <div class="w-40 sm:w-auto">
@@ -54,11 +57,14 @@
                             <img v-else :src="'/storage/thumbnails/' + video.thumbnail">
                         </div>
                     </div>
-                    <div>{{video.title}}</div>
-                    <button v-on:click="edit(video)" class="w-10 bg-gray-600">Edit Video</button>
-                    <div>Visibility</div>
-                    <div>Date Uploaded: {{setTime(video.created_at)}}</div>
-                    <div class="flex flex-row justify-between">
+                    <div class="flex items-center">{{video.title}}</div>
+                    <button v-on:click="edit(video)" class="w-10 text-gray-600 flex justify-center items-center"><img class="icon" src="/open-iconic/svg/pencil.svg" alt="edit icon"></button>
+                    <div class="flex items-center">
+                        <p v-if="video.listed">Public</p>
+                        <p v-else>Unlisted</p>
+                    </div>
+                    <div class="flex items-center">{{setTime(video.created_at)}}</div>
+                    <div class="flex flex-row justify-between items-center">
                         <div v-if="video.status == 'done'" class="bg-green-400 rounded p-1 w-min">Ready</div>
                         <div v-else-if="video.status == 'processing'" class="bg-gray-400 rounded p-1 w-min">Ready</div>
                         <button v-on:click="deleteVideo(video.id)" class="bg-red-600 rounded p-1 text-white">Delete</button>
