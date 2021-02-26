@@ -90,22 +90,22 @@
                         <label for="title" class="text-gray-400 block relative top-7 ml-3">Title </label>
                         <input class="pl-3 resize-none rounded w-full active:birder-black-900  border-solid border-2 border-black-600 pt-5" id="title" name="title" placeholder="Video Title" :value="editVideo.title">
                     </div>
-                    <jet-input-error v-if="errors.title && formID === editVideo.id" :message="errors.title"/>
+                    <jet-input-error class="ml-5" v-if="errors.title && formID === editVideo.id" :message="errors.title"/>
 
                     <div class="ml-5 mr-5">
                         <label for="description" class="text-gray-400 block relative top-7 ml-3">Description</label>
                         <textarea class="pl-3 resize-none rounded w-full active:birder-black-900  border-solid border-2 border-black-600 pt-5" id="description" name="description" rows=5 :value="editVideo.description"/>
                     </div>
-                    <jet-input-error v-if="errors.description && formID === editVideo.id" :message="errors.description"/>
+                    <jet-input-error class="ml-5" v-if="errors.description && formID === editVideo.id" :message="errors.description"/>
 
-                    <span v-if="editVideo.status === 'done'">
-                        <label for="list">Visibile:</label>
+                    <span class="ml-5" v-if="editVideo.status === 'done'">
+                        <label for="list">Make video public:</label>
                         <input v-if="editVideo.listed == 0" type="checkbox" name="list" id="list">
                         <input v-else type="checkbox" name="list" id="list" checked>
                     </span>
                     <div v-if="errors.list"><mark>{{ errors.list }}</mark></div>
 
-                    <button type="submit" class="bg-blue-600">Submit</button>
+                    <button type="submit" class="ml-5 bg-blue-600 w-1/6 rounded float-right">Submit</button>
                 </form>
             </div>
         </div>
@@ -139,7 +139,8 @@
                 url: "",
                 form: this.$inertia.form({
                     '_method': 'POST',
-                    text:null
+                    title:null,
+                    description:null
                 }, {
                         bag: 'video',
                         resetOnSuccess: false,
@@ -158,6 +159,9 @@
                 this.$page.props.flash.url = null;
                 this.upload();
             }
+            if(this.editVideo.id) {
+                this.editVideo = this.videos.find(video => video.id == this.editVideo.id)
+            }
         },
         methods: {
             edit(video) {
@@ -165,6 +169,7 @@
             },
             unedit() {
                 this.editVideo = {};
+                this.clearErrors();
             },
             submit(id) {
                 this.formID = id;
