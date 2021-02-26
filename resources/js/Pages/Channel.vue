@@ -75,21 +75,26 @@
                 </div>
             </div>
         </transition>
-        <div class="w-full h-full absolute top-0 z-50 lg:-ml-52 md:-ml-40 sm:-ml-24 flex justify-center bg-black bg-opacity-50" v-if="editVideo.id">
+        <div class="w-full h-full absolute top-0 z-50 flex justify-center bg-black bg-opacity-50"
+        v-bind:class="{ 
+            'w-full': this.$store.state.isHidden, 
+            'lg:-ml-52 md:-ml-40 sm:-ml-24': !this.$store.state.isHidden
+        }"
+         v-if="editVideo.id">
             <div class="flex flex-col bg-white relative m-auto w-4/6 h-4/5">    
                 <div class="flex flex-row-reverse">
                     <button v-on:click="unedit()"> <img class="icon" src="/open-iconic/svg/x.svg" alt="add video icon"></button>
                 </div>
                 <form @submit.prevent="submit(editVideo.id)" :id="editVideo.id" class="flex flex-col">
-                    <span>
-                        <label for="title">Title: </label>
-                        <input class="border-solid border-2 border-black-600 rounded" id="title" name="title" placeholder="Video Title" :value="editVideo.title">
-                    </span>
+                    <div class="ml-5 mr-5">
+                        <label for="title" class="text-gray-400 block relative top-7 ml-3">Title </label>
+                        <input class="pl-3 resize-none rounded w-full active:birder-black-900  border-solid border-2 border-black-600 pt-5" id="title" name="title" placeholder="Video Title" :value="editVideo.title">
+                    </div>
                     <jet-input-error v-if="errors.title && formID === editVideo.id" :message="errors.title"/>
 
-                    <div class="w-full border-solid border-2 border-black-600">
-                        <label for="description" class="text-gray-400 block">Description</label>
-                        <textarea class="resize-none rounded w-5/6 outline-none" id="description" name="description" rows=5 :value="editVideo.description"/>
+                    <div class="ml-5 mr-5">
+                        <label for="description" class="text-gray-400 block relative top-7 ml-3">Description</label>
+                        <textarea class="pl-3 resize-none rounded w-full active:birder-black-900  border-solid border-2 border-black-600 pt-5" id="description" name="description" rows=5 :value="editVideo.description"/>
                     </div>
                     <jet-input-error v-if="errors.description && formID === editVideo.id" :message="errors.description"/>
 
