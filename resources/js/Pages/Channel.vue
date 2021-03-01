@@ -1,6 +1,7 @@
 <template>
     <header-layout>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 h-full">
+            <button v-on:click="sort">Sort</button>
             <div v-if="errors.deny">
                 <mark>{{errors.deny}}</mark>
             </div>
@@ -33,7 +34,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="w-full grid grid-cols-6 gap-4 border-2 border-black">  
+                <div class="w-full grid grid-cols-6 gap-4 border-b-2 border-black">  
                     <div class="col-start-2">
                         Title
                     </div>
@@ -50,7 +51,7 @@
                         Status
                     </div>
                 </div>
-                <div class="w-full grid grid-cols-6 gap-4 border-2 border-black" v-for="video in videos" :key="video.id">
+                <div class="w-full grid grid-cols-6 gap-4 border-b-2 border-black" v-for="video in sortedVideos" :key="video.id">
                     <div class="w-40 sm:w-auto">
                         <div class="w-full flex justify-center ">
                             <img v-if="!video.thumbnail" :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=81'">
@@ -80,7 +81,7 @@
          v-if="editVideo.id">
             <div class="flex flex-col bg-white relative m-auto w-4/6 h-4/5">    
                 <div class="flex flex-row-reverse">
-                    <button v-on:click="unedit()"> <img class="icon" src="/open-iconic/svg/x.svg" alt="add video icon"></button>
+                    <button v-on:click="unedit()" class="p-1 mr-1 mt-1"> <img class="icon" src="/open-iconic/svg/x.svg" alt="add video icon"></button>
                 </div>
                 <form @submit.prevent="submit(editVideo.id)" :id="editVideo.id" class="flex flex-col">
                     <div class="ml-5 mr-5">
@@ -149,6 +150,7 @@
                     description:null,
                     list:null
                 }),
+                sortedVideos: this.videos,
             }
         },
         updated: function() {
@@ -228,6 +230,18 @@
             setTime(date) {
                 moment.locale();
                 return moment(date).format('MMMM Do YYYY, hh:mm a');
+            }, 
+            sort() {
+                //this.sortedVideos.sort(this.sortByDate);
+                this.sortedVideos.reverse();
+            },
+            sortByDate(left, right) {
+                return moment.utc(left.timeStamp).diff(moment.utc(right.timeStamp))
+            }
+        },
+        watch: { 
+            videos: function(newVal, oldVal) {
+                this.sortedVideos = newVal;
             }
         },
     }
