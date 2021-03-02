@@ -1,30 +1,37 @@
 <template>
   <main class="h-full"> 
-    <header class="grid lg:grid-cols-8 md:grid-cols-6 grid-cols-2 lg:gap-4 bg-gray-700 fixed top-0 w-full h-16 z-30">
-        <div class="flex flex-row items-center justify-center">
-          <button @click="nav">
+    <header class="shadow-md  bg-gray-700 fixed top-0 w-full h-16 z-30">
+      <div class="flex justify-between">
+        <div class="flex flex-row items-center justify-center ml-6">
+          <button @click="nav" class="hover:bg-white p-2 rounded focus:outline-none w-10 flex justify-center">
             <img class="icon" src="/open-iconic/svg/menu.svg">
           </button>
           <jet-responsive-nav-link href="/">Home</jet-responsive-nav-link>
         </div>
         
-        <form class="sm:visible invisible 
-        flex items-center justify-center 
-        lg:col-span-2 md:col-span-2 sm:col-span-1 lg:col-start-4 md:col-start-2" @submit.prevent="search">
-          <input class="w-4/5 h-6" type="text" id="search">
-          <button class="icon-button h-6 w-8 flex items-center justify-center bg-gray-600">
+        <form class="flex items-center justify-center" @submit.prevent="search" v-if="this.windowWidth > 640">
+          <input class="rounded rounded-r-none w-96 h-8" type="text" id="search">
+          <button class="rounded-r icon-button h-8 w-8 flex items-center justify-center bg-gray-600">
             <img class="icon" src="/open-iconic/svg/magnifying-glass.svg">
           </button>
         </form>
 
-        <div class="flex items-center text-white font-medium lg:col-start-7 md:col-start-5 col-span-2">
+        <div class="flex items-center text-white font-medium mr-6">
             <div>Have questions? Email 
-              <a href="mailto:support@vodunion.com">support@vodunion.com</a>
+              <a class="hover:bg-white" href="mailto:support@vodunion.com">support@vodunion.com</a>
             </div>
         </div>
 
+      </div>
+      <form class="shadow-md flex items-center justify-center fixed top-16 w-full m-b-8" @submit.prevent="search" v-if="this.windowWidth < 640">
+        <input class="rounded rounded-r-none w-full h-8" type="text" id="search">
+        <button class="rounded-r icon-button h-8 w-8 flex items-center justify-center bg-gray-600">
+          <img class="icon" src="/open-iconic/svg/magnifying-glass.svg">
+        </button>
+      </form>
+
     </header>
-    <article class="h-full pt-20">
+    <article class="h-full" v-bind:class="{ 'pt-20': (this.windowWidth > 640), 'pt-28': (this,windowWidth < 640)}">
       <div v-bind:class="{ hidden: this.$store.state.isHidden}">
         <sidebar/>
       </div>
