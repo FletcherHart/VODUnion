@@ -27,3 +27,13 @@ html, body {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
 }
+
+.upside-down {
+    -webkit-transform: scaleY(-1);
+    transform: scaleY(-1);
+}
+
+.upside-up {
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+}

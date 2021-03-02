@@ -1,17 +1,18 @@
 <template>
     <header-layout>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 h-full">
-            <button v-on:click="sort">Sort</button>
             <div v-if="errors.deny">
                 <mark>{{errors.deny}}</mark>
             </div>
             <div class="overflow-hidden flex flex-col justify-center">
                 <div> 
                     <span class="flex justify-between">
-                        <button v-on:click="reloadPage" class="bg-blue-400 w-10 h-10 flex justify-center items-center rounded"><img class="icon" src="/open-iconic/svg/loop-circular.svg" alt="refresh videos icon"></button>
-                        <button v-on:click="uploadModalDisplay" class="bg-green-400 w-10 h-10 flex justify-center items-center rounded">
-                            <img class="icon" src="/open-iconic/svg/plus.svg" alt="add video icon">
-                        </button>
+                        <span class="flex">
+                            <button v-on:click="reloadPage" class="bg-blue-400 w-10 h-10 flex justify-center items-center rounded"><img class="icon" src="/open-iconic/svg/loop-circular.svg" alt="refresh videos icon"></button>
+                            <button v-on:click="uploadModalDisplay" class="bg-green-400 w-10 h-10 flex justify-center items-center rounded">
+                                <img class="icon" src="/open-iconic/svg/plus.svg" alt="add video icon">
+                            </button>
+                        </span>
                     </span>
                     <div class="m-10" v-bind:class="{'hidden': uploadModal}">
                         <div class="flex justify-center">
@@ -44,8 +45,9 @@
                     <div>
                         Visibility
                     </div>
-                    <div>
-                        Date
+                    <div class="flex">
+                        <span>Date</span>
+                        <button v-on:click="sort" class="flex justify-center items-center rounded"><img class="w-4 h-full ml-1" id="dateSortImg" src="/open-iconic/svg/arrow-top.svg" alt="sort video by date icon"></button>
                     </div>
                     <div>
                         Status
@@ -234,6 +236,13 @@
             sort() {
                 //this.sortedVideos.sort(this.sortByDate);
                 this.sortedVideos.reverse();
+                if(document.getElementById('dateSortImg').classList.contains('upside-down')) {
+                    document.getElementById('dateSortImg').classList.remove('upside-down');
+                    document.getElementById('dateSortImg').classList.add('upside-up');
+                } else {
+                    document.getElementById('dateSortImg').classList.remove('upside-up');
+                    document.getElementById('dateSortImg').classList.add('upside-down');
+                }
             },
             sortByDate(left, right) {
                 return moment.utc(left.timeStamp).diff(moment.utc(right.timeStamp))
