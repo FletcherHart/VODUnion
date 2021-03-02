@@ -1,7 +1,7 @@
 <template>
   <main class="h-full"> 
     <header class="shadow-md  bg-gray-700 fixed top-0 w-full h-16 z-30">
-      <div class="flex justify-between">
+      <div class="flex justify-between h-full">
         <div class="flex flex-row items-center justify-center ml-6">
           <button @click="nav" class="hover:bg-white p-2 rounded focus:outline-none w-10 flex justify-center">
             <img class="icon" src="/open-iconic/svg/menu.svg">
