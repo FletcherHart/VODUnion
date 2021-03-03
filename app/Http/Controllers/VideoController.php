@@ -172,7 +172,7 @@ class VideoController extends Controller
             ])
             ->get('https://api.cloudflare.com/client/v4/accounts/'
             . config('app.cloud_account') .
-            '/stream/analytics/views?metrics=totalImpressions&filters=videoId==' . $data['videoID']);
+            '/stream/analytics/views?metrics=totalImpressions&filters=videoId==' . $data['videoID'] . '&since=2021-01-01T00:00:00Z');
 
         $data['views'] = $response['result']['totals']['totalImpressions'];
 
