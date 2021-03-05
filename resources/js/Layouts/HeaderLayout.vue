@@ -18,7 +18,7 @@
 
         <div class="flex items-center text-white font-medium mr-6">
             <div>Have questions? Email 
-              <a class="hover:bg-white" href="mailto:support@vodunion.com">support@vodunion.com</a>
+              <a class="hover:bg-white hover:text-black" href="mailto:support@vodunion.com">support@vodunion.com</a>
             </div>
         </div>
 
