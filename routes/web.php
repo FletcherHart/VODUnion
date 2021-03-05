@@ -2,13 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\LikeVideoController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use Inertia\Inertia;
 use App\Models\Video;
 use App\Models\UpgradeCode;
-use Iman\Streamer\VideoStreamer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -127,3 +127,10 @@ Route::get('/account', function() {
 // Route::middleware(['auth:sanctum', 'verified'])->get('/', function() {
 //     return Inertia::render('Dashboard');
 // })->name('dashboard');
+
+
+Route::post('/video/{video}/like', [LikeVideoController::class, 'like'])
+    ->middleware('auth');
+
+Route::post('/video/{video}/dislike', [LikeVideoController::class, 'dislike'])
+    ->middleware('auth');
