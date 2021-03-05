@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Video;
+use App\Models\LikeVideo;
 use App\Models\Comment;
 use App\Jobs\ProcessVideo;
 use Inertia\Inertia;
@@ -180,8 +181,19 @@ class VideoController extends Controller
             ->join('users', "comments.user_id", "users.id")
             ->get(['comments.id','comments.text', 'comments.created_at as date', 'users.name', 'users.id as user_id']);
 
+        $isLiked = LikeVideo::where(['user_id' => auth()->id(), 'video_id' => $id])->first('like');
+
+        $numLikes = LikeVideo::where(['video_id' => $id, 'like'=>1])->count();
+        $numDislikes = LikeVideo::where(['video_id' => $id, 'like'=>0])->count();
+
+        if($isLiked == null) {
+            $isLiked = 2;
+        } else {
+            $isLiked = $isLiked->like;
+        }
+
         $number_comments = Comment::where('video_id', $id)->count();
-        return Inertia::render('Video', ['data'=> $data, 'comments'=>$comments, 'totalComments'=> $number_comments]);
+        return Inertia::render('Video', ['data'=> $data, 'comments'=>$comments, 'totalComments'=> $number_comments, 'isLiked'=>$isLiked, 'likes'=>$numLikes, 'dislikes'=>$numDislikes]);
     }
 
     /**
