@@ -35,7 +35,8 @@ class VideoFactory extends Factory
             'videoID' => $this->faker->numberBetween(0,100000),
             'listed' => false,
             'sizeKB' => $this->faker->numberBetween(10, 100000),
-            'status' => 'done'
+            'status' => 'done',
+            'video_length' => 10
         ];
     }
 }
