@@ -32,6 +32,11 @@ class VideoController extends Controller
         $data = Video::latest()->where('listed', 1)->get();
 
         $data->each(function ($collection, $alphabet) {
+
+            if(strlen($collection['description']) > 100) {
+                $collection['description'] = substr($collection['description'], 0, 100) . "...";
+            }
+
             $response = Http::withToken(config('app.cloud_token'))
             ->withHeaders([
                 'Access-Control-Allow-Origin' => '*',
