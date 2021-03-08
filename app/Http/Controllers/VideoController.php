@@ -33,7 +33,7 @@ class VideoController extends Controller
 
         $data = Video::where('listed', 1)
             ->join('users', "videos.user_id", "users.id")
-            ->get(['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.created_at', 'users.name as uploader', 'videos.user_id']);
+            ->get(['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.created_at', 'users.name as uploader', 'videos.user_id', 'videos.video_length']);
         
 
         $data->each(function ($collection, $alphabet) {
@@ -77,10 +77,23 @@ class VideoController extends Controller
            $item = $this->status($item);
         };
 
+        $videos = Video::where([['user_id', Auth::user()->id],['video_length', '<=', '0']])
+            ->orderByDesc('created_at')
+            ->get();
+
+        $videos->each(function ($collection, $alphabet) {
+            $response = Http::withToken(config('app.cloud_token'))
+            ->get('https://api.cloudflare.com/client/v4/accounts/'
+            . config('app.cloud_account') .
+            '/stream/'. $collection['videoID']);
+            $collection['video_length'] = $response['result']['duration'];
+            $collection->save();
+        });
+
         $videos = Video::where([['user_id', Auth::user()->id],['status', '=', 'done']])
             ->orderByDesc('created_at')
             ->get();
-        
+
         return Inertia::render('Channel', ['videos' => $videos]);
     }
 

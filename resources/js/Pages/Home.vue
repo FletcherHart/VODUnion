@@ -7,8 +7,9 @@
             <div class="overflow-hidden flex flex-col justify-items-center">
                 <div class="thumb-container" v-for="video in data" :key="video.id">
                     <inertia-link class="flex mt-5 p-2 bg-white shadow rounded" :href="'video/'+video.id">
-                        <div class="bg-black flex justify-center mr-5">
+                        <div class="bg-black relative mr-5">
                             <img :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=169&width=300'">
+                            <div class="absolute bottom-2 text-white bg-black text-sm">{{getTime(video.video_length)}}</div>
                         </div>
                         <div class="w-full relative">
                             <div class="flex justify-between">
@@ -48,6 +49,10 @@
         methods: {
             getVideoAge(date) {
                 return moment([date]).fromNow();
+            },
+            getTime(duration) {
+                console.log(duration)
+                return new Date(duration * 1000).toISOString().substr(11, 8);
             }
         }
     }
