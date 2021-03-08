@@ -27,6 +27,6 @@ class Upgrade extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('upgrade_codes');
     }
 }
