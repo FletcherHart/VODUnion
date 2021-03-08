@@ -14,7 +14,7 @@ class AddLengthToVideo extends Migration
     public function up()
     {
         Schema::table('videos', function (Blueprint $table) {
-            $table->integer('video_length');
+            $table->decimal('video_length');
         });
     }
 
