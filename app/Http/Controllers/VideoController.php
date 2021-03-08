@@ -29,7 +29,12 @@ class VideoController extends Controller
      */
     public function index()
     {
-        $data = Video::latest()->where('listed', 1)->get();
+        // $data = Video::latest()->where('listed', 1)->get();
+
+        $data = Video::where('listed', 1)
+            ->join('users', "videos.user_id", "users.id")
+            ->get(['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.created_at', 'users.name as uploader', 'videos.user_id']);
+        
 
         $data->each(function ($collection, $alphabet) {
 

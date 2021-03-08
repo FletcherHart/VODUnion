@@ -10,7 +10,7 @@
                         <div class="bg-black flex justify-center mr-5">
                             <img :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=169&width=300'">
                         </div>
-                        <div class="w-full">
+                        <div class="w-full relative">
                             <div class="flex justify-between">
                                 <h2 class="font-semibold">{{video.title}}</h2>
                                 <div class="text-sm">
@@ -22,6 +22,9 @@
                             <hr>
                             <div>
                                 {{video.description}}
+                            </div>
+                            <div class="absolute bottom-0">
+                                {{video.uploader}}
                             </div>
                         </div>
                     </inertia-link>
