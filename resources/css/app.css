@@ -14,11 +14,7 @@ html, body {
   }
 
 .thumb {
-    height: 169px;
-}
-
-.thumb-container {
-    max-width: 300px;
+    height: 168.75px;
 }
 
 .fade-enter-active, .fade-leave-active {
