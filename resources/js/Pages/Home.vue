@@ -6,26 +6,32 @@
             </div>
             <div class="overflow-hidden flex flex-col justify-items-center">
                 <div class="thumb-container" v-for="video in data" :key="video.id">
-                    <inertia-link class="flex mt-5 p-2 bg-white shadow rounded" :href="'video/'+video.id">
-                        <div class="bg-black relative mr-5">
-                            <img :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=169&width=300'">
-                            <div class="absolute bottom-2 text-white bg-black text-sm">{{getTime(video.video_length)}}</div>
-                        </div>
-                        <div class="w-full relative">
+                    <inertia-link class="flex mt-5 p-2 bg-white shadow rounded h-60" :href="'video/'+video.id">
+                        <div class="w-full">
                             <div class="flex justify-between">
                                 <h2 class="font-semibold">{{video.title}}</h2>
                                 <div class="text-sm">
-                                    Views: {{video.views}}
-                                    •
-                                    {{getVideoAge(video.created_at)}}
+                                    <span>
+                                    Views: {{video.views}} • {{getVideoAge(video.created_at)}}
+                                    </span>
                                 </div>
                             </div>
                             <hr>
-                            <div>
-                                {{video.description}}
+                            <div class="flex h-4/6">
+                                <div class="mr-5 h-full">
+                                    <div class="relative thumb">
+                                        <img :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=169&width=300'">
+                                        <div class="absolute bottom-2 text-white bg-black text-sm bg-opacity-50 ml-1">{{getTime(video.video_length)}}</div>
+                                    </div>
+                                </div>
+                                <div class="h-full">
+                                    <div class="break-words">
+                                        {{video.description}}
+                                    </div>
+                                </div>
                             </div>
-                            <div class="absolute bottom-0">
-                                {{video.uploader}}
+                            <div class="h-1/6 flex items-end mt-3">
+                                Uploaded by {{video.uploader}}
                             </div>
                         </div>
                     </inertia-link>

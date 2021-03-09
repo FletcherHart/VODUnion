@@ -15,6 +15,7 @@ html, body {
 
 .thumb {
     height: 168.75px;
+    min-width: 300px;
 }
 
 .fade-enter-active, .fade-leave-active {
@@ -32,4 +33,12 @@ html, body {
 .upside-up {
     -webkit-transform: scaleY(1);
     transform: scaleY(1);
+}
+
+
+@media only screen and (max-width: 600px) {
+    .thumb {
+        height: 140px;
+        min-width: 250px;
+    }
 }
