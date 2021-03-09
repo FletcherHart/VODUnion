@@ -57,7 +57,6 @@
                 return moment([date]).fromNow();
             },
             getTime(duration) {
-                console.log(duration)
                 return new Date(duration * 1000).toISOString().substr(11, 8);
             }
         }
