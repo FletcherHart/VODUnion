@@ -4,7 +4,7 @@
             <div v-if="errors.deny">
                 <mark>{{errors.deny}}</mark>
             </div>
-            <div class="overflow-hidden flex flex-col justify-center">
+            <div class="overflow-hidden flex flex-col justify-center mb-10">
                 <div> 
                     <span class="flex justify-between">
                         <span class="flex">
@@ -35,43 +35,51 @@
                         </div>
                     </div>
                 </div>
-                <div class="w-full grid grid-cols-6 gap-4 border-b-2 border-black">  
-                    <div class="col-start-2">
-                        Title
-                    </div>
-                    <div>
-                        Edit
-                    </div>
-                    <div>
-                        Visibility
-                    </div>
-                    <div class="flex">
+                <div class="w-full border-b-2 border-black">  
+                    <div class="flex justify-end">
                         <span>Date</span>
                         <button v-on:click="sort" class="flex justify-center items-center rounded"><img class="w-4 h-full ml-1" id="dateSortImg" src="/open-iconic/svg/arrow-top.svg" alt="sort video by date icon"></button>
                     </div>
-                    <div>
-                        Status
-                    </div>
                 </div>
-                <div class="w-full grid grid-cols-6 gap-4 border-b-2 border-black" v-for="video in sortedVideos" :key="video.id">
-                    <div class="w-40 sm:w-auto">
-                        <div class="w-full flex justify-center ">
-                            <img v-if="!video.thumbnail" :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=81'">
-                            <img v-else :src="'/storage/thumbnails/' + video.thumbnail">
+                <div class="w-full mb-5" v-for="video in sortedVideos" :key="video.id">
+                    <div class="flex mt-5 p-2 bg-white shadow rounded">
+                        <div class="w-full">
+                            <div class="flex justify-between">
+                                <h2 class="font-semibold" v-if="video.title">{{video.title}}</h2>
+                                <h2 class="font-semibold" v-else><i>Untitled</i></h2>
+                                <div v-if="video.status == 'done'" class="bg-green-400 rounded p-1 w-min">Ready</div>
+                                <div v-else-if="video.status == 'processing'" class="bg-gray-400 rounded p-1 w-min">Ready</div>
+                                <div class="flex items-center">
+                                    <img class="icon mr-2" src="/open-iconic/svg/eye.svg" alt="visibility icon">
+                                    <p v-if="video.listed">Public</p>
+                                    <p v-else>Unlisted</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="flex">
+                                <div class="mr-5 h-full">
+                                    <div class="relative">
+                                        <img :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=113&width=200'">
+                                        <div class="absolute bottom-2 text-white bg-black text-sm bg-opacity-50 ml-1">{{getTime(video.video_length)}}</div>
+                                    </div>
+                                </div>
+                                <div class="w-full">
+                                    <div class="text-sm">
+                                        <div>Views: {{video.views}}</div>
+                                        <div>Uploaded: {{setTime(video.created_at)}}</div>
+                                    </div>
+                                    <div class="flex items-center justify-between w-full">
+                                        <button v-on:click="edit(video)" class="w-10 h-10 text-gray-600 flex justify-center items-center"><img class="icon" src="/open-iconic/svg/pencil.svg" alt="edit icon"></button>
+                                        <div class="flex flex-row justify-between items-center">
+                                            <button v-on:click="deleteVideo(video.id)" class="bg-red-600 rounded p-1 text-white">Delete</button>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
-                    </div>
-                    <div class="flex items-center">{{video.title}}</div>
-                    <button v-on:click="edit(video)" class="w-10 text-gray-600 flex justify-center items-center"><img class="icon" src="/open-iconic/svg/pencil.svg" alt="edit icon"></button>
-                    <div class="flex items-center">
-                        <p v-if="video.listed">Public</p>
-                        <p v-else>Unlisted</p>
-                    </div>
-                    <div class="flex items-center">{{setTime(video.created_at)}}</div>
-                    <div class="flex flex-row justify-between items-center">
-                        <div v-if="video.status == 'done'" class="bg-green-400 rounded p-1 w-min">Ready</div>
-                        <div v-else-if="video.status == 'processing'" class="bg-gray-400 rounded p-1 w-min">Ready</div>
-                        <button v-on:click="deleteVideo(video.id)" class="bg-red-600 rounded p-1 text-white">Delete</button>
-                    </div>
+                    </div>                    
                 </div>
             </div>
         </div>
@@ -81,7 +89,7 @@
             'lg:-ml-52 md:-ml-40 sm:-ml-24': !this.$store.state.isHidden
         }"
          v-if="editVideo.id">
-            <div class="flex flex-col bg-white relative m-auto w-4/6 h-4/5">    
+            <div class="flex flex-col bg-white relative m-auto sm:w-4/6 sm:h-4/5 w-5/6 h-3/5">    
                 <div class="flex flex-row-reverse">
                     <button v-on:click="unedit()" class="p-1 mr-1 mt-1"> <img class="icon" src="/open-iconic/svg/x.svg" alt="add video icon"></button>
                 </div>
@@ -105,7 +113,7 @@
                     </span>
                     <div v-if="errors.list"><mark>{{ errors.list }}</mark></div>
 
-                    <button type="submit" class="ml-5 bg-blue-600 w-1/6 rounded float-right">Submit</button>
+                    <button type="submit" class="m-10 bg-blue-600 rounded float-right">Submit</button>
                 </form>
                 <transition name="fade">
                     <div v-on:click="clearStatus" v-if="$page.props.flash.updateStatus" class="w-full flex items-center justify-center">
@@ -246,6 +254,9 @@
             },
             sortByDate(left, right) {
                 return moment.utc(left.timeStamp).diff(moment.utc(right.timeStamp))
+            },
+            getTime(duration) {
+                return new Date(duration * 1000).toISOString().substr(11, 8);
             }
         },
         watch: { 
