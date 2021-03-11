@@ -6,14 +6,7 @@
             </div>
             <div class="overflow-hidden flex flex-col justify-center mb-10">
                 <div> 
-                    <span class="flex justify-between">
-                        <span class="flex">
-                            <button v-on:click="reloadPage" class="bg-blue-400 w-10 h-10 flex justify-center items-center rounded"><img class="icon" src="/open-iconic/svg/loop-circular.svg" alt="refresh videos icon"></button>
-                            <button v-on:click="uploadModalDisplay" class="bg-green-400 w-10 h-10 flex justify-center items-center rounded">
-                                <img class="icon" src="/open-iconic/svg/plus.svg" alt="add video icon">
-                            </button>
-                        </span>
-                    </span>
+                    
                     <div class="m-10" v-bind:class="{'hidden': uploadModal}">
                         <div class="flex justify-center">
                             <h2 class="m-auto font-bold">Upload</h2>
@@ -35,10 +28,24 @@
                         </div>
                     </div>
                 </div>
-                <div class="w-full border-b-2 border-black">  
-                    <div class="flex justify-end">
-                        <span>Date</span>
-                        <button v-on:click="sort" class="flex justify-center items-center rounded"><img class="w-4 h-full ml-1" id="dateSortImg" src="/open-iconic/svg/arrow-top.svg" alt="sort video by date icon"></button>
+                <div class="flex justify-center">
+                    <div class="w-5/6 border-b-2 border-black">
+                        <div class="flex justify-between">
+                            <div>
+                                <span class="flex justify-between">
+                                    <span class="flex">
+                                        <button v-on:click="reloadPage" class="bg-blue-400 w-10 h-10 flex justify-center items-center rounded"><img class="icon" src="/open-iconic/svg/loop-circular.svg" alt="refresh videos icon"></button>
+                                        <button v-on:click="uploadModalDisplay" class="bg-green-400 w-10 h-10 flex justify-center items-center rounded">
+                                            <img class="icon" src="/open-iconic/svg/plus.svg" alt="add video icon">
+                                        </button>
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="flex">
+                                <span>Date</span>
+                                <button v-on:click="sort" class="flex justify-center items-center rounded"><img class="w-4 h-full ml-1" id="dateSortImg" src="/open-iconic/svg/arrow-top.svg" alt="sort video by date icon"></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="w-full mb-5" v-for="video in sortedVideos" :key="video.id">
