@@ -41,7 +41,7 @@
                                     </span>
                                 </span>
                             </div>
-                            <div class="flex">
+                            <div class="flex items-center">
                                 <span>Date</span>
                                 <button v-on:click="sort" class="flex justify-center items-center rounded"><img class="w-4 h-full ml-1" id="dateSortImg" src="/open-iconic/svg/arrow-top.svg" alt="sort video by date icon"></button>
                             </div>
@@ -54,12 +54,14 @@
                             <div class="flex justify-between">
                                 <h2 class="font-semibold" v-if="video.title">{{video.title}}</h2>
                                 <h2 class="font-semibold" v-else><i>Untitled</i></h2>
-                                <div v-if="video.status == 'done'" class="bg-green-400 rounded p-1 w-min">Ready</div>
-                                <div v-else-if="video.status == 'processing'" class="bg-gray-400 rounded p-1 w-min">Ready</div>
-                                <div class="flex items-center">
-                                    <img class="icon mr-2" src="/open-iconic/svg/eye.svg" alt="visibility icon">
-                                    <p v-if="video.listed">Public</p>
-                                    <p v-else>Unlisted</p>
+                                <div class="flex">
+                                    <div class="flex items-center mr-3">
+                                        <img class="icon mr-2" src="/open-iconic/svg/eye.svg" alt="visibility icon">
+                                        <p v-if="video.listed">Public</p>
+                                        <p v-else>Unlisted</p>
+                                    </div>
+                                    <div v-if="video.status == 'done'" class="bg-green-400 rounded p-1 w-min">Ready</div>
+                                    <div v-else-if="video.status == 'processing'" class="bg-gray-400 rounded p-1 w-min">Processing</div>
                                 </div>
                             </div>
                             <hr>
