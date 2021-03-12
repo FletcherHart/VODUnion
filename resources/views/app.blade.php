@@ -8,10 +8,13 @@
         <title>VODUnion</title>
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
+        <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap"> -->
 
         <!-- Styles -->
         <link type="text/css" rel="stylesheet" href="{{ mix('css/app.css') }}">
+        <style>
+            html,body {height:100%;background-color: rgba(219, 234, 254, 1);}
+        </style>
 
         <!-- Scripts -->
         @routes
