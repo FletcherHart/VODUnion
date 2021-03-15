@@ -2,18 +2,6 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-
-
-.icon {
-    width: 16px;
-    height: 16px;
-  }
-
-.thumb {
-    height: 168.75px;
-    min-width: 300px;
-}
-
 .fade-enter-active, .fade-leave-active {
     transition: opacity .5s;
 }
