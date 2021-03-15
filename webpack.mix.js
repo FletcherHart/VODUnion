@@ -11,9 +11,17 @@ const mix = require('laravel-mix');
  |
  */
 
+require('laravel-mix-bundle-analyzer');
+
+if (!mix.inProduction() && !mix.isWatching()) {
+    mix.bundleAnalyzer();
+}
+
 mix.js('resources/js/app.js', 'public/js')
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),
         require('tailwindcss'),
     ])
     .webpackConfig(require('./webpack.config'));
+
+
