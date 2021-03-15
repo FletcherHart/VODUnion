@@ -1,7 +1,5 @@
 require('./bootstrap');
 
-require('moment');
-
 import Vue from 'vue';
 import Vuex from 'vuex';
 
