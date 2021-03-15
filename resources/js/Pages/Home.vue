@@ -43,7 +43,7 @@
 
 <script>
     import HeaderLayout from '@/Layouts/HeaderLayout'
-    import moment from 'moment'
+    import {formatDistance, toDate} from 'date-fns'
     export default {
         components: {
             HeaderLayout
@@ -54,7 +54,7 @@
         },
         methods: {
             getVideoAge(date) {
-                return moment([date]).fromNow();
+                return formatDistance(toDate(new Date(date)), new Date(), { addSuffix: true });
             },
             getTime(duration) {
                 return new Date(duration * 1000).toISOString().substr(11, 8);

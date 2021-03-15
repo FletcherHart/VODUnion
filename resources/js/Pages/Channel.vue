@@ -143,7 +143,7 @@
     import HeaderLayout from '@/Layouts/HeaderLayout'
     import JetInputError from '@/Jetstream/InputError'
     import { Inertia } from '@inertiajs/inertia'
-    import moment from 'moment'
+    import {format, formatDistance, toDate} from 'date-fns'
 
     export default {
         components: {
@@ -247,11 +247,9 @@
                 Inertia.reload();
             },
             setTime(date) {
-                moment.locale();
-                return moment(date).format('MMMM Do YYYY, hh:mm a');
+                return format(toDate(new Date(date)), 'LLL d, y');
             }, 
             sort() {
-                //this.sortedVideos.sort(this.sortByDate);
                 this.sortedVideos.reverse();
                 if(document.getElementById('dateSortImg').classList.contains('upside-down')) {
                     document.getElementById('dateSortImg').classList.remove('upside-down');
@@ -260,9 +258,6 @@
                     document.getElementById('dateSortImg').classList.remove('upside-up');
                     document.getElementById('dateSortImg').classList.add('upside-down');
                 }
-            },
-            sortByDate(left, right) {
-                return moment.utc(left.timeStamp).diff(moment.utc(right.timeStamp))
             },
             getTime(duration) {
                 return new Date(duration * 1000).toISOString().substr(11, 8);
