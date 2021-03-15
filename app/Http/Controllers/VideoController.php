@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Video;
 use App\Models\LikeVideo;
 use App\Models\Comment;
-use App\Jobs\ProcessVideo;
+use App\Jobs\UpdateVideoViews;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,26 +33,13 @@ class VideoController extends Controller
 
         $data = Video::where('listed', 1)
             ->join('users', "videos.user_id", "users.id")
-            ->get(['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.created_at', 'users.name as uploader', 'videos.user_id', 'videos.video_length']);
+            ->get(['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.views', 'videos.created_at', 'users.name as uploader', 'videos.user_id', 'videos.video_length']);
         
 
         $data->each(function ($collection, $alphabet) {
-
             if(strlen($collection['description']) > 100) {
                 $collection['description'] = substr($collection['description'], 0, 100) . "...";
             }
-
-            $response = Http::withToken(config('app.cloud_token'))
-            ->withHeaders([
-                'Access-Control-Allow-Origin' => '*',
-                'Access-Control-Allow-Methods' => 'POST',
-                'Access-Control-Allow-Headers' => '*'
-            ])
-            ->get('https://api.cloudflare.com/client/v4/accounts/'
-            . config('app.cloud_account') .
-            '/stream/analytics/views?metrics=totalImpressions&filters=videoId==' . $collection['videoID'] . '&since=2021-01-01T00:00:00Z');
-
-            $collection['views'] = $response['result']['totals']['totalImpressions'];
         });
 
         return Inertia::render('Home', ['data'=> $data]);
@@ -213,21 +200,12 @@ class VideoController extends Controller
      */
     public function show($id)
     {
+        UpdateVideoViews::dispatch($id)->delay(now()->addMinutes(1));
+
         $data = Video::where('videos.id', $id)
             ->join('users', "videos.user_id", "users.id")
-            ->first(['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.created_at', 'users.name as uploader', 'videos.user_id']);
+            ->first(['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.views', 'videos.created_at', 'users.name as uploader', 'videos.user_id']);
         
-        $response = Http::withToken(config('app.cloud_token'))
-            ->withHeaders([
-                'Access-Control-Allow-Origin' => '*',
-                'Access-Control-Allow-Methods' => 'POST',
-                'Access-Control-Allow-Headers' => '*'
-            ])
-            ->get('https://api.cloudflare.com/client/v4/accounts/'
-            . config('app.cloud_account') .
-            '/stream/analytics/views?metrics=totalImpressions&filters=videoId==' . $data['videoID'] . '&since=2021-01-01T00:00:00Z');
-
-        $data['views'] = $response['result']['totals']['totalImpressions'];
 
         $comments = Comment::where('video_id', $id)
             ->join('users', "comments.user_id", "users.id")
