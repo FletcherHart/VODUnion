@@ -2,6 +2,11 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+.thumb {
+    height: 168.75px;
+    min-width: 300px;
+}
+
 .fade-enter-active, .fade-leave-active {
     transition: opacity .5s;
 }
@@ -22,7 +27,6 @@
 
 @media only screen and (max-width: 600px) {
     .thumb {
-        height: 140px;
-        min-width: 250px;
+        max-width: 250px;
     }
 }

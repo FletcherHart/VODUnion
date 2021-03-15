@@ -26,7 +26,7 @@
         <form class="shadow-md flex items-center justify-center fixed top-16 w-full m-b-8" @submit.prevent="search" v-if="this.windowWidth < 640">
           <input class="rounded rounded-r-none w-full h-8" type="text" id="search">
           <button class="rounded-r icon-button h-8 w-8 flex items-center justify-center bg-gray-600">
-            <img class="icon" src="/open-iconic/svg/magnifying-glass.svg">
+            <img width="16px" height="16px" src="/open-iconic/svg/magnifying-glass.svg">
           </button>
         </form>
       </div>
