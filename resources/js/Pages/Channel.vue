@@ -34,9 +34,9 @@
                             <div>
                                 <span class="flex justify-between">
                                     <span class="flex">
-                                        <button v-on:click="reloadPage" class="bg-blue-400 w-10 h-10 flex justify-center items-center rounded"><img class="icon" src="/open-iconic/svg/loop-circular.svg" alt="refresh videos icon"></button>
+                                        <button v-on:click="reloadPage" class="bg-blue-400 w-10 h-10 flex justify-center items-center rounded"><img width="16px" height="16px" src="/open-iconic/svg/loop-circular.svg" alt="refresh videos icon"></button>
                                         <button v-on:click="uploadModalDisplay" class="bg-green-400 w-10 h-10 flex justify-center items-center rounded">
-                                            <img class="icon" src="/open-iconic/svg/plus.svg" alt="add video icon">
+                                            <img width="16px" height="16px" src="/open-iconic/svg/plus.svg" alt="add video icon">
                                         </button>
                                     </span>
                                 </span>
@@ -56,7 +56,7 @@
                                 <h2 class="font-semibold" v-else><i>Untitled</i></h2>
                                 <div class="flex">
                                     <div class="flex items-center mr-3">
-                                        <img class="icon mr-2" src="/open-iconic/svg/eye.svg" alt="visibility icon">
+                                        <img class="mr-2" width="16px" height="16px" src="/open-iconic/svg/eye.svg" alt="visibility icon">
                                         <p v-if="video.listed">Public</p>
                                         <p v-else>Unlisted</p>
                                     </div>
@@ -78,7 +78,7 @@
                                         <div>Uploaded: {{setTime(video.created_at)}}</div>
                                     </div>
                                     <div class="flex items-center justify-between w-full">
-                                        <button v-on:click="edit(video)" class="w-10 h-10 text-gray-600 flex justify-center items-center"><img class="icon" src="/open-iconic/svg/pencil.svg" alt="edit icon"></button>
+                                        <button v-on:click="edit(video)" class="w-10 h-10 text-gray-600 flex justify-center items-center"><img width="16px" height="16px" src="/open-iconic/svg/pencil.svg" alt="edit icon"></button>
                                         <div class="flex flex-row justify-between items-center">
                                             <button v-on:click="deleteVideo(video.id)" class="bg-red-600 rounded p-1 text-white">Delete</button>
                                         </div>
@@ -100,7 +100,7 @@
          v-if="editVideo.id">
             <div class="flex flex-col bg-white relative m-auto sm:w-4/6 sm:h-4/5 w-5/6 h-3/5">    
                 <div class="flex flex-row-reverse">
-                    <button v-on:click="unedit()" class="p-1 mr-1 mt-1"> <img class="icon" src="/open-iconic/svg/x.svg" alt="add video icon"></button>
+                    <button v-on:click="unedit()" class="p-1 mr-1 mt-1"> <img width="16px" height="16px" src="/open-iconic/svg/x.svg" alt="add video icon"></button>
                 </div>
                 <form @submit.prevent="submit(editVideo.id)" :id="editVideo.id" class="flex flex-col">
                     <div class="ml-5 mr-5">
