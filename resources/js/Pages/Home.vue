@@ -18,9 +18,11 @@
                                         <div class="absolute bottom-2 text-white bg-black text-sm bg-opacity-50 ml-1">{{getTime(video.video_length)}}</div>
                                     </div>
                                 </div>
-                                <div class="group relative flex justify-between h-1/6">
-                                    <h2 class="font-semibold">{{titleSubstring(video.title)}}</h2>
-                                    <p class="absolute top-0 z-50 group-hover:opacity-100 bg-gray-100 opacity-0 text-sm whitespace-nowrap">{{video.title}}</p>
+                                <div class="group flex justify-between h-1/6" v-on:mouseover="titleHover($event, video.id)" v-on:mouseleave="titleLeave(video.id)">
+                                    <h2 class="font-semibold truncate">{{video.title}}</h2>
+                                    <p :id="'title' + video.id" class="absolute hidden z-50 bg-gray-100 text-sm whitespace-nowrap">
+                                        {{video.title}}
+                                    </p>
                                 </div>
                                 <div class="text-sm">
                                     <span>
@@ -57,12 +59,19 @@
             getTime(duration) {
                 return new Date(duration * 1000).toISOString().substr(11, 8);
             },
-            titleSubstring(title) {
-                if(title.length > 35)
-                    return title.substring(0,35) + "...";
-                else    
-                    return title;
-            }
+            titleHover(event, id) {
+                console.log(event.clientX + "px;" + ", " + event.clientY + "px;");
+                document.getElementById('title' + id).style.left = event.pageX + "px;";
+                document.getElementById('title'+ id).style.top = event.pageY + "px;";
+                document.getElementById('title'+ id).style.display = "block";
+
+                var rect =  document.getElementById('title' + id).getBoundingClientRect();
+                console.log(rect.left, rect.top);
+            },
+            titleLeave(id) {
+                //console.log(title);
+                document.getElementById('title' + id).style.display='none';
+            },
         }
     }
 </script>
