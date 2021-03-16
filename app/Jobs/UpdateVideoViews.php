@@ -11,9 +11,11 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\Video;
 use Illuminate\Support\Facades\Http;
 
-class UpdateVideoViews implements ShouldQueue
+class UpdateVideoViews implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public $uniqueFor = 600;
 
     protected $video;
 
