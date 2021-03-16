@@ -1,37 +1,32 @@
 <template>
     <header-layout>
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 h-full">
+        <div class="w-full h-full flex sm:pl-5 sm:pr-5">
             <div v-if="search" class="w-full flex justify-center mb-6 mt-6">
                 <h1 class="font-bold text-xl">Search term: {{search}}</h1>
             </div>
-            <div class="overflow-hidden flex flex-col justify-items-center">
-                <div class="thumb-container" v-for="video in data" :key="video.id">
-                    <inertia-link class="flex mt-5 p-2 bg-white shadow rounded h-60" :href="'video/'+video.id">
+            <div class="overflow-hidden grid gap-3 lg:grid-cols-4 md:grid-cols-3 w-full sm:w-min">
+                <div v-for="video in data" :key="video.id">
+                    <inertia-link class="flex mt-5 p-2 bg-white shadow rounded h-full" :href="'video/'+video.id">
                         <div class="w-full">
-                            <div class="flex justify-between">
-                                <h2 class="font-semibold">{{video.title}}</h2>
-                                <div class="text-sm">
-                                    <span>
-                                    Views: {{video.views}} • {{getVideoAge(video.created_at)}}
-                                    </span>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="flex h-4/6">
-                                <div class="mr-5 h-full">
+                            <div class="flex flex-col">
+                                <div class="h-full flex justify-center">
                                     <div class="relative thumb">
                                         <img :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=169&width=300'" width="300px" height="169px">
                                         <div class="absolute bottom-2 text-white bg-black text-sm bg-opacity-50 ml-1">{{getTime(video.video_length)}}</div>
                                     </div>
                                 </div>
-                                <div class="h-full">
-                                    <div class="break-all">
-                                        {{video.description}}
-                                    </div>
+                                <div class="group relative flex justify-between h-1/6">
+                                    <h2 class="font-semibold">{{titleSubstring(video.title)}}</h2>
+                                    <p class="absolute top-0 z-50 group-hover:opacity-100 bg-gray-100 opacity-0 text-sm whitespace-nowrap">{{video.title}}</p>
                                 </div>
-                            </div>
-                            <div class="h-1/6 flex items-end mt-3">
-                                Uploaded by {{video.uploader}}
+                                <div class="text-sm">
+                                    <span>
+                                    Views: {{video.views}} • {{getVideoAge(video.created_at)}}
+                                    </span>
+                                </div>
+                                <div class="flex h-full items-end mt-3">
+                                    Uploaded by {{video.uploader}}
+                                </div>
                             </div>
                         </div>
                     </inertia-link>
@@ -58,6 +53,12 @@
             },
             getTime(duration) {
                 return new Date(duration * 1000).toISOString().substr(11, 8);
+            },
+            titleSubstring(title) {
+                if(title.length > 35)
+                    return title.substring(0,35) + "...";
+                else    
+                    return title;
             }
         }
     }

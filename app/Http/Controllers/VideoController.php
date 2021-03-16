@@ -204,7 +204,7 @@ class VideoController extends Controller
 
         $data = Video::where('videos.id', $id)
             ->join('users', "videos.user_id", "users.id")
-            ->first(['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.views', 'videos.created_at', 'users.name as uploader', 'videos.user_id']);
+            ->first(['videos.title', 'videos.id', 'videos.videoID', 'videos.views', 'videos.created_at', 'users.name as uploader', 'videos.user_id']);
         
 
         $comments = Comment::where('video_id', $id)

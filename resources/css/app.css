@@ -3,10 +3,9 @@
 @import 'tailwindcss/utilities';
 
 .thumb {
-    height: 168.75px;
-    min-width: 300px;
+    max-width:100%;
+    height:auto;
 }
-
 .fade-enter-active, .fade-leave-active {
     transition: opacity .5s;
 }
@@ -22,11 +21,4 @@
 .upside-up {
     -webkit-transform: scaleY(1);
     transform: scaleY(1);
-}
-
-
-@media only screen and (max-width: 600px) {
-    .thumb {
-        max-width: 250px;
-    }
 }
