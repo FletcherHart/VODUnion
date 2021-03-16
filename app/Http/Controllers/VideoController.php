@@ -200,7 +200,7 @@ class VideoController extends Controller
      */
     public function show($id)
     {
-        UpdateVideoViews::dispatch($id)->delay(now()->addMinutes(1));
+        UpdateVideoViews::dispatch($id)->delay(now()->addMinutes(10));
 
         $data = Video::where('videos.id', $id)
             ->join('users', "videos.user_id", "users.id")
