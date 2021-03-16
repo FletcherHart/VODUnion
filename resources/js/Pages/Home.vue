@@ -4,7 +4,10 @@
             <div v-if="search" class="w-full flex justify-center mb-6 mt-6">
                 <h1 class="font-bold text-xl">Search term: {{search}}</h1>
             </div>
-            <div class="overflow-hidden grid gap-3 lg:grid-cols-4 md:grid-cols-3 w-full sm:w-min">
+            <div class="overflow-hidden grid gap-3 sm:grid-cols-3 w-full sm:w-min xl:grid-cols-4" v-bind:class="{ 
+                'lg:grid-cols-4': this.$store.state.isHidden, 
+                'xl:grid-cols-3 lg:grid-cols-3': !this.$store.state.isHidden
+            }">
                 <div v-for="video in data" :key="video.id">
                     <inertia-link class="flex mt-5 p-2 bg-white shadow rounded h-full" :href="'video/'+video.id">
                         <div class="w-full">
