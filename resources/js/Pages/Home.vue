@@ -18,12 +18,12 @@
                                         <div class="absolute bottom-2 text-white bg-black text-sm bg-opacity-50 ml-1">{{getTime(video.video_length)}}</div>
                                     </div>
                                 </div>
-                                <div class="group flex justify-between h-1/6" v-on:mouseover="titleHover($event, video.id)" v-on:mouseleave="titleLeave(video.id)">
+                                <div class="flex justify-between h-1/6" v-on:mouseover="titleHover($event, video.id, video.title)" v-on:mouseleave="titleLeave(video.id)">
                                     <h2 class="font-semibold truncate">{{video.title}}</h2>
-                                    <p :id="'title' + video.id" class="absolute hidden z-50 bg-gray-100 text-sm whitespace-nowrap">
-                                        {{video.title}}
-                                    </p>
                                 </div>
+                                <span :id="'title' + video.id" class="absolute hidden z-50 bg-gray-100 text-sm whitespace-nowrap">
+                                    
+                                </span>
                                 <div class="text-sm">
                                     <span>
                                     Views: {{video.views}} • {{getVideoAge(video.created_at)}}
@@ -59,17 +59,20 @@
             getTime(duration) {
                 return new Date(duration * 1000).toISOString().substr(11, 8);
             },
-            titleHover(event, id) {
-                console.log(event.clientX + "px;" + ", " + event.clientY + "px;");
-                document.getElementById('title' + id).style.left = event.pageX + "px;";
-                document.getElementById('title'+ id).style.top = event.pageY + "px;";
+            titleHover(event, id, title) {
                 document.getElementById('title'+ id).style.display = "block";
-
-                var rect =  document.getElementById('title' + id).getBoundingClientRect();
-                console.log(rect.left, rect.top);
+                document.getElementById('title'+ id).textContent = title;
+                var left = (event.clientX + 10);
+                var top = (event.clientY - (document.getElementById('title' + id).clientHeight / 2) + 30);
+                
+                if (left + document.getElementById('title' + id).offsetWidth > window.outerWidth) {
+                    left = window.outerWidth - document.getElementById('title' + id).offsetWidth;
+                }
+                
+                document.getElementById('title'+ id).style.left = left + "px";
+                document.getElementById('title'+ id).style.top = top + "px";
             },
             titleLeave(id) {
-                //console.log(title);
                 document.getElementById('title' + id).style.display='none';
             },
         }
