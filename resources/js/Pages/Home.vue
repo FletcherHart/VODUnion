@@ -1,6 +1,6 @@
 <template>
     <header-layout>
-        <div class="w-full h-full flex sm:pl-5 sm:pr-5">
+        <div class="w-full h-full flex flex-col sm:pl-5 sm:pr-5">
             <div v-if="search" class="w-full flex justify-center mb-6 mt-6">
                 <h1 class="font-bold text-xl">Search term: {{search}}</h1>
             </div>
