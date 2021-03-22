@@ -37,30 +37,10 @@ class UploadVideoTest extends TestCase
         $response->assertRedirect('upgrade');
     }
 
-    public function test_prevent_upload_if_more_than_20gb_already_stored() {
-
-        Video::factory(['sizeKB' => 20000000001])->create();
-
-        $this->be($user = User::factory(['role_id'=>2])->create());
-        $response = $this->get('/key');
-
-        $response->assertSessionHasErrors(['deny']);
-    }
-
     public function test_user_with_3_uploaded_videos_cannot_upload_more_videos() {
         $this->be($user = User::factory(['role_id'=>2])->create());
 
         Video::factory(['user_id' => $user->id])->count(3)->create();
-
-        $response = $this->get('/key');
-
-        $response->assertSessionHasErrors(['deny']);
-    }
-
-    public function test_user_cannot_upload_more_than_2_gigabytes() {
-        $this->be($user = User::factory(['role_id'=>2])->create());
-
-        Video::factory(['user_id' => $user->id, 'sizeKB' => 2000000000])->create();
 
         $response = $this->get('/key');
 

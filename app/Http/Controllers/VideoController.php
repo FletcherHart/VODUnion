@@ -104,11 +104,6 @@ class VideoController extends Controller
                     'Error: You have reached the maximum allotment of video uploads, and cannot upload more at this time.'
                 ]);
             }
-            if($this->totalStorageUsed() >= 20000000000)
-            {
-                return Redirect::back()
-                    ->withErrors(['deny' => 'Error: Max storage space occupied. No videos can be uploaded at this time.']);
-            }
             if(Video::where('user_id', Auth::user()->id)->sum('sizeKB') >= 2000000000) {
                 return Redirect::back()
                     ->withErrors(['deny' => 'Error: You have reached the maximum 2GB of storage per user.']);
@@ -316,10 +311,6 @@ class VideoController extends Controller
         $video->delete();
 
         return Redirect::back();
-    }
-
-    public function totalStorageUsed() {
-        return Video::all()->sum('sizeKB');
     }
 
     public function status(Video $video) {
