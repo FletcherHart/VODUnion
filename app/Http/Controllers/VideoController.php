@@ -64,7 +64,7 @@ class VideoController extends Controller
             return Redirect::route('upgrade');
         }
         
-        $videos = $this->getVideos([['user_id', Auth::user()->id],['status', '!=', 'done']]);
+        $videos = $this->getVideos([['user_id', Auth::user()->id],['status', '!=', 'ready']]);
 
         foreach($videos as $key => $item) {
            $item = $this->status($item);
@@ -81,7 +81,7 @@ class VideoController extends Controller
             $collection->save();
         });
         
-        $videos = $this->getVideos([['user_id', Auth::user()->id],['status', '=', 'done']]);
+        $videos = $this->getVideos([['user_id', Auth::user()->id],['status', '=', 'ready']]);
 
         return Inertia::render('Channel', ['videos' => $videos]);
     }
@@ -323,23 +323,15 @@ class VideoController extends Controller
     }
 
     public function status(Video $video) {
-        if($video->status != 'done') {
+        if($video->status != 'ready') {
             $response = Http::withToken(config('app.cloud_token'))
             ->get('https://api.cloudflare.com/client/v4/accounts/'
             . config('app.cloud_account') .
             '/stream/'. $video['videoID']);
-            
-            $status = $response['result']['status']['state'];
 
-            if($status == 'ready') {
-                $video->status = "done";
-                $video->save();
-                return $video;
-            } else if ($status == 'inProgress') {
-                $video->status = "pending";
-                $video->save();
-                return $video;
-            }
+            $video->status = $response['result']['status']['state'];
+            $video->save();
+            return $video;
         }
 
         return $video;

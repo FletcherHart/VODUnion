@@ -60,8 +60,8 @@
                                         <p v-if="video.listed">Public</p>
                                         <p v-else>Unlisted</p>
                                     </div>
-                                    <div v-if="video.status == 'done'" class="bg-green-400 rounded p-1 w-min">Ready</div>
-                                    <div v-else-if="video.status == 'processing'" class="bg-gray-400 rounded p-1 w-min">Processing</div>
+                                    <div v-if="video.status == 'ready'" class="bg-green-400 rounded p-1 w-min">Ready</div>
+                                    <div v-else class="bg-gray-400 rounded p-1 w-min">Processing</div>
                                 </div>
                             </div>
                             <hr>
