@@ -33,15 +33,8 @@ class VideoController extends Controller
 
         $data = Video::where('listed', 1)
             ->join('users', "videos.user_id", "users.id")
-            ->get(['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.views', 'videos.created_at', 'users.name as uploader', 'videos.user_id', 'videos.video_length']);
+            ->get(['videos.title', 'videos.id', 'videos.videoID', 'videos.views', 'videos.created_at', 'users.name as uploader', 'videos.user_id', 'videos.video_length']);
         
-
-        $data->each(function ($collection, $alphabet) {
-            if(strlen($collection['description']) > 100) {
-                $collection['description'] = substr($collection['description'], 0, 100) . "...";
-            }
-        });
-
         return Inertia::render('Home', ['data'=> $data]);
     }
 
