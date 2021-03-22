@@ -106,7 +106,7 @@ class VideoController extends Controller
             }
 
             $video = Video::where('user_id', Auth::user()->id)
-                ->where('status', 'inprogress')
+                ->where('status', 'uploading')
                 ->first();
 
             if($video != null) {
