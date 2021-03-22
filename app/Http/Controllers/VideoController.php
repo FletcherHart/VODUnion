@@ -83,21 +83,6 @@ class VideoController extends Controller
         
         $videos = $this->getVideos([['user_id', Auth::user()->id],['status', '=', 'done']]);
 
-        $videos->each(function ($collection, $alphabet) {
-
-            $response = Http::withToken(config('app.cloud_token'))
-            ->withHeaders([
-                'Access-Control-Allow-Origin' => '*',
-                'Access-Control-Allow-Methods' => 'POST',
-                'Access-Control-Allow-Headers' => '*'
-            ])
-            ->get('https://api.cloudflare.com/client/v4/accounts/'
-            . config('app.cloud_account') .
-            '/stream/analytics/views?metrics=totalImpressions&filters=videoId==' . $collection['videoID'] . '&since=2021-01-01T00:00:00Z');
-
-            $collection['views'] = $response['result']['totals']['totalImpressions'];
-        });
-
         return Inertia::render('Channel', ['videos' => $videos]);
     }
 
