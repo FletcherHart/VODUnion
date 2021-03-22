@@ -29,13 +29,28 @@ class VideoController extends Controller
      */
     public function index()
     {
-        // $data = Video::latest()->where('listed', 1)->get();
-
-        $data = Video::where('listed', 1)
-            ->join('users', "videos.user_id", "users.id")
-            ->get(['videos.title', 'videos.id', 'videos.videoID', 'videos.views', 'videos.created_at', 'users.name as uploader', 'videos.user_id', 'videos.video_length']);
-        
+            $data = $this->getVideos(['listed', 1], 
+                ['videos.title', 'videos.id', 'videos.videoID', 'videos.views', 'videos.created_at', 'users.name as uploader', 'videos.user_id', 'videos.video_length']
+                , ['users', "videos.user_id", "users.id"]
+            );
         return Inertia::render('Home', ['data'=> $data]);
+    }
+
+    /*
+     * Get videos function
+     * @return array
+    */
+    public function getVideos($conditions, $get_params = '*', $join_params = null) {
+        if($join_params == null || count($join_params) < 2) {
+            return Video::where($conditions)
+            ->orderByDesc('created_at')
+            ->get($get_params);
+        } else {
+            return Video::where(...$conditions)
+            ->join(...$join_params)
+            ->orderByDesc('created_at')
+            ->get($get_params);
+        }
     }
 
     /**
@@ -49,17 +64,13 @@ class VideoController extends Controller
             return Redirect::route('upgrade');
         }
         
-        $videos = Video::where([['user_id', Auth::user()->id],['status', '!=', 'done']])
-            ->orderByDesc('created_at')
-            ->get();
+        $videos = $this->getVideos([['user_id', Auth::user()->id],['status', '!=', 'done']]);
 
         foreach($videos as $key => $item) {
            $item = $this->status($item);
         };
 
-        $videos = Video::where([['user_id', Auth::user()->id],['video_length', '<=', '0']])
-            ->orderByDesc('created_at')
-            ->get();
+        $videos = $this->getVideos([['user_id', Auth::user()->id],['video_length', '<=', '0']]);
 
         $videos->each(function ($collection, $alphabet) {
             $response = Http::withToken(config('app.cloud_token'))
@@ -69,10 +80,8 @@ class VideoController extends Controller
             $collection['video_length'] = $response['result']['duration'];
             $collection->save();
         });
-
-        $videos = Video::where([['user_id', Auth::user()->id],['status', '=', 'done']])
-            ->orderByDesc('created_at')
-            ->get();
+        
+        $videos = $this->getVideos([['user_id', Auth::user()->id],['status', '=', 'done']]);
 
         $videos->each(function ($collection, $alphabet) {
 
@@ -194,11 +203,10 @@ class VideoController extends Controller
     public function show($id)
     {
         UpdateVideoViews::dispatch($id)->delay(now()->addMinutes(10));
-
-        $data = Video::where('videos.id', $id)
-            ->join('users', "videos.user_id", "users.id")
-            ->first(['videos.title', 'videos.id', 'videos.videoID', 'videos.views', 'videos.created_at', 'users.name as uploader', 'videos.user_id']);
         
+        $data = $this->getVideos(['videos.id', $id], 
+            ['videos.title', 'videos.id', 'videos.videoID', 'videos.views', 'videos.created_at', 'users.name as uploader', 'videos.user_id']
+            , ['users', 'videos.user_id', 'users.id'])[0];
 
         $comments = Comment::where('video_id', $id)
             ->join('users', "comments.user_id", "users.id")
@@ -330,8 +338,6 @@ class VideoController extends Controller
     }
 
     public function status(Video $video) {
-
-        //$video = Video::where('videoID', $request['uid'])->first();
         if($video->status != 'done') {
             $response = Http::withToken(config('app.cloud_token'))
             ->get('https://api.cloudflare.com/client/v4/accounts/'
