@@ -104,30 +104,22 @@ class VideoController extends Controller
                     'Error: You have reached the maximum allotment of video uploads, and cannot upload more at this time.'
                 ]);
             }
-            if(Video::where('user_id', Auth::user()->id)->sum('sizeKB') >= 2000000000) {
-                return Redirect::back()
-                    ->withErrors(['deny' => 'Error: You have reached the maximum 2GB of storage per user.']);
-            }
 
             $video = Video::where('user_id', Auth::user()->id)
-                ->where('status', 'uploading')
+                ->where('status', 'inprogress')
                 ->first();
 
             if($video != null) {
-                if (Carbon::now()->gt(Carbon::parse($video->created_at)->add(5, 'minutes'))) {
+                if (Carbon::now()->gt(Carbon::parse($video->created_at)->add(15, 'minutes'))) {
                     $response = Http::withToken(config('app.cloud_token'))
                         ->delete('https://api.cloudflare.com/client/v4/accounts/'
                         . config('app.cloud_account') .
                         '/stream/' . $video->videoID);
                     $video->delete();
-                    //$response = $this.getUploadUrl();
                 }
             }
 
             if($video == null){
-
-                $uploadURL = "";
-                $uid = "";
 
                 $response = $this->getUploadUrl();
 
