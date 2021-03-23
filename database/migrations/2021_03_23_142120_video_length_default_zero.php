@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class VideoLengthNullable extends Migration
+class VideoLengthDefaultZero extends Migration
 {
     /**
      * Run the migrations.
@@ -25,6 +25,8 @@ class VideoLengthNullable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('videos', function (Blueprint $table) {
+            $table->decimal('video_length')->change();
+        });
     }
 }
