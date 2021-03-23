@@ -223,7 +223,7 @@ class VideoController extends Controller
             return Redirect::route('home');
         }
         if($request->has('list')) {
-            if($video->status != 'done') {
+            if($video->status != 'ready') {
                 return Redirect::back()
                     ->withErrors(['status' => 'Video must finish processing before it can be listed']);
             }

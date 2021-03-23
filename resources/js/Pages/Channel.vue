@@ -115,7 +115,7 @@
                     </div>
                     <jet-input-error class="ml-5" v-if="errors.description && formID === editVideo.id" :message="errors.description"/>
 
-                    <span class="ml-5" v-if="editVideo.status === 'done'">
+                    <span class="ml-5" v-if="editVideo.status === 'ready'">
                         <label for="list">Make video public:</label>
                         <input v-if="editVideo.listed == 0" type="checkbox" name="list" id="list">
                         <input v-else type="checkbox" name="list" id="list" checked>
