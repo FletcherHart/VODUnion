@@ -67,7 +67,20 @@ class VideoController extends Controller
         $videos = $this->getVideos([['user_id', Auth::user()->id],['status', '!=', 'ready']]);
 
         foreach($videos as $key => $item) {
-           $item = $this->status($item);
+            //On first pass video will have status of readyToUpload to skip first pendingupload check
+            if($item->status == "pendingupload") {
+                //Check if video is still pending upload, delete if so
+                $item = $this->status($item);
+                if($item->status == "pendingupload") {
+                    $this->destroy($item);
+                }
+                
+            } elseif ($item->status == "error"){
+                $this->destroy($item);
+            } else {
+                $item = $this->status($item);
+            }
+           
         };
 
         $videos = $this->getVideos([['user_id', Auth::user()->id],['video_length', '<=', '0']]);
@@ -82,6 +95,8 @@ class VideoController extends Controller
         });
         
         $videos = $this->getVideos([['user_id', Auth::user()->id],['status', '=', 'ready']]);
+        $videos2 = $this->getVideos([['user_id', Auth::user()->id],['status', '=', 'processing']]);
+        $videos = $videos->merge($videos2);
 
         return Inertia::render('Channel', ['videos' => $videos]);
     }
@@ -105,38 +120,22 @@ class VideoController extends Controller
                 ]);
             }
 
-            $video = Video::where('user_id', Auth::user()->id)
-                ->where('status', 'uploading')
-                ->first();
+            $response = $this->getUploadUrl();
 
-            if($video != null) {
-                if (Carbon::now()->gt(Carbon::parse($video->created_at)->add(15, 'minutes'))) {
-                    $response = Http::withToken(config('app.cloud_token'))
-                        ->delete('https://api.cloudflare.com/client/v4/accounts/'
-                        . config('app.cloud_account') .
-                        '/stream/' . $video->videoID);
-                    $video->delete();
-                }
-            }
+            if($response['success']) {
 
-            if($video == null){
+                $video = new Video;
+                $video->user_id = Auth::user()->id;
+                $video->videoID = $response['result']['uid'];
+                $video->uploadUrl = $response['result']['uploadURL'];
+                $video->status = "readyToUpload";
 
-                $response = $this->getUploadUrl();
-
-                if($response['success']) {
-
-                    $video = new Video;
-                    $video->user_id = Auth::user()->id;
-                    $video->videoID = $response['result']['uid'];
-                    $video->uploadUrl = $response['result']['uploadURL'];
-    
-                    $video->save();    
-                    
-                } else {
-                    return Redirect::back()
-                        ->withInput()
-                        ->withErrors(['deny' => 'Error: Cannot retrieve key.']);
-                }
+                $video->save();    
+                
+            } else {
+                return Redirect::back()
+                    ->withInput()
+                    ->withErrors(['deny' => 'Error: Cannot retrieve key.']);
             }
 
             return Redirect::back()
@@ -217,8 +216,7 @@ class VideoController extends Controller
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Video $video)
-    {
+    public function update(Request $request, Video $video){
         $user = Auth::user();
 
         if($video->user_id != $user->id) {
@@ -289,8 +287,7 @@ class VideoController extends Controller
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Video $video)
-    {
+    public function destroy(Video $video){
         if($video->user_id != Auth::user()->id) {
             return Redirect::route('home');
         }
