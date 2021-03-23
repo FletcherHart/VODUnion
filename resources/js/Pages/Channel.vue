@@ -61,7 +61,7 @@
                                         <p v-else>Unlisted</p>
                                     </div>
                                     <div v-if="video.status == 'ready'" class="bg-green-400 rounded p-1 w-min">Ready</div>
-                                    <div v-else class="bg-gray-400 rounded p-1 w-min">Processing</div>
+                                    <div v-else class="bg-gray-400 rounded p-1 w-min">{{video.status}}</div>
                                 </div>
                             </div>
                             <hr>
@@ -69,7 +69,7 @@
                                 <div class="mr-5 h-full">
                                     <div class="relative">
                                         <img :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=113&width=200'">
-                                        <div class="absolute bottom-2 text-white bg-black text-sm bg-opacity-50 ml-1">{{getTime(video.video_length)}}</div>
+                                        <div v-if="video.video_length > 0" class="absolute bottom-2 text-white bg-black text-sm bg-opacity-50 ml-1">{{getTime(video.video_length)}}</div>
                                     </div>
                                 </div>
                                 <div class="w-full">
