@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\LikeVideoController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ChangelogController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use Inertia\Inertia;
@@ -133,4 +134,7 @@ Route::post('/video/{video}/like', [LikeVideoController::class, 'like'])
     ->middleware('auth');
 
 Route::post('/video/{video}/dislike', [LikeVideoController::class, 'dislike'])
+    ->middleware('auth');
+
+Route::post('/admin/changelog', [ChangelogController::class, 'store'])
     ->middleware('auth');
