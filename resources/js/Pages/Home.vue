@@ -14,7 +14,7 @@
                             <div class="flex flex-col h-full">
                                 <div class="h-full flex">
                                     <div class="relative thumb">
-                                        <img class="thumb" :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=169&width=300'" width="300px" height="169px">
+                                        <img class="thumb" :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=169&width=300'" width="300px" height="169px" alt="thumbnail">
                                         <div class="absolute bottom-2 text-white bg-black text-sm bg-opacity-50 ml-1">{{getTime(video.video_length)}}</div>
                                     </div>
                                 </div>

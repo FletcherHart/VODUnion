@@ -5,7 +5,7 @@
         <div class="flex justify-between sm:h-full h-16">
           <div class="flex flex-row items-center justify-center ml-6">
             <button @click="nav" class="hover:bg-white p-2 rounded focus:outline-none w-10 flex justify-center">
-              <img width="16px" height="16px" src="/open-iconic/svg/menu.svg">
+              <img width="16px" height="16px" src="/open-iconic/svg/menu.svg" alt="menu icon">
             </button>
             <jet-responsive-nav-link href="/">Home</jet-responsive-nav-link>
           </div>
@@ -13,7 +13,7 @@
           <form class="flex items-center justify-center" @submit.prevent="search" v-if="this.windowWidth > 640">
             <input class="rounded rounded-r-none w-96 h-8" type="text" id="search">
             <button class="rounded-r icon-button h-8 w-8 flex items-center justify-center bg-gray-600">
-              <img width="16px" height="16px" src="/open-iconic/svg/magnifying-glass.svg">
+              <img width="16px" height="16px" src="/open-iconic/svg/magnifying-glass.svg" alt="search icon">
             </button>
           </form>
 
@@ -26,7 +26,7 @@
         <form class="shadow-md flex items-center justify-center fixed top-16 w-full m-b-8" @submit.prevent="search" v-if="this.windowWidth < 640">
           <input class="rounded rounded-r-none w-full h-8" type="text" id="search">
           <button class="rounded-r icon-button h-8 w-8 flex items-center justify-center bg-gray-600">
-            <img width="16px" height="16px" src="/open-iconic/svg/magnifying-glass.svg">
+            <img width="16px" height="16px" src="/open-iconic/svg/magnifying-glass.svg" alt="search icon">
           </button>
         </form>
       </div>
