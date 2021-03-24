@@ -140,4 +140,4 @@ Route::post('/admin/changelog', [ChangelogController::class, 'store'])
     ->middleware('auth');
 
 Route::get('/admin/changelog', [ChangelogController::class, 'create'])
-    ->middleware('auth');
+    ->middleware('auth')->name('changelogform');

@@ -1,5 +1,6 @@
 <template>
     <header-layout>
+        <a :href="route('changelogform')">Changelog Form</a>
         <div class="flex items-center justify-center">
             <h1>List users</h1>
             <button v-on:click="listUsers" type="submit" class="bg-blue-600">Submit</button>
