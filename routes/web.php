@@ -138,3 +138,6 @@ Route::post('/video/{video}/dislike', [LikeVideoController::class, 'dislike'])
 
 Route::post('/admin/changelog', [ChangelogController::class, 'store'])
     ->middleware('auth');
+
+Route::get('/admin/changelog', [ChangelogController::class, 'create'])
+    ->middleware('auth');

@@ -31,4 +31,25 @@ class ChangelogTest extends TestCase
 
         $this->assertDatabaseHas('changelogs', ["title"=> $title,'text' => $text]);
     }
+
+    public function test_non_admin_users_cannot_make_blog_post()
+    {
+        $this->be($admin = User::factory(['role_id'=>2])->create());
+        $title= $this->faker->sentence;
+        $text = $this->faker->paragraph;
+        $response = $this->post('/admin/changelog', ["title"=> $title,"text" => $text]);
+        $this->assertDatabaseMissing('changelogs', ["title"=> $title,'text' => $text]);
+    }
+
+    public function test_only_admins_can_access_changelog_form() {
+        //admins can access
+        $this->be($admin = User::factory(['role_id'=>4])->create());
+        $response = $this->get('/admin/changelog');
+        $response->assertStatus(200);
+
+        //non-admins cannot access
+        $this->be($admin = User::factory(['role_id'=>2])->create());
+        $response = $this->get('/admin/changelog');
+        $response->assertStatus(302);
+    }
 }
