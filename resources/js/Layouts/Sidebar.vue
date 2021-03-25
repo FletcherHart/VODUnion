@@ -43,8 +43,16 @@
                 </div>
             </jet-responsive-nav-link>       
         </div>
-        <div class="h-full relative">
-            <jet-responsive-nav-link href="/about" class="absolute top-0 w-full">
+        <div>
+            <jet-responsive-nav-link :href="route('changelog')" class="w-full">
+                <div class="grid grid-cols-3 flex items-center">
+                    <img class="inline col-span-1" width="16px" height="16px" src="/open-iconic/svg/code.svg" alt="changelog icon">
+                    <p>Changelog</p>
+                </div>
+            </jet-responsive-nav-link> 
+        </div>  
+        <div>
+            <jet-responsive-nav-link href="/about" class="w-full">
                 <div class="grid grid-cols-3 flex items-center">
                     <img class="inline col-span-1" width="16px" height="16px" src="/open-iconic/svg/question-mark.svg" alt="question mark icon">
                     <p>About</p>
