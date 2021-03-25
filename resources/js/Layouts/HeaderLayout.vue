@@ -32,7 +32,7 @@
       </div>
 
     </header>
-    <article class="h-full" v-bind:class="{ 'pt-20': (this.windowWidth > 640), 'pt-28': (this,windowWidth < 640)}">
+    <article class="overflow-auto" v-bind:class="{ 'pt-20': (this.windowWidth > 640), 'pt-28': (this,windowWidth < 640)}">
       <div v-bind:class="{ hidden: this.$store.state.isHidden}">
         <sidebar/>
       </div>
