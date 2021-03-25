@@ -141,3 +141,6 @@ Route::post('/admin/changelog', [ChangelogController::class, 'store'])
 
 Route::get('/admin/changelog', [ChangelogController::class, 'create'])
     ->middleware('auth')->name('changelogform');
+
+Route::get('/changelog', [ChangelogController::class, 'index'])
+    ->middleware('auth')->name('changelog');
