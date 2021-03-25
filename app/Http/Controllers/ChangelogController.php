@@ -9,12 +9,17 @@ use Inertia\Inertia;
 
 class ChangelogController extends Controller
 {
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function index() {
+        $changelog = Changelog::first();
+        $past_logs = Changelog::where('id', '!=', $changelog->id)->get(['id','title', 'created_at', 'updated_at']);
+
+        return Inertia::render('Changelog/ChangelogIndex', ['changelog' => $changelog, 'past_logs' => $past_logs]);
+    }
+
+    public function show() {
+        
+    }
+
     public function store(Request $request)
     {
         if (Gate::allows('admin', auth()->user())) {
@@ -33,7 +38,7 @@ class ChangelogController extends Controller
     public function create(Request $request)
     {
         if (Gate::allows('admin', auth()->user())) {
-            return Inertia::render('ChangelogForm');
+            return Inertia::render('Changelog/ChangelogForm');
         }
 
         return redirect()->route('home');
