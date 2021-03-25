@@ -16,7 +16,7 @@ class CreateChangelogTable extends Migration
         Schema::create('changelogs', function (Blueprint $table) {
             $table->id();
             $table->string('title', 100);
-            $table->string('text');
+            $table->mediumText('text');
             $table->foreignId('user_id');
             $table->timestamps();
 
@@ -31,6 +31,6 @@ class CreateChangelogTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('blog_posts');
+        Schema::dropIfExists('changelogs');
     }
 }
