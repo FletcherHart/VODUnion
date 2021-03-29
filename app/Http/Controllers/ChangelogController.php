@@ -11,7 +11,7 @@ class ChangelogController extends Controller
 {
     public function index() {
         $changelog = Changelog::orderBy('created_at', 'DESC')->first();
-        $past_logs = Changelog::where('id', '!=', $changelog->id)->get(['id','title', 'created_at', 'updated_at']);
+        $past_logs = Changelog::orderBy('created_at', 'DESC')->get(['id','title', 'created_at', 'updated_at']);
 
         return Inertia::render('Changelog/ChangelogIndex', ['changelog' => $changelog, 'past_logs' => $past_logs]);
     }
