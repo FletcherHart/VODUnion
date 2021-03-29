@@ -3,7 +3,8 @@
         <div class="sm:flex flex-col sm:items-center m-10 mt-0" v-if="changelog != null && past_logs != null">
             <div class="sm:w-4/6 flex items-center justify-center flex-col whitespace-pre-wrap">
                 <h1 class="font-bold text-2xl">{{changelog.title}}</h1>
-                <div>{{changelog.text}}</div>
+                <div class="text-gray-600 text-sm">{{toDate(changelog.created_at)}}</div>
+                <div class="changelog-body" v-html="changelog.text">{{changelog.text}}</div>
             </div> 
             <div class="sm:w-4/6 w-full h-40 bg-white rounded mt-5 p-1">
                 <div v-for="log in past_logs" :key="log.id">

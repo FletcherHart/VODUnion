@@ -2,6 +2,10 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+.changelog-body > a {
+    color:blue;
+    text-decoration: underline;
+}
 .thumb {
     width:100%;
     height:auto;
