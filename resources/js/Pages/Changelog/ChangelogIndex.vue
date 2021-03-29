@@ -8,7 +8,7 @@
             <div class="sm:w-4/6 w-full h-40 bg-white rounded mt-5 p-1">
                 <div v-for="log in past_logs" :key="log.id">
                     <div v-bind:class="{'bg-yellow-200': (log.id == changelog.id)}">
-                        <inertia-link :href="'changelog/'+log.id">
+                        <inertia-link :href="route('changelog') + '/' + log.id">
                             <div class="relative">
                                 <img v-if="(log.id == changelog.id)" class="absolute right-0" width="16px" height="16px" src="/open-iconic/svg/star.svg" alt="current changelog article icon">
                             </div>
