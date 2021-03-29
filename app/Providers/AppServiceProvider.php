@@ -36,9 +36,9 @@ class AppServiceProvider extends ServiceProvider
             return Auth::user();
         });
 
-        Inertia::share('jetstream', function() {
-            return Jetstream;
-        });
+        // Inertia::share('jetstream', function() {
+        //     return Jetstream;
+        // });
 
         Inertia::share('flash', function () {
             return [
