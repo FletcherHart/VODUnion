@@ -16,8 +16,11 @@ class ChangelogController extends Controller
         return Inertia::render('Changelog/ChangelogIndex', ['changelog' => $changelog, 'past_logs' => $past_logs]);
     }
 
-    public function show() {
-        
+    public function show($id) {
+        $changelog = Changelog::where(['id' => $id])->first();
+        $past_logs = Changelog::orderBy('created_at', 'DESC')->get(['id','title', 'created_at', 'updated_at']);
+
+        return Inertia::render('Changelog/ChangelogIndex', ['changelog' => $changelog, 'past_logs' => $past_logs]);
     }
 
     public function store(Request $request)
@@ -32,7 +35,7 @@ class ChangelogController extends Controller
     
             $change->save();
         }
-        
+        return redirect()->route('changelog');
     }
 
     public function create(Request $request)

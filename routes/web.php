@@ -144,3 +144,6 @@ Route::get('/admin/changelog', [ChangelogController::class, 'create'])
 
 Route::get('/changelog', [ChangelogController::class, 'index'])
     ->middleware('auth')->name('changelog');
+
+Route::get('/changelog/{id}', [ChangelogController::class, 'show'])
+    ->middleware('auth');
