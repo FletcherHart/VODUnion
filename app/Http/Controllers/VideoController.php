@@ -176,7 +176,7 @@ class VideoController extends Controller
         UpdateVideoViews::dispatch($id)->delay(now()->addMinutes(10));
         
         $data = $this->getVideos(['videos.id', $id], 
-            ['videos.title', 'videos.id', 'videos.videoID', 'videos.views', 'videos.created_at', 'users.name as uploader', 'videos.user_id']
+            ['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.views', 'videos.created_at', 'users.name as uploader', 'videos.user_id']
             , ['users', 'videos.user_id', 'users.id'])[0];
 
         $comments = Comment::where('video_id', $id)
