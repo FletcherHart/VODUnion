@@ -1,6 +1,6 @@
 <template>
     <header-layout>
-        <div class="sm:flex flex-col sm:items-center m-10 mt-0" v-if="changelog != null && past_logs != null">
+        <article class="sm:flex flex-col sm:items-center m-10 mt-0" v-if="changelog != null && past_logs != null">
             <div class="sm:w-4/6 flex items-center justify-center flex-col whitespace-pre-wrap">
                 <h1 class="font-bold text-2xl">{{changelog.title}}</h1>
                 <div class="text-gray-600 text-sm">{{toDate(changelog.created_at)}}</div>
@@ -20,7 +20,7 @@
                     <hr>
                 </div>
             </div>
-        </div>
+        </article>
         <div class="flex items-center flex-col mt-0 m-10" v-else>
             <h1 class="font-bold text-2xl">Nothing here right now</h1>
             <div>This page is for documenting changes that occur on the site. Currently, there appears to be no documented changes.</div>
