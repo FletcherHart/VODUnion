@@ -1,10 +1,10 @@
 <template>
-  <div class="py-12">
+  <section class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
               <div v-if="$page.props.auth.user.loggedIn">
               <form @submit.prevent="submit">
-                <textarea class="border-solid border-2 border-black-600 w-full" id="text" rows="4" v-model="form.text" placeholder="Comment" />
-                <button type="submit" class="bg-blue-600 text-white rounded pl-4 pr-4">Submit</button>
+                <textarea class="border-solid border-2 border-black-600 w-full" id="text" rows="4" v-model="form.text" placeholder="Comment" aria-label="make comment"/>
+                <button type="submit" class="bg-blue-600 text-white rounded pl-4 pr-4" aria-label="submit comment">Submit</button>
                 <div>
                 <jet-input-error v-if="form.errors.text" :message="form.errors.text"/>
                 </div>
@@ -16,7 +16,7 @@
           <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
               <h1 class="text-xl font-bold">Total Comments: {{totalComments}}</h1>
               <hr>
-              <div v-for="comment in $page.props.comments" :key="comment.id">
+              <article v-for="comment in $page.props.comments" :key="comment.id">
                 <div class="my-3 ml-2 mr-2">
                   <!-- <a class="inline text-blue-600 hover:text-purple-600 mb-3" :href="'user/' + comment.user_id">{{comment.name}}</a> -->
                   <div class="flex justify-between">
@@ -33,10 +33,10 @@
                   <p class="break-words whitespace-pre-line whitespace-pre-wrap">{{comment.text}}</p>
                 </div>
                 <hr>
-              </div>
+              </article>
           </div>
       </div>
-  </div>
+  </section>
 </template>
 
 <script>
