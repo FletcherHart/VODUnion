@@ -1,20 +1,21 @@
 <template>
     <header-layout>
-        <div class="w-full h-full flex flex-col sm:pl-5 sm:pr-5">
-            <div v-if="search" class="w-full flex justify-center mb-6 mt-6">
-                <h1 class="font-bold text-xl">Search term: {{search}}</h1>
+        <section class="w-full h-full flex flex-col sm:pl-5 sm:pr-5">
+            <div class="w-full flex justify-center">
+                <h1 v-if="search" class="font-bold text-xl mb-6 mt-6">Search term: {{search}}</h1>
+                <h1 v-else class="accessiblity-h1">Videos</h1>
             </div>
             <div class="overflow-hidden grid gap-3 sm:grid-cols-3 w-full sm:w-min xl:grid-cols-4 mt-5" v-bind:class="{ 
                 'lg:grid-cols-4': this.$store.state.isHidden, 
                 'xl:grid-cols-3 lg:grid-cols-3': !this.$store.state.isHidden
             }">
-                <div v-for="video in data" :key="video.id">
+                <article v-for="video in data" :key="video.id">
                     <inertia-link class="flex p-2 bg-white shadow rounded h-full" :href="'video/'+video.id">
                         <div class="w-full">
                             <div class="flex flex-col h-full">
                                 <div class="h-full flex">
                                     <div class="relative thumb">
-                                        <img class="thumb" :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=169&width=300'" width="300px" height="169px" alt="thumbnail">
+                                        <img class="thumb" :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=169&width=300'" width="300px" height="169px" alt="" role="presentation">
                                         <div class="absolute bottom-2 text-white bg-black text-sm bg-opacity-50 ml-1">{{getTime(video.video_length)}}</div>
                                     </div>
                                 </div>
@@ -35,9 +36,9 @@
                             </div>
                         </div>
                     </inertia-link>
-                </div>
+                </article>
             </div>
-        </div>
+        </section>
     </header-layout>
 </template>
 
