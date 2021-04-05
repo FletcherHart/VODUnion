@@ -2,21 +2,21 @@
     <header-layout>
         <article class="flex flex-col">
             <h1 class="font-semibold text-xl text-gray-800 leading-tight self-center">
-                Profile
+                User Profile
             </h1>
             <div>
                 <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                    <div>
+                    <section>
                         <update-profile-information-form :user="$page.props.user" />
 
                         <jet-section-border />
-                    </div>
+                    </section>
 
-                    <div>
+                    <section>
                         <update-password-form class="mt-10 sm:mt-0" />
 
                         <jet-section-border />
-                    </div>
+                    </section>
 
                     <!-- <div v-if="$page.jetstream.canManageTwoFactorAuthentication">
                         <two-factor-authentication-form class="mt-10 sm:mt-0" />

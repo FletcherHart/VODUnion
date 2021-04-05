@@ -15,11 +15,12 @@
             <div class="mt-4">
                 <jet-input type="password" class="mt-1 block w-3/4" placeholder="Password"
                             ref="password"
+                            aria-label="password input for account deletion"
                             v-model="form.password"
                             @keyup.enter.native="deleteUser" />
                 <jet-input-error v-if="form.errors.password" :message="form.errors['password']" class="mt-2" />
             </div>
-            <jet-danger-button class="ml-2" @click.native="deleteUser" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <jet-danger-button @click.native="deleteUser" :class="{ 'opacity-25': form.processing }" :disabled="form.processing" aria-label="submit to delete account">
                 Delete Account
             </jet-danger-button>
         </template>
