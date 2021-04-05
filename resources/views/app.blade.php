@@ -13,7 +13,21 @@
         <!-- Styles -->
         <link type="text/css" rel="stylesheet" href="{{ mix('css/app.css') }}">
         <style>
-            html,body {height:100%;background-color: rgba(219, 234, 254, 1);}
+            html,body {height:100%;background-color: #f9f9f9;}/*rgba(219, 234, 254, 1) #F9F9F9 */
+            .nav-header {background-color: #fefefe;}
+            ::-webkit-scrollbar {
+                width: 12px;
+            }
+
+            ::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px     rgba(0,0,0,0.3); 
+                border-radius: 10px;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 6px     rgba(0,0,0,0.5); 
+            }
         </style>
 
         <!-- Scripts -->
