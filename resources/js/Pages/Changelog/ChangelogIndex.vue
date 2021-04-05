@@ -4,7 +4,7 @@
             <div class="sm:w-4/6 flex items-center justify-center flex-col whitespace-pre-wrap">
                 <h1 class="font-bold text-2xl">{{changelog.title}}</h1>
                 <div class="text-gray-600 text-sm">{{toDate(changelog.created_at)}}</div>
-                <div class="changelog-body" v-html="changelog.text"></div>
+                <div class="article-body" v-html="changelog.text"></div>
             </div> 
             <div class="sm:w-4/6 w-full h-40 bg-white rounded mt-5 p-1 overflow-auto">
                 <div v-for="log in past_logs" :key="log.id">
@@ -14,7 +14,7 @@
                                 <img v-if="(log.id == changelog.id)" class="absolute right-0" width="16px" height="16px" src="/open-iconic/svg/star.svg" alt="current changelog article icon">
                             </div>
                             <div>{{log.title}}</div>
-                            <div class="text-gray-600">{{toDate(log.created_at)}}</div>
+                            <div class="text-gray-700">{{toDate(log.created_at)}}</div>
                         </inertia-link>
                     </div>
                     <hr>

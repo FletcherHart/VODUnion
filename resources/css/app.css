@@ -15,10 +15,11 @@
   clip: rect(1px,1px,1px,1px);
 }
 
-.changelog-body > a {
+.article-body > a {
     color:blue;
     text-decoration: underline;
 }
+
 .thumb {
     width:100%;
     height:auto;
