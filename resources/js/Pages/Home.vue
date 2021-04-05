@@ -10,7 +10,7 @@
                 'xl:grid-cols-3 lg:grid-cols-3': !this.$store.state.isHidden
             }">
                 <article v-for="video in data" :key="video.id">
-                    <inertia-link class="flex p-2 bg-white shadow rounded h-full" :href="'video/'+video.id">
+                    <inertia-link class="flex p-2 h-full" :href="'video/'+video.id">
                         <div class="w-full">
                             <div class="flex flex-col h-full">
                                 <div class="h-full flex">
@@ -19,12 +19,9 @@
                                         <div class="absolute bottom-2 text-white bg-black text-sm bg-opacity-50 ml-1">{{getTime(video.video_length)}}</div>
                                     </div>
                                 </div>
-                                <div class="flex justify-between h-1/6">
-                                    <h2 class="font-semibold truncate" :title="video.title">{{video.title}}</h2>
+                                <div class="flex justify-between h-1/6" :title="video.title">
+                                    <h2 class="font-semibold truncate" >{{video.title}}</h2>
                                 </div>
-                                <span :id="'title' + video.id" class="absolute hidden z-50 bg-gray-100 text-sm whitespace-nowrap">
-                                    
-                                </span>
                                 <div class="text-sm">
                                     <span>
                                     Views: {{video.views}} • {{getVideoAge(video.created_at)}}
