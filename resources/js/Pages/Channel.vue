@@ -1,13 +1,15 @@
 <template>
     <header-layout>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 h-full">
+            <div class="w-full flex items-center justify-center mb-5">
+                <h1 class="font-bold text-xl">My Videos</h1>
+            </div>
             <div v-if="errors.deny">
                 <mark>{{errors.deny}}</mark>
             </div>
             <div class="overflow-hidden flex flex-col justify-center mb-10">
-                <div> 
-                    
-                    <div class="m-10" v-bind:class="{'hidden': uploadModal}">
+                <section v-bind:class="{'hidden': uploadModal}"> 
+                    <div class="m-10" >
                         <div class="flex justify-center">
                             <h2 class="m-auto font-bold">Upload</h2>
                         </div>
@@ -22,33 +24,33 @@
                                         <input type="file" id="video" name="video" ref="video" accept=".mp4">
                                     </span>
                                     <div v-if="uploadErrors.length > 0"><mark>{{ uploadErrors }}</mark></div>
-                                    <button type="submit" v-bind:class="{'bg-blue-600':!progress, 'bg-gray-400': progress}" :disabled="progress > 0">Submit</button>
+                                    <button type="submit" v-bind:class="{'bg-blue-600 text-white':!progress, 'bg-gray-400 text-black': progress}" :disabled="progress > 0">Submit</button>
                                 </form>
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
                 <div class="flex justify-center">
                     <div class="w-5/6 border-b-2 border-black">
                         <div class="flex justify-between">
                             <div>
                                 <span class="flex justify-between">
                                     <span class="flex">
-                                        <button v-on:click="reloadPage" class="bg-blue-400 w-10 h-10 flex justify-center items-center rounded"><img width="16px" height="16px" src="/open-iconic/svg/loop-circular.svg" alt="refresh videos icon"></button>
-                                        <button v-on:click="uploadModalDisplay" class="bg-green-400 w-10 h-10 flex justify-center items-center rounded">
-                                            <img width="16px" height="16px" src="/open-iconic/svg/plus.svg" alt="add video icon">
+                                        <button v-on:click="reloadPage" class="bg-blue-400 w-10 h-10 flex justify-center items-center rounded" aria-label="refresh videos"><img width="16px" height="16px" src="/open-iconic/svg/loop-circular.svg" alt=""></button>
+                                        <button v-on:click="uploadModalDisplay" class="bg-green-400 w-10 h-10 flex justify-center items-center rounded" aria-label="show upload video form">
+                                            <img width="16px" height="16px" src="/open-iconic/svg/plus.svg" alt="">
                                         </button>
                                     </span>
                                 </span>
                             </div>
                             <div class="flex items-center">
                                 <span>Date</span>
-                                <button v-on:click="sort" class="flex justify-center items-center rounded"><img class="w-4 h-full ml-1" id="dateSortImg" src="/open-iconic/svg/arrow-top.svg" alt="sort video by date icon"></button>
+                                <button v-on:click="sort" class="flex justify-center items-center rounded" aria-label="sort videos by upload date"><img class="w-4 h-full ml-1" id="dateSortImg" src="/open-iconic/svg/arrow-top.svg" alt=""></button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="w-full mb-5" v-for="video in sortedVideos" :key="video.id">
+                <article class="w-full mb-5" v-for="video in sortedVideos" :key="video.id">
                     <div class="flex mt-5 p-2 bg-white shadow rounded">
                         <div class="w-full">
                             <div class="flex justify-between">
@@ -56,7 +58,7 @@
                                 <h2 class="font-semibold" v-else><i>Untitled</i></h2>
                                 <div class="flex">
                                     <div class="flex items-center mr-3">
-                                        <img class="mr-2" width="16px" height="16px" src="/open-iconic/svg/eye.svg" alt="visibility icon">
+                                        <img class="mr-2" width="16px" height="16px" src="/open-iconic/svg/eye.svg" alt="">
                                         <p v-if="video.listed">Public</p>
                                         <p v-else>Unlisted</p>
                                     </div>
@@ -68,7 +70,7 @@
                             <div class="flex">
                                 <div class="mr-5 h-full">
                                     <div class="relative">
-                                        <img :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=113&width=200'">
+                                        <img alt="" :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=113&width=200'">
                                         <div v-if="video.video_length > 0" class="absolute bottom-2 text-white bg-black text-sm bg-opacity-50 ml-1">{{getTime(video.video_length)}}</div>
                                     </div>
                                 </div>
@@ -78,9 +80,9 @@
                                         <div>Uploaded: {{setTime(video.created_at)}}</div>
                                     </div>
                                     <div class="flex items-center justify-between w-full">
-                                        <button v-on:click="edit(video)" class="w-10 h-10 text-gray-600 flex justify-center items-center"><img width="16px" height="16px" src="/open-iconic/svg/pencil.svg" alt="edit icon"></button>
+                                        <button v-on:click="edit(video)" class="w-10 h-10 text-gray-600 flex justify-center items-center" :aria-label="'Edit video with title ' + video.title"><img width="16px" height="16px" src="/open-iconic/svg/pencil.svg" alt=""></button>
                                         <div class="flex flex-row justify-between items-center">
-                                            <button v-on:click="deleteVideo(video.id)" class="bg-red-600 rounded p-1 text-white">Delete</button>
+                                            <button v-on:click="deleteVideo(video.id)" class="bg-red-600 rounded p-1 text-white" :aria-label="'Delete video with title ' + video.title">Delete</button>
                                         </div>
                                         
                                     </div>
@@ -89,10 +91,10 @@
                             
                         </div>
                     </div>                    
-                </div>
+                </article>
             </div>
         </div>
-        <div class="w-full h-full absolute top-0 z-50 flex justify-center bg-black bg-opacity-50"
+        <div class="w-full h-full fixed top-0 z-50 flex justify-center bg-black bg-opacity-50"
         v-bind:class="{ 
             'w-full': this.$store.state.isHidden, 
             'lg:-ml-52 md:-ml-40 sm:-ml-24': !this.$store.state.isHidden
@@ -100,18 +102,18 @@
          v-if="editVideo.id">
             <div class="flex flex-col bg-white relative m-auto sm:w-4/6 sm:h-4/5 w-5/6 h-3/5">    
                 <div class="flex flex-row-reverse">
-                    <button v-on:click="unedit()" class="p-1 mr-1 mt-1"> <img width="16px" height="16px" src="/open-iconic/svg/x.svg" alt="add video icon"></button>
+                    <button v-on:click="unedit()" class="p-1 mr-1 mt-1" aria-label="stop editing video"> <img width="16px" height="16px" src="/open-iconic/svg/x.svg" alt=""></button>
                 </div>
                 <form @submit.prevent="submit(editVideo.id)" :id="editVideo.id" class="flex flex-col">
                     <div class="ml-5 mr-5">
                         <label for="title" class="text-gray-400 block relative top-7 ml-3">Title </label>
-                        <input class="pl-3 resize-none rounded w-full active:birder-black-900  border-solid border-2 border-black-600 pt-5" id="title" name="title" placeholder="Video Title" :value="editVideo.title">
+                        <input class="pl-3 resize-none rounded w-full active:birder-black-900  border-solid border-2 border-black-600 pt-5" id="title" name="title" aria-label="title of video" placeholder="Video Title" :value="editVideo.title">
                     </div>
                     <jet-input-error class="ml-5" v-if="errors.title && formID === editVideo.id" :message="errors.title"/>
 
                     <div class="ml-5 mr-5">
                         <label for="description" class="text-gray-400 block relative top-7 ml-3">Description</label>
-                        <textarea class="pl-3 resize-none rounded w-full active:birder-black-900  border-solid border-2 border-black-600 pt-5" id="description" name="description" rows=5 :value="editVideo.description"/>
+                        <textarea class="pl-3 resize-none rounded w-full active:birder-black-900  border-solid border-2 border-black-600 pt-5" id="description" name="description" aria-label="description of video" rows=5 :value="editVideo.description"/>
                     </div>
                     <jet-input-error class="ml-5" v-if="errors.description && formID === editVideo.id" :message="errors.description"/>
 
@@ -122,7 +124,7 @@
                     </span>
                     <div v-if="errors.list"><mark>{{ errors.list }}</mark></div>
 
-                    <button type="submit" class="m-10 bg-blue-600 rounded float-right">Submit</button>
+                    <button type="submit" class="m-10 bg-blue-600 text-white rounded float-right" aria-label="submit changes to video">Submit</button>
                 </form>
                 <transition name="fade">
                     <div v-on:click="clearStatus" v-if="$page.props.flash.updateStatus" class="w-full flex items-center justify-center">
@@ -143,7 +145,7 @@
     import HeaderLayout from '@/Layouts/HeaderLayout'
     import JetInputError from '@/Jetstream/InputError'
     import { Inertia } from '@inertiajs/inertia'
-    import {format, formatDistance, toDate} from 'date-fns'
+    import {format,toDate} from 'date-fns'
 
     export default {
         components: {
