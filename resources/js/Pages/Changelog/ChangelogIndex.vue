@@ -61,7 +61,7 @@
                 });
             },
             toDate(date) {
-                return format(toDate(new Date(date)), 'LLLL io, y');
+                return format(toDate(new Date(date)), 'LLLL do, y');
             },
         }
     }
