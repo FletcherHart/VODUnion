@@ -33,8 +33,6 @@ class VideoHistoryTest extends TestCase
         $this->be($user = User::factory()->create());
         $response = $this->get('/history');
 
-        dump($response);
-
         $response->assertStatus(200);
     }
 
@@ -43,5 +41,14 @@ class VideoHistoryTest extends TestCase
         $response = $this->get('/history');
 
         $response->assertStatus(302);
+    }
+
+    public function test_video_added_to_history_for_auth_user()
+    {
+        $this->be($user = User::factory()->create());
+        $video = Video::factory()->create();
+        $response = $this->get('/video/'.$video->id);
+
+        $this->assertDatabaseHas('watched_videos', ['video_id' => $video->id, 'user_id' => $user->id]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Video;
 use App\Models\LikeVideo;
+use App\Models\WatchedVideo;
 use App\Models\Comment;
 use App\Jobs\UpdateVideoViews;
 use Inertia\Inertia;
@@ -173,6 +174,14 @@ class VideoController extends Controller
      */
     public function show($id)
     {
+
+        if(auth()->id() != null && WatchedVideo::where('user_id', auth()->id())->first() == null) {
+            $watched = new WatchedVideo;
+            $watched->user_id = auth()->id();
+            $watched->video_id = $id;
+            $watched->save();
+        }
+
         UpdateVideoViews::dispatch($id)->delay(now()->addMinutes(10));
         
         $data = $this->getVideos(['videos.id', $id], 
