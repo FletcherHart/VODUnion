@@ -51,4 +51,28 @@ class VideoHistoryTest extends TestCase
 
         $this->assertDatabaseHas('watched_videos', ['video_id' => $video->id, 'user_id' => $user->id]);
     }
+
+    public function test_auth_user_can_see_list_of_watched_videos()
+    {
+        $this->be($user = User::factory()->create());
+        $uploaders = User::factory()->count(3)->create();
+        $videos = array();
+
+        foreach($uploaders as $owner) {
+            array_push($videos, $video = Video::factory(['user_id' => $owner->id])->create());
+            
+            DB::table('watched_videos')->insert([
+                'user_id' => $user->id,
+                'video_id' => $video->id
+            ]);
+        }
+
+        $response = $this->get('/history');
+        
+        foreach($videos as $key => $video) {
+            $response->assertSee($video->title);
+            $response->assertSee($video->views);
+            $response->assertSee($uploaders[$key]->name);
+        }
+    }
 }
