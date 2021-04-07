@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\LikeVideoController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ChangelogController;
@@ -145,3 +146,6 @@ Route::get('/admin/changelog', [ChangelogController::class, 'create'])
 Route::get('/changelog', [ChangelogController::class, 'index'])->name('changelog');
 
 Route::get('/changelog/{id}', [ChangelogController::class, 'show']);
+
+Route::get('/history', [HistoryController::class, 'watchedVideos'])
+    ->middleware('auth');
