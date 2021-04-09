@@ -175,7 +175,7 @@ class VideoController extends Controller
     public function show($id)
     {
 
-        if(auth()->id() != null && WatchedVideo::where('user_id', auth()->id())->first() == null) {
+        if(auth()->id() != null && WatchedVideo::where('user_id', auth()->id())->where('video_id', $id)->first() == null) {
             $watched = new WatchedVideo;
             $watched->user_id = auth()->id();
             $watched->video_id = $id;

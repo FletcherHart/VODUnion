@@ -41,7 +41,15 @@
                     <img class="inline col-span-1" width="16px" height="16px" src="/open-iconic/svg/data-transfer-upload.svg" alt="upload icon" aria-hidden="true">
                     <p class="col-span-2">My Videos</p>
                 </div>
-            </jet-responsive-nav-link>       
+            </jet-responsive-nav-link>  
+            <div>
+                <jet-responsive-nav-link :href="route('history')" class="w-full">
+                    <div class="grid grid-cols-3 flex items-center">
+                        <img class="inline col-span-1" width="16px" height="16px" src="/open-iconic/svg/timer.svg" alt="timer icon" aria-hidden="true">
+                        <p>History</p>
+                    </div>
+                </jet-responsive-nav-link> 
+            </div>      
         </div>
         <div>
             <jet-responsive-nav-link :href="route('changelog')" class="w-full">
