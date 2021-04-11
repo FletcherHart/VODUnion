@@ -1,9 +1,10 @@
 <template>
     <header-layout>
         <section class="w-full h-full flex flex-col sm:pl-5 sm:pr-5">
-            <div class="w-full flex justify-center">
+            <div class="w-full flex justify-center flex-col items-center">
                 <h1 v-if="search" class="font-bold text-xl mb-6 mt-6">Search term: {{search}}</h1>
                 <h1 v-else class="accessiblity-h1">Videos</h1>
+                <h2 v-if="data.length <= 0" class="font-bold text-lg">Uh oh. There doesn't appear to be any videos to display.</h2>
             </div>
             <div class="overflow-hidden grid gap-3 sm:grid-cols-3 w-full sm:w-min xl:grid-cols-4 mt-5" v-bind:class="{ 
                 'lg:grid-cols-4': this.$store.state.isHidden, 
