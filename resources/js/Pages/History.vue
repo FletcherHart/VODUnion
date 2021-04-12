@@ -25,6 +25,7 @@
                     </div>
                 </inertia-link>
             </article>
+            <button class="mt-10 bg-blue-600 text-white rounded float-right" v-on:click="loadMoreVideos" v-if="this.videos.length < this.maxVideos">Load More Videos</button>
         </section>
         <div v-if="videos.length <= 0" class="flex items-center justify-center m-5">
             <h1 class="font-bold text-lg">You haven't watched any videos yet.</h1>
@@ -35,12 +36,14 @@
 <script>
 import HeaderLayout from '@/Layouts/HeaderLayout'
 import {formatDistance, toDate} from 'date-fns'
+import { Inertia } from '@inertiajs/inertia'
 export default {
   components: {
       HeaderLayout
   },
   props: {
-      videos: Array
+      videos: Array,
+      maxVideos: Number
   },
     methods: {
         getVideoAge(date) {
@@ -49,6 +52,12 @@ export default {
         getTime(duration) {
             return new Date(duration * 1000).toISOString().substr(11, 8);
         },
+        loadMoreVideos() {
+                if((window.innerHeight + window.scrollY) >= document.body.scrollHeight && this.videos.length < this.maxVideos)
+                {
+                    Inertia.post(route('history'), {num_videos: this.videos.length}, {preserveScroll: true})
+                }
+            }
     }
 }
 </script>

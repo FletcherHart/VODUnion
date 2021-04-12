@@ -154,3 +154,6 @@ Route::get('/changelog/{id}', [ChangelogController::class, 'show']);
 
 Route::get('/history', [HistoryController::class, 'watchedVideos'])
     ->middleware('auth')->name('history');
+
+Route::post('/history', [HistoryController::class, 'watchedVideos'])
+    ->middleware('auth');
