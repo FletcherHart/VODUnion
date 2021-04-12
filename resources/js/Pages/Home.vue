@@ -1,6 +1,6 @@
 <template>
     <header-layout>
-        <section class="w-full h-full flex flex-col sm:pl-5 sm:pr-5">
+        <section class="w-full h-full flex flex-col sm:pl-5 sm:pr-5 mb-10">
             <div class="w-full flex justify-center flex-col items-center">
                 <h1 v-if="search" class="font-bold text-xl mb-6 mt-6">Search term: {{search}}</h1>
                 <h1 v-else class="accessiblity-h1">Videos</h1>
@@ -36,6 +36,7 @@
                     </inertia-link>
                 </article>
             </div>
+            <button class="mt-10 bg-blue-600 text-white rounded float-right" v-on:click="loadMoreVideos" v-if="this.data.length < this.maxVideos">Load More Videos</button>
         </section>
     </header-layout>
 </template>
@@ -43,13 +44,15 @@
 <script>
     import HeaderLayout from '@/Layouts/HeaderLayout'
     import {formatDistance, toDate} from 'date-fns'
+    import { Inertia } from '@inertiajs/inertia'
     export default {
         components: {
             HeaderLayout
         },
         props: {
             data: Array,
-            search: String
+            search: String,
+            maxVideos: Number
         },
         methods: {
             getVideoAge(date) {
@@ -58,6 +61,12 @@
             getTime(duration) {
                 return new Date(duration * 1000).toISOString().substr(11, 8);
             },
+            loadMoreVideos() {
+                if((window.innerHeight + window.scrollY) >= document.body.scrollHeight && this.data.length < this.maxVideos)
+                {
+                    Inertia.post(route('home'), {num_videos: this.data.length}, {preserveScroll: true})
+                }
+            }
         }
     }
 </script>

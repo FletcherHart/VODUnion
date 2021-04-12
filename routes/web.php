@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', [VideoController::class, 'index'])
     ->name('home');
 
+Route::post('/', [VideoController::class, 'index']);
+
 Route::get('/video/{id}', [VideoController::class, 'show'])
     ->name('video');
 
@@ -94,6 +96,9 @@ Route::post('/upgrade', function(Request $request) {
 
 //Search routes
 Route::get('search/{term}', [VideoController::class, "search"]);
+
+Route::post('search/{term}', [VideoController::class, "search"]);
+
 Route::get('search', function() {
     return redirect()->route('home');
 });

@@ -28,13 +28,22 @@ class VideoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-            $data = $this->getVideos(['listed', 1], 
-                ['videos.title', 'videos.id', 'videos.videoID', 'videos.views', 'videos.created_at', 'users.name as uploader', 'videos.user_id', 'videos.video_length']
-                , ['users', "videos.user_id", "users.id"]
-            );
-        return Inertia::render('Home', ['data'=> $data]);
+        $videos_to_get = 12;
+        $max_videos = Video::where('listed', 1)->count();
+        if($request['num_videos'] < $max_videos && $request['num_videos'] != null) {
+            $videos_to_get += $request['num_videos'];
+        }
+
+        $data = Video::where('listed', 1)
+        ->join('users', "videos.user_id", "users.id")
+        ->orderByDesc('created_at')
+        ->get(['videos.title', 'videos.id', 'videos.videoID', 'videos.views', 
+        'videos.created_at', 'users.name as uploader', 'videos.user_id', 'videos.video_length'])
+        ->take($videos_to_get);
+
+        return Inertia::render('Home', ['data'=> $data, 'maxVideos'=>$max_videos]);
     }
 
     /*
@@ -326,10 +335,23 @@ class VideoController extends Controller
         return $video;
     }
 
-    public function search($request) {
-        $videos = Video::where('title', $request)
-            ->orWhere('title', 'like', '%'.$request.'%')->get();
+    public function search(Request $request, $search_term) {
 
-        return Inertia::render('Home.vue', ['data' => $videos, 'search' => $request]);
+        $videos_to_get = 12;
+        $max_videos = Video::where(['listed'=> 1, 'title' => $search_term])
+        ->orWhere('title', 'like', '%'.$search_term.'%')->count();
+        if($request['num_videos'] < $max_videos && $request['num_videos'] != null) {
+            $videos_to_get += $request['num_videos'];
+        }
+        
+        $data = Video::where(['listed'=> 1, 'title' => $search_term])
+        ->orWhere('title', 'like', '%'.$search_term.'%')
+        ->join('users', "videos.user_id", "users.id")
+        ->orderByDesc('created_at')
+        ->get(['videos.title', 'videos.id', 'videos.videoID', 'videos.views', 
+        'videos.created_at', 'users.name as uploader', 'videos.user_id', 'videos.video_length'])
+        ->take($videos_to_get);
+
+        return Inertia::render('Home.vue', ['data' => $data, 'search' => $search_term, 'maxVideos'=>$max_videos]);
     }
 }
