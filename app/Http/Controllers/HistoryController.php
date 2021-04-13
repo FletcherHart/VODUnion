@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Video;
+use App\Models\Comment;
 use Illuminate\Support\Facades\DB;
 
 class HistoryController extends Controller
@@ -27,5 +28,14 @@ class HistoryController extends Controller
             ->get();
 
         return Inertia::render('History', ['videos' => $videos, 'maxVideos'=>$max_videos]);
+    }
+
+    public function comments() {
+        $comments = Comment::where('comments.user_id', '=', auth()->id())
+        ->join('videos', 'videos.id', '=', 'comments.video_id')
+        ->join('users', 'users.id', '=', 'videos.user_id')
+        ->get(['comments.*', 'videos.id', 'videos.title', 'users.name', 'users.id']);
+
+        return Inertia::render('History', ['comments'=>$comments]);
     }
 }

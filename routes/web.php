@@ -157,3 +157,6 @@ Route::get('/history', [HistoryController::class, 'watchedVideos'])
 
 Route::post('/history', [HistoryController::class, 'watchedVideos'])
     ->middleware('auth');
+
+Route::get('/history/comments', [HistoryController::class, 'comments'])
+    ->middleware('auth')->name('comments');
