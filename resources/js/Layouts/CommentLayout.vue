@@ -25,7 +25,7 @@
                       <p class="inline">Date Posted {{comment.date}}</p>
                     </div>
                     <div v-if="$page.props.auth.user.loggedIn">
-                      <button class="bg-red-600 text-white rounded ml-2 mr-2"
+                      <button class="bg-red-600 text-white rounded ml-2 mr-2 p-2"
                       v-on:click="deleteComment(comment.id)"
                       v-if="$page.props.user.id == comment.user_id || $page.props.user.role_id == 4 || $page.props.user.id == ownerID">Delete</button>
                      </div>
