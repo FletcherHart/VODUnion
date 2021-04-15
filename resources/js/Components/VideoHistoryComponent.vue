@@ -3,11 +3,13 @@
         <article v-for="video in videos" :key="video.id" class="mt-3 ml-3">
             <inertia-link class="flex p-2 h-full" :href="'video/'+video.id">
                 <div class="w-full">
-                    <div class="flex flex-row h-full">
+                    <div class="sm:flex sm:flex-row h-full grid grid-cols-2 sm:grid-cols-none">
                         <div class="h-full flex mr-3">
-                            <div class="relative thumb">
-                                <img class="thumb" :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=169&width=300'" width="300px" height="169px" alt="" role="presentation">
-                                <div class="absolute bottom-2 text-white bg-black text-sm bg-opacity-50 ml-1">{{getTime(video.video_length)}}</div>
+                            <div>
+                                <div class="relative thumb">
+                                    <img class="thumb" :src="'https://videodelivery.net/' +video.videoID+'/thumbnails/thumbnail.jpg?time=0s&height=169&width=300'" width="300px" height="169px" alt="" role="presentation">
+                                    <div class="absolute bottom-2 text-white bg-black text-sm bg-opacity-50 ml-1">{{getTime(video.video_length)}}</div>
+                                </div>
                             </div>
                         </div>
                         <div class="flex flex-col" :title="video.title">
