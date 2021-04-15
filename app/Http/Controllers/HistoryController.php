@@ -33,9 +33,8 @@ class HistoryController extends Controller
     public function comments() {
         $comments = Comment::where('comments.user_id', '=', auth()->id())
         ->join('videos', 'videos.id', '=', 'comments.video_id')
-        ->join('users', 'users.id', '=', 'videos.user_id')
         ->orderBy('comments.created_at','DESC')
-        ->get(['comments.*', 'videos.id as video_id', 'videos.title', 'users.name as uploader', 'users.id as uploader_id']);
+        ->get(['comments.*', 'videos.id as video_id', 'videos.title']);
 
         return Inertia::render('History', ['comments'=>$comments]);
     }
