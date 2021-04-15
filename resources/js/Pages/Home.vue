@@ -36,7 +36,7 @@
                     </inertia-link>
                 </article>
             </div>
-            <button class="mt-10 bg-blue-600 text-white rounded float-right" v-on:click="loadMoreVideos" v-if="this.data.length < this.maxVideos">Load More Videos</button>
+            <button class="mt-10 bg-blue-600 text-white rounded p-2 w-full" v-on:click="loadMoreVideos" v-if="this.data.length < this.maxVideos">Load More Videos</button>
         </section>
     </header-layout>
 </template>
