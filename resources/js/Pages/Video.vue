@@ -26,7 +26,7 @@
                         <hr>
                         <div>
                             <div class="cursor-pointer" @click="toggleDesc">Show All</div>
-                            <div class="break-words" v-bind:class="{'truncate': hideDescription, 'h-auto min-h-full': !hideDescription}">{{data.description}}</div>
+                            <div class="break-words" v-bind:class="{'overflow-hidden whitespace-pre-wrap h-6': hideDescription, 'h-auto min-h-full whitespace-pre-wrap': !hideDescription}">{{data.description}}</div>
                         </div>
                     </div>
                 </div>
