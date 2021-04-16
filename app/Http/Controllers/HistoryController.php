@@ -23,6 +23,7 @@ class HistoryController extends Controller
         $videos = Video::join('watched_videos', 'videos.id', '=', 'watched_videos.video_id')
             ->join('users', 'videos.user_id', '=', 'users.id')
             ->where('watched_videos.user_id', '=', auth()->id())
+            ->orderBy('watched_videos.created_at', 'DESC')
             ->select('videos.*', 'users.name as uploader')
             ->take($videos_to_get)
             ->get();
