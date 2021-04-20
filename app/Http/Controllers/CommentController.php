@@ -22,14 +22,9 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($video_id, $page)
+    public function index()
     {
-        $comments = Comment::where('video_id', $id)
-            ->join('users', "comments.user_id", "users.id")
-            ->get(['comments.text', 'comments.created_at as date', 'users.name', 'users.id as user_id'])
-            ->limit($page*10);
 
-        return $comments;
     }
 
     /**
