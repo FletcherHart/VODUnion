@@ -62,7 +62,8 @@ class VideoController extends Controller
         foreach($videos as $key => $item) {
             //On first pass video will have status of readyToUpload to skip first pendingupload check
             if($item->status == "pendingupload") {
-                //Check if video is still pending upload, delete if so
+                //Check if video is still pending upload
+                //Videos with pending upload status that reach this point are aborted, and so need to be deleted
                 $item = $this->status($item);
                 if($item->status == "pendingupload") {
                     $this->destroy($item);
@@ -76,6 +77,7 @@ class VideoController extends Controller
            
         };
 
+        //Get videos with unset video_length & update them based on cloudflare's API return
         $videos = Video::where([['user_id', Auth::user()->id],['video_length', '<=', '0']])->get();
 
         $videos->each(function ($collection, $alphabet) {
@@ -87,9 +89,8 @@ class VideoController extends Controller
             $collection->save();
         });
         
-        $videos = Video::where([['user_id', Auth::user()->id],['status', '=', 'ready']])->orderBy('created_at', 'DESC')->get();
-        $videos2 = Video::where([['user_id', Auth::user()->id],['status', '=', 'processing']])->orderBy('created_at', 'DESC')->get();
-        $videos = $videos->merge($videos2);
+        $videos = Video::where([['user_id', Auth::user()->id],['status', '=', 'ready']])
+            ->OrWhere([['user_id', Auth::user()->id],['status', '=', 'processing']])->orderBy('created_at', 'DESC')->get();
 
         return Inertia::render('Channel', ['videos' => $videos]);
     }
@@ -225,6 +226,7 @@ class VideoController extends Controller
         if($video->user_id != $user->id) {
             return Redirect::route('home');
         }
+        //If video is to be listed, ensure video meets requirements for listing, i.e. title & description
         if($request->has('list')) {
             if($video->status != 'ready') {
                 return Redirect::back()
@@ -268,14 +270,14 @@ class VideoController extends Controller
             $video->save();
         }
 
-        $request->validate([
-            'thumbnail' => 'max:2000000|mimetypes:image/jpeg,image/png'
-        ]);
+        // $request->validate([
+        //     'thumbnail' => 'max:2000000|mimetypes:image/jpeg,image/png'
+        // ]);
         
-        if($request->has('thumbnail')) { 
-            $path = $request->file('thumbnail')->store('public/thumbnails');
-            $video->thumbnail = $request->file('thumbnail')->hashname();
-        }
+        // if($request->has('thumbnail')) { 
+        //     $path = $request->file('thumbnail')->store('public/thumbnails');
+        //     $video->thumbnail = $request->file('thumbnail')->hashname();
+        // }
 
         $video->save();
 
