@@ -46,23 +46,6 @@ class VideoController extends Controller
         return Inertia::render('Home', ['data'=> $data, 'maxVideos'=>$max_videos]);
     }
 
-    /*
-     * Get videos function
-     * @return array
-    */
-    public function getVideos($conditions, $get_params = '*', $join_params = null) {
-        if($join_params == null || count($join_params) < 2) {
-            return Video::where($conditions)
-            ->orderByDesc('created_at')
-            ->get($get_params);
-        } else {
-            return Video::where(...$conditions)
-            ->join(...$join_params)
-            ->orderByDesc('created_at')
-            ->get($get_params);
-        }
-    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -74,7 +57,7 @@ class VideoController extends Controller
             return Redirect::route('upgrade');
         }
         
-        $videos = $this->getVideos([['user_id', Auth::user()->id],['status', '!=', 'ready']]);
+        $videos = Video::where([['user_id', Auth::user()->id],['status', '!=', 'ready']])->get();
 
         foreach($videos as $key => $item) {
             //On first pass video will have status of readyToUpload to skip first pendingupload check
@@ -93,7 +76,7 @@ class VideoController extends Controller
            
         };
 
-        $videos = $this->getVideos([['user_id', Auth::user()->id],['video_length', '<=', '0']]);
+        $videos = Video::where([['user_id', Auth::user()->id],['video_length', '<=', '0']])->get();
 
         $videos->each(function ($collection, $alphabet) {
             $response = Http::withToken(config('app.cloud_token'))
@@ -104,8 +87,8 @@ class VideoController extends Controller
             $collection->save();
         });
         
-        $videos = $this->getVideos([['user_id', Auth::user()->id],['status', '=', 'ready']]);
-        $videos2 = $this->getVideos([['user_id', Auth::user()->id],['status', '=', 'processing']]);
+        $videos = Video::where([['user_id', Auth::user()->id],['status', '=', 'ready']])->orderBy('created_at', 'DESC')->get();
+        $videos2 = Video::where([['user_id', Auth::user()->id],['status', '=', 'processing']])->orderBy('created_at', 'DESC')->get();
         $videos = $videos->merge($videos2);
 
         return Inertia::render('Channel', ['videos' => $videos]);
@@ -193,9 +176,11 @@ class VideoController extends Controller
 
         UpdateVideoViews::dispatch($id)->delay(now()->addMinutes(10));
         
-        $data = $this->getVideos(['videos.id', $id], 
-            ['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.views', 'videos.created_at', 'users.name as uploader', 'videos.user_id']
-            , ['users', 'videos.user_id', 'users.id'])[0];
+        $data = Video::where('videos.id', $id)
+            ->join('users', 'videos.user_id', 'users.id')
+            ->get(['videos.title', 'videos.id', 'videos.videoID', 'videos.description', 'videos.views', 'videos.created_at', 'users.name as uploader', 'videos.user_id'])
+            ->first(); 
+            
 
         $comments = Comment::where('video_id', $id)
             ->join('users', "comments.user_id", "users.id")
