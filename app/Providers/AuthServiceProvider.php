@@ -27,6 +27,12 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('store-video', function (User $user) {
+
+            //if server is set to allow any user to upload
+            if(config('app.lenient_upload')) {
+                return true;
+            }
+
             return $user->role->id >= 2;
         });
 
