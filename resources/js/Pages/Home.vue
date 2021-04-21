@@ -64,7 +64,7 @@
             loadMoreVideos() {
                 if((window.innerHeight + window.scrollY) >= document.body.scrollHeight && this.data.length < this.maxVideos)
                 {
-                    Inertia.post(route('home'), {num_videos: this.data.length}, {preserveScroll: true})
+                    Inertia.post(route(route().current()), {num_videos: this.data.length}, {preserveScroll: true})
                 }
             }
         }
