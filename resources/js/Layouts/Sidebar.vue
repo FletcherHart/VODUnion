@@ -67,6 +67,14 @@
                 </div>
             </jet-responsive-nav-link> 
         </div>   
+        <div>
+            <jet-responsive-nav-link href="/contact" class="w-full">
+                <div class="grid grid-cols-3 flex items-center">
+                    <img class="inline col-span-1" width="16px" height="16px" src="/open-iconic/svg/chat.svg" alt="contact icon" aria-hidden="true">
+                    <p>Contact</p>
+                </div>
+            </jet-responsive-nav-link> 
+        </div> 
     </div>
 </template>
 

@@ -234,5 +234,6 @@ return [
     'cloud_account' => env('CLOUD_ACCOUNT'),
     'cloud_token' => env('CLOUD_TOKEN'),
     'lenient_upload' => env('LENIENT_UPLOAD'),
+    'mailFrom' => env('MAIL_FROM_ADDRESS'),
 
 ];

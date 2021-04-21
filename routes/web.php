@@ -13,6 +13,8 @@ use App\Models\Video;
 use App\Models\UpgradeCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactUs;
 
 /*
 |--------------------------------------------------------------------------
@@ -160,3 +162,19 @@ Route::post('/history', [HistoryController::class, 'watchedVideos'])
 
 Route::get('/history/comments', [HistoryController::class, 'comments'])
     ->middleware('auth')->name('comments');
+
+Route::get('/contact',  function() {
+    return Inertia::render('Contact');
+})->name('contact');
+
+Route::post('/contact',  function(Request $request) {
+    $request->validate(['email' => 'required', 'subject' => 'required', 'message' => 'required']);
+
+    Mail::to(config('app.mailFrom'))
+        ->send(new ContactUs($request['email'],$request['subject'],$request['message']));
+
+    Mail::to($request['email'])
+        ->send(new ContactUs($request['email'],"Thank you for Contacting Us",$request['message'], $request['subject']));
+    
+    return Inertia::render('Contact', ['done' => true]);
+});
