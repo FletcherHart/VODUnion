@@ -2,7 +2,7 @@
   <div class="h-full"> 
     <header class="fixed top-0 w-full h-24 sm:h-16 z-30 nav-header">
       <div class="flex flex-col h-full">
-        <div class="flex justify-between sm:h-full h-16">
+        <div class="flex justify-between sm:h-full h-16 mr-10">
           <div class="flex flex-row items-center justify-center ml-6">
             <button @click="nav" class="hover:bg-gray-600 p-2 rounded focus:outline-none w-10 flex justify-center" aria-label="display menu">
               <img width="16px" height="16px" src="/open-iconic/svg/menu.svg" alt="menu icon" aria-hidden="true">
@@ -16,12 +16,6 @@
               <img width="16px" height="16px" src="/open-iconic/svg/magnifying-glass.svg" alt="search icon" aria-hidden="true">
             </button>
           </form>
-
-          <div class="flex items-center font-medium mr-6">
-              <div class="text-center">Have questions? Email 
-                <a class="underline" href="mailto:support@vodunion.com">support@vodunion.com</a>
-              </div>
-          </div>
         </div>
         <form class="shadow-md flex items-center justify-center fixed top-16 w-full m-b-8" @submit.prevent="search" v-if="this.windowWidth < 640">
           <input class="rounded rounded-r-none w-full h-8 p-1" type="text" id="search" placeholder="Search" aria-label="Search for videos">
