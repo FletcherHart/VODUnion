@@ -1,6 +1,6 @@
 <template>
     <header-layout>
-        <div class="flex items-center justify-center flex-col">
+        <div v-if="!done" class="flex items-center justify-center flex-col">
             <h1 class="font-bold text-2xl">Contact Us</h1>
             <form @submit.prevent="submit" class="mt-5 mb-10 w-1/2">
                 <div class="flex flex-col">
@@ -20,6 +20,9 @@
                 </div>
             </form>
         </div>
+        <div v-else class="flex items-center justify-center flex-col">
+            <h1 class="font-bold text-2xl">Your message has been sent</h1>
+        </div>
     </header-layout>
 </template>
 
@@ -30,6 +33,9 @@
         components: {
             HeaderLayout,
             JetInputError,
+        },
+        props: {
+            done: Boolean
         },
         data() {
             return {
@@ -43,7 +49,6 @@
         },
         methods: {
             submit() {
-                this.$inertia.post('/contact', this.form)
                 this.form.post(route('contact'), {
                     preserveScroll: true
                 });

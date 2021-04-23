@@ -164,7 +164,7 @@ Route::get('/history/comments', [HistoryController::class, 'comments'])
     ->middleware('auth')->name('comments');
 
 Route::get('/contact',  function() {
-    return Inertia::render('Contact');
+    return Inertia::render('Contact', ['done'=>false]);
 })->name('contact');
 
 Route::post('/contact',  function(Request $request) {
