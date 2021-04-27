@@ -16,7 +16,7 @@
                     <jet-input-error v-if="form.errors.message" :message="form.errors['message']" class="mt-2" />
                     <textarea class="shadow-inner border border-gray-400 p-1" rows=8 name="message" id="message" v-model="form.message" required/>
 
-                    <button type="submit" class="bg-blue-600 mt-5">Submit</button>
+                    <button type="submit" class="bg-blue-600 mt-5 text-white">Submit</button>
                 </div>
             </form>
         </div>
