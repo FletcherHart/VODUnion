@@ -4,7 +4,7 @@
       <div class="flex flex-col h-full">
         <div class="flex justify-between sm:h-full h-16 mr-10">
           <div class="flex flex-row items-center justify-center ml-6">
-            <button @click="nav" class="hover:bg-gray-600 p-2 rounded focus:outline-none w-10 flex justify-center" aria-label="display menu">
+            <button @click="nav" class="hover:bg-gray-600 p-2 rounded w-10 flex justify-center" aria-label="display menu">
               <img width="16px" height="16px" src="/open-iconic/svg/menu.svg" alt="menu icon" aria-hidden="true">
             </button>
             <a href="/" class="block pl-3 pr-4 py-2 ml-5 font-semibold rounded hover:rounded text-black" style="background-color:#7DAEFC;">VODUnion</a>
