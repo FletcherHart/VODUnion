@@ -11,7 +11,9 @@
                     <div v-bind:class="{'bg-yellow-200': (log.id == changelog.id)}">
                         <inertia-link :href="route('changelog') + '/' + log.id">
                             <div class="relative">
-                                <img v-if="(log.id == changelog.id)" class="absolute right-0" width="16px" height="16px" src="/open-iconic/svg/star.svg" alt="current changelog article icon">
+                                <svg v-if="(log.id == changelog.id)" class="absolute right-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 8 8">
+                                    <path d="M4 0l-1 3h-3l2.5 2-1 3 2.5-2 2.5 2-1-3 2.5-2h-3l-1-3z" />
+                                </svg>
                             </div>
                             <div>{{log.title}}</div>
                             <div class="text-gray-700">{{toDate(log.created_at)}}</div>

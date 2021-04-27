@@ -36,16 +36,24 @@
                             <div>
                                 <span class="flex justify-between">
                                     <span class="flex">
-                                        <button v-on:click="reloadPage" class="bg-blue-400 w-10 h-10 flex justify-center items-center rounded" aria-label="refresh videos"><img width="16px" height="16px" src="/open-iconic/svg/loop-circular.svg" alt=""></button>
+                                        <button v-on:click="reloadPage" class="bg-blue-400 w-10 h-10 flex justify-center items-center rounded" aria-label="refresh videos">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 8 8">
+                                                  <path d="M4 0c-1.65 0-3 1.35-3 3h-1l1.5 2 1.5-2h-1c0-1.11.89-2 2-2v-1zm2.5 1l-1.5 2h1c0 1.11-.89 2-2 2v1c1.65 0 3-1.35 3-3h1l-1.5-2z" transform="translate(0 1)" />
+                                            </svg>
+                                        </button>
                                         <button v-on:click="uploadModalDisplay" class="bg-green-400 w-10 h-10 flex justify-center items-center rounded" aria-label="show upload video form">
-                                            <img width="16px" height="16px" src="/open-iconic/svg/plus.svg" alt="">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 8 8">
+                                                <path d="M3 0v3h-3v2h3v3h2v-3h3v-2h-3v-3h-2z" />
+                                            </svg>
                                         </button>
                                     </span>
                                 </span>
                             </div>
                             <div class="flex items-center">
                                 <span>Date</span>
-                                <button v-on:click="sort" class="flex justify-center items-center rounded" aria-label="sort videos by upload date"><img class="w-4 h-full ml-1" id="dateSortImg" src="/open-iconic/svg/arrow-top.svg" alt=""></button>
+                                <button v-on:click="sort" class="flex justify-center items-center rounded" aria-label="sort videos by upload date">
+                                    <img class="w-4 h-full ml-1" id="dateSortImg" src="/open-iconic/svg/arrow-top.svg" alt="">
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -58,7 +66,10 @@
                                 <h2 class="font-semibold" v-else><i>Untitled</i></h2>
                                 <div class="flex">
                                     <div class="flex items-center mr-3">
-                                        <img class="mr-2" width="16px" height="16px" src="/open-iconic/svg/eye.svg" alt="">
+                                        <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 8 8">
+                                            <path d="M4.03 0c-2.53 0-4.03 3-4.03 3s1.5 3 4.03 3c2.47 0 3.97-3 3.97-3s-1.5-3-3.97-3zm-.03 1c1.11 0 2 .9 2 2 0 1.11-.89 2-2 2-1.1 0-2-.89-2-2 0-1.1.9-2 2-2zm0 1c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1c0-.1-.04-.19-.06-.28-.08.16-.24.28-.44.28-.28 0-.5-.22-.5-.5 0-.2.12-.36.28-.44-.09-.03-.18-.06-.28-.06z"
+                                            transform="translate(0 1)" />
+                                        </svg>
                                         <p v-if="video.listed">Public</p>
                                         <p v-else>Unlisted</p>
                                     </div>
@@ -80,7 +91,11 @@
                                         <div>Uploaded: {{setTime(video.created_at)}}</div>
                                     </div>
                                     <div class="flex items-center justify-between w-full">
-                                        <button v-on:click="edit(video)" class="w-10 h-10 text-gray-600 flex justify-center items-center" :aria-label="'Edit video with title ' + video.title"><img width="16px" height="16px" src="/open-iconic/svg/pencil.svg" alt=""></button>
+                                        <button v-on:click="edit(video)" class="w-10 h-10 text-gray-600 flex justify-center items-center" :aria-label="'Edit video with title ' + video.title">
+                                            <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 8 8">
+                                                <path d="M6 0l-1 1 2 2 1-1-2-2zm-2 2l-4 4v2h2l4-4-2-2z" />
+                                            </svg>
+                                        </button>
                                         <div class="flex flex-row justify-between items-center">
                                             <button v-on:click="deleteVideo(video.id)" class="bg-red-600 rounded p-1 text-white" :aria-label="'Delete video with title ' + video.title">Delete</button>
                                         </div>
