@@ -9,7 +9,7 @@
                   <path d="M0 0v1h8v-1h-8zm0 2.97v1h8v-1h-8zm0 3v1h8v-1h-8z" transform="translate(0 1)" />
               </svg>
             </button>
-            <a href="/" class="block pl-3 pr-4 py-2 ml-5 font-semibold rounded hover:rounded text-black" style="background-color:#7DAEFC;">VODUnion</a>
+            <inertia-link href="/" class="block pl-3 pr-4 py-2 ml-5 font-semibold rounded hover:rounded text-black" style="background-color:#7DAEFC;">VODUnion</inertia-link>
           </div>
           
           <form class="flex items-center justify-center" @submit.prevent="search" v-if="this.windowWidth > 640">
